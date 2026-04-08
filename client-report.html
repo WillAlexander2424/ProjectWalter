@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Comparison Report — Meridian Creative Ltd | Bayleys</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #fafafa; --white: #ffffff; --dark: #0f172a; --dark2: #1e293b;
+            --text: #334155; --text2: #64748b; --text3: #94a3b8;
+            --accent: #1a1a2e; --blue: #3b82f6; --green: #10b981; --orange: #f59e0b;
+            --purple: #8b5cf6; --red: #ef4444;
+            --border: #e2e8f0; --border2: #f1f5f9;
+            --radius: 16px; --radius-sm: 10px;
+        }
+        html { font-size: 15px; scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+        /* ===== HERO ===== */
+        .report-hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 50%, #2d5a7b 100%);
+            color: white;
+            padding: 80px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .report-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .report-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+        .hero-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; opacity: 0.7; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+        .hero-brand-icon { width: 28px; height: 28px; background: rgba(255,255,255,0.15); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+        .hero-label { font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+        .hero-title { font-size: 38px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 12px; }
+        .hero-title span { background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: 17px; color: rgba(255,255,255,0.65); font-weight: 400; max-width: 600px; line-height: 1.6; }
+        .hero-meta { display: flex; gap: 32px; margin-top: 32px; }
+        .hero-meta-item { display: flex; flex-direction: column; }
+        .hero-meta-item span { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero-meta-item strong { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.9); margin-top: 2px; }
+
+        /* ===== NAVIGATION ===== */
+        .report-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; gap: 32px; }
+        .nav-link {
+            padding: 16px 0;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .nav-cta {
+            margin-left: auto;
+            padding: 8px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { opacity: 0.9; }
+
+        /* ===== SECTIONS ===== */
+        .section { max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
+        .section-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+        .section-title { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .section-desc { font-size: 15px; color: var(--text2); max-width: 600px; line-height: 1.6; margin-bottom: 40px; }
+
+        /* ===== PROPERTY CARDS ===== */
+        .property-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px; }
+        .prop-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        .prop-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+        .prop-card.recommended { border: 2px solid var(--blue); }
+        .prop-card.recommended::before {
+            content: 'Recommended';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--blue);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        .prop-card-img {
+            height: 160px;
+            background: linear-gradient(135deg, #64748b, #475569);
+            position: relative;
+            overflow: hidden;
+        }
+        .prop-card-img.britomart { background: linear-gradient(135deg, #1e3a5f, #2d5a7b, #3b82f6); }
+        .prop-card-img.wynyard { background: linear-gradient(135deg, #065f46, #047857, #10b981); }
+        .prop-card-img.viaduct { background: linear-gradient(135deg, #4c1d95, #6d28d9, #8b5cf6); }
+        .prop-card-addr { position: absolute; bottom: 0; left: 0; right: 0; padding: 30px 20px 16px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white; }
+        .prop-card-addr h3 { font-size: 16px; font-weight: 600; }
+        .prop-card-addr span { font-size: 12px; opacity: 0.8; }
+        .prop-card-body { padding: 18px 20px; }
+        .prop-card-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .pcm { padding: 10px 12px; background: var(--border2); border-radius: 8px; }
+        .pcm span { display: block; font-size: 11px; color: var(--text3); }
+        .pcm strong { font-size: 15px; font-weight: 700; }
+        .prop-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+        .pct { font-size: 11px; padding: 4px 10px; background: var(--border2); border-radius: 20px; color: var(--text2); }
+        .pct.highlight { background: #eff6ff; color: var(--blue); font-weight: 500; }
+
+        /* ===== COMPARISON TABLE ===== */
+        .compare-section { background: var(--white); border-radius: var(--radius); padding: 32px; border: 1px solid var(--border); }
+        .compare-section h3 { font-size: 18px; font-weight: 650; margin-bottom: 20px; }
+        .ct { width: 100%; border-collapse: collapse; }
+        .ct th { padding: 12px 16px; text-align: center; font-size: 13px; font-weight: 600; background: var(--border2); border-bottom: 2px solid var(--border); }
+        .ct th:first-child { text-align: left; background: none; }
+        .ct th.best { background: #eff6ff; color: var(--blue); }
+        .ct th small { display: block; font-weight: 400; font-size: 11px; color: var(--text3); }
+        .ct td { padding: 11px 16px; text-align: center; font-size: 14px; border-bottom: 1px solid var(--border2); }
+        .ct td:first-child { text-align: left; color: var(--text2); font-size: 13px; }
+        .ct td.best { background: rgba(59,130,246,0.04); font-weight: 600; color: var(--dark); }
+        .ct tr:hover td { background: rgba(59,130,246,0.02); }
+
+        /* ===== RECOMMENDATION ===== */
+        .rec-section {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 100%);
+            border-radius: var(--radius);
+            padding: 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .rec-section::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .rec-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(59,130,246,0.2); padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; margin-bottom: 20px; }
+        .rec-title { font-size: 24px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.3px; }
+        .rec-text { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.75); max-width: 700px; margin-bottom: 12px; }
+        .rec-text strong { color: white; }
+
+        /* ===== MARKET INSIGHTS ===== */
+        .insights-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+        .insight-card {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .insight-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+        .insight-icon { font-size: 28px; margin-bottom: 10px; }
+        .insight-value { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; display: block; }
+        .insight-label { font-size: 12px; color: var(--text2); margin-top: 2px; }
+        .insight-change { font-size: 12px; font-weight: 600; margin-top: 6px; display: inline-block; padding: 2px 10px; border-radius: 20px; }
+        .insight-change.up { background: #ecfdf5; color: var(--green); }
+        .insight-change.down { background: #fef2f2; color: var(--red); }
+        .insight-change.stable { background: var(--border2); color: var(--text2); }
+
+        /* ===== MARKET CHART (CSS only) ===== */
+        .chart-section { background: var(--white); border-radius: var(--radius); padding: 32px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .chart-section h3 { font-size: 16px; font-weight: 650; margin-bottom: 6px; }
+        .chart-section p { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+        .bar-chart { display: flex; align-items: flex-end; gap: 12px; height: 200px; padding: 0 20px; }
+        .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .bar-stack { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; justify-content: flex-end; }
+        .bar { width: 80%; border-radius: 6px 6px 0 0; transition: height 0.8s ease; position: relative; }
+        .bar.rent { background: linear-gradient(180deg, var(--blue), #2563eb); }
+        .bar.opex { background: linear-gradient(180deg, #93c5fd, #60a5fa); opacity: 0.6; }
+        .bar-label { font-size: 11px; color: var(--text3); text-align: center; white-space: nowrap; }
+        .bar-value { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; white-space: nowrap; }
+
+        /* ===== INTERACTIVE COST CALC ===== */
+        .calc-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+        .calc-card h3 { font-size: 16px; font-weight: 650; margin-bottom: 6px; }
+        .calc-card > p { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+        .calc-slider-row { margin-bottom: 20px; }
+        .calc-slider-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+        .calc-slider-label strong { color: var(--blue); }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--border2);
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(59,130,246,0.3);
+        }
+        .calc-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+        .calc-result {
+            text-align: center;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            background: var(--border2);
+        }
+        .calc-result.best { background: #eff6ff; border: 1px solid #bfdbfe; }
+        .calc-result span { display: block; font-size: 11px; color: var(--text3); }
+        .calc-result strong { font-size: 20px; font-weight: 800; display: block; margin-top: 4px; }
+        .calc-result small { font-size: 11px; color: var(--text2); }
+
+        /* ===== NEXT STEPS ===== */
+        .next-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .step-card {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 28px 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .step-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: var(--blue); }
+        .step-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+        .step-icon.blue { background: #eff6ff; color: var(--blue); }
+        .step-icon.green { background: #ecfdf5; color: var(--green); }
+        .step-icon.purple { background: #f5f3ff; color: var(--purple); }
+        .step-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .step-card p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+        /* ===== FOOTER ===== */
+        .report-footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.5);
+            padding: 40px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .footer-inner { max-width: 1100px; margin: 0 auto; }
+        .footer-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; color: rgba(255,255,255,0.8); font-weight: 600; font-size: 15px; }
+        .footer-brand .hero-brand-icon { background: rgba(255,255,255,0.1); }
+        .footer-agent { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-agent strong { color: rgba(255,255,255,0.8); display: block; font-size: 14px; }
+        .footer-agent span { font-size: 12px; }
+
+        .divider { height: 1px; background: var(--border); max-width: 1100px; margin: 0 auto; }
+
+        /* Animations */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <div class="report-hero">
+        <div class="hero-inner">
+            <div class="hero-brand">
+                <img src="bayleys-logo.png" alt="Bayleys" style="height:22px;opacity:0.7;">
+                <span style="opacity:0.3">|</span>
+                Walter Intelligence
+            </div>
+            <div class="hero-label">Lease Comparison Report</div>
+            <h1 class="hero-title">CBD Office Options for<br><span>Meridian Creative Ltd</span></h1>
+            <p class="hero-subtitle">A personalised analysis of three commercial lease opportunities, benchmarked against current Auckland market conditions.</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item"><span>Prepared by</span><strong>Will Alexander — Bayleys</strong></div>
+                <div class="hero-meta-item"><span>Date</span><strong>5 April 2026</strong></div>
+                <div class="hero-meta-item"><span>Properties</span><strong>3 compared</strong></div>
+                <div class="hero-meta-item"><span>Report ID</span><strong>LCD-2026-04-05-MC</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Nav -->
+    <nav class="report-nav">
+        <div class="nav-inner">
+            <a href="#properties" class="nav-link active">Properties</a>
+            <a href="#comparison" class="nav-link">Comparison</a>
+            <a href="#recommendation" class="nav-link">Recommendation</a>
+            <a href="#market" class="nav-link">Market</a>
+            <a href="#calculator" class="nav-link">Cost Calculator</a>
+            <a href="#next" class="nav-link">Next Steps</a>
+            <a href="#next" class="nav-cta">Book a viewing</a>
+        </div>
+    </nav>
+
+    <!-- Properties -->
+    <div class="section" id="properties">
+        <div class="section-label">Your Options</div>
+        <h2 class="section-title">Three exceptional CBD offices</h2>
+        <p class="section-desc">Each property has been selected based on your requirements: 250-320 sqm, CBD location, Grade A/B+, and capacity for 28-35 staff.</p>
+
+        <div class="property-cards">
+            <div class="prop-card">
+                <div class="prop-card-img britomart">
+                    <div class="prop-card-addr"><h3>8 Mahuhu Crescent</h3><span>Britomart, Auckland CBD</span></div>
+                </div>
+                <div class="prop-card-body">
+                    <div class="prop-card-metrics">
+                        <div class="pcm"><span>Area</span><strong>280 sqm</strong></div>
+                        <div class="pcm"><span>$/sqm</span><strong>$420</strong></div>
+                        <div class="pcm"><span>Annual Rent</span><strong>$117,600</strong></div>
+                        <div class="pcm"><span>Total Cost</span><strong>$143,360</strong></div>
+                    </div>
+                    <div class="prop-card-tags">
+                        <span class="pct highlight">Grade A</span>
+                        <span class="pct highlight">90% NBS</span>
+                        <span class="pct">3+3+3 term</span>
+                        <span class="pct">3 car parks</span>
+                        <span class="pct">$75k fit-out</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prop-card recommended">
+                <div class="prop-card-img wynyard">
+                    <div class="prop-card-addr"><h3>12 Madden Street</h3><span>Wynyard Quarter, Auckland</span></div>
+                </div>
+                <div class="prop-card-body">
+                    <div class="prop-card-metrics">
+                        <div class="pcm"><span>Area</span><strong>300 sqm</strong></div>
+                        <div class="pcm"><span>$/sqm</span><strong>$385</strong></div>
+                        <div class="pcm"><span>Annual Rent</span><strong>$115,500</strong></div>
+                        <div class="pcm"><span>Total Cost</span><strong>$138,900</strong></div>
+                    </div>
+                    <div class="prop-card-tags">
+                        <span class="pct highlight">Best value</span>
+                        <span class="pct highlight">5+3 term</span>
+                        <span class="pct">Grade B+</span>
+                        <span class="pct">CPI capped 3%</span>
+                        <span class="pct">$50k fit-out</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prop-card">
+                <div class="prop-card-img viaduct">
+                    <div class="prop-card-addr"><h3>155 Fanshawe Street</h3><span>Viaduct, Auckland CBD</span></div>
+                </div>
+                <div class="prop-card-body">
+                    <div class="prop-card-metrics">
+                        <div class="pcm"><span>Area</span><strong>245 sqm</strong></div>
+                        <div class="pcm"><span>$/sqm</span><strong>$395</strong></div>
+                        <div class="pcm"><span>Annual Rent</span><strong>$96,775</strong></div>
+                        <div class="pcm"><span>Total Cost</span><strong>$117,600</strong></div>
+                    </div>
+                    <div class="prop-card-tags">
+                        <span class="pct highlight">Lowest cost</span>
+                        <span class="pct">Grade A-</span>
+                        <span class="pct">78% NBS</span>
+                        <span class="pct">3+3 term</span>
+                        <span class="pct">$40k fit-out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Comparison -->
+    <div class="section" id="comparison">
+        <div class="section-label">Detailed Analysis</div>
+        <h2 class="section-title">Side-by-side comparison</h2>
+        <p class="section-desc">Every lease term compared across 11 key metrics to help you make an informed decision.</p>
+
+        <div class="compare-section">
+            <table class="ct">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>8 Mahuhu Cres<small>Britomart</small></th>
+                        <th class="best">12 Madden St<small>Wynyard Quarter</small></th>
+                        <th>155 Fanshawe St<small>Viaduct</small></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Lettable Area</td><td>280 sqm</td><td class="best">300 sqm</td><td>245 sqm</td></tr>
+                    <tr><td>Rental Rate</td><td>$420/sqm</td><td class="best">$385/sqm</td><td>$395/sqm</td></tr>
+                    <tr><td>Annual Rent</td><td>$117,600</td><td>$115,500</td><td class="best">$96,775</td></tr>
+                    <tr><td>OPEX Rate</td><td>$92/sqm</td><td class="best">$78/sqm</td><td>$85/sqm</td></tr>
+                    <tr><td>Total Occupancy p.a.</td><td>$143,360</td><td>$138,900</td><td class="best">$117,600</td></tr>
+                    <tr><td>Lease Term</td><td>3+3+3 yrs</td><td class="best">5+3 yrs</td><td>3+3 yrs</td></tr>
+                    <tr><td>Rent Review</td><td>CPI annual</td><td class="best">CPI capped 3%</td><td>Market biennial</td></tr>
+                    <tr><td>Car Parks</td><td class="best">3 included</td><td>2 @ $65/pw</td><td>2 included</td></tr>
+                    <tr><td>Fit-out Contribution</td><td class="best">$75,000</td><td>$50,000</td><td>$40,000</td></tr>
+                    <tr><td>NBS Rating</td><td class="best">90%</td><td>67%</td><td>78%</td></tr>
+                    <tr><td>Building Grade</td><td class="best">A</td><td>B+</td><td>A-</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Recommendation -->
+    <div class="section" id="recommendation">
+        <div class="rec-section">
+            <div class="rec-badge">&#9733; Our Recommendation</div>
+            <h2 class="rec-title">12 Madden Street, Wynyard Quarter</h2>
+            <p class="rec-text"><strong>Best balance of value, flexibility, and growth potential.</strong> At 300 sqm and $385/sqm, this property offers the largest footprint at the lowest rate. The 5+3 year term with CPI reviews capped at 3% provides long-term cost certainty in the current economic environment.</p>
+            <p class="rec-text">The Wynyard Quarter precinct is experiencing strong tenant demand growth and infrastructure investment, positioning your brand alongside leading creative and technology firms. This location supports Meridian Creative's projected headcount growth from 28 to 35+ staff.</p>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Market Insights -->
+    <div class="section" id="market">
+        <div class="section-label">Market Context</div>
+        <h2 class="section-title">Auckland CBD office market</h2>
+        <p class="section-desc">Key economic indicators and market conditions that informed our analysis.</p>
+
+        <div class="insights-grid">
+            <div class="insight-card">
+                <div class="insight-icon">&#127970;</div>
+                <span class="insight-value">8.2%</span>
+                <span class="insight-label">CBD Vacancy Rate</span>
+                <span class="insight-change down">+0.4% vs Q3</span>
+            </div>
+            <div class="insight-card">
+                <div class="insight-icon">&#128200;</div>
+                <span class="insight-value">$395</span>
+                <span class="insight-label">Avg Office $/sqm</span>
+                <span class="insight-change up">+2.1% YoY</span>
+            </div>
+            <div class="insight-card">
+                <div class="insight-icon">&#127974;</div>
+                <span class="insight-value">4.25%</span>
+                <span class="insight-label">OCR Rate</span>
+                <span class="insight-change up">Trending down</span>
+            </div>
+            <div class="insight-card">
+                <div class="insight-icon">&#128202;</div>
+                <span class="insight-value">2.3%</span>
+                <span class="insight-label">CPI Forecast</span>
+                <span class="insight-change stable">Stable outlook</span>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="chart-section">
+                <h3>Total Annual Cost Comparison</h3>
+                <p>Rent + OPEX + parking — full occupancy cost per property</p>
+                <div class="bar-chart">
+                    <div class="bar-group">
+                        <div class="bar-stack">
+                            <div class="bar rent" style="height:130px; position:relative;"><span class="bar-value">$143k</span></div>
+                        </div>
+                        <span class="bar-label">8 Mahuhu</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-stack">
+                            <div class="bar rent" style="height:120px; position:relative; background:linear-gradient(180deg, var(--green), #059669);"><span class="bar-value">$139k</span></div>
+                        </div>
+                        <span class="bar-label">12 Madden</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-stack">
+                            <div class="bar rent" style="height:100px; position:relative; background:linear-gradient(180deg, var(--purple), #6d28d9);"><span class="bar-value">$118k</span></div>
+                        </div>
+                        <span class="bar-label">155 Fanshawe</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3>Cost per Staff Member</h3>
+                <p>Based on projected headcount of 30 staff — cost efficiency metric</p>
+                <div class="bar-chart">
+                    <div class="bar-group">
+                        <div class="bar-stack">
+                            <div class="bar rent" style="height:140px; position:relative;"><span class="bar-value">$4,779</span></div>
+                        </div>
+                        <span class="bar-label">8 Mahuhu</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-stack">
+                            <div class="bar rent" style="height:130px; position:relative; background:linear-gradient(180deg, var(--green), #059669);"><span class="bar-value">$4,630</span></div>
+                        </div>
+                        <span class="bar-label">12 Madden</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-stack">
+                            <div class="bar rent" style="height:108px; position:relative; background:linear-gradient(180deg, var(--purple), #6d28d9);"><span class="bar-value">$3,920</span></div>
+                        </div>
+                        <span class="bar-label">155 Fanshawe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Interactive Cost Calculator -->
+    <div class="section" id="calculator">
+        <div class="section-label">Interactive Tool</div>
+        <h2 class="section-title">Cost projection calculator</h2>
+        <p class="section-desc">Adjust the lease term and team size to see how costs compare over time.</p>
+
+        <div class="calc-card">
+            <h3>Projected 5-Year Occupancy Cost</h3>
+            <p>Drag the sliders to model different scenarios.</p>
+
+            <div class="calc-slider-row">
+                <div class="calc-slider-label"><span>Lease duration</span><strong id="termValue">5 years</strong></div>
+                <input type="range" min="3" max="9" value="5" id="termSlider">
+            </div>
+            <div class="calc-slider-row">
+                <div class="calc-slider-label"><span>Team size</span><strong id="teamValue">30 staff</strong></div>
+                <input type="range" min="15" max="50" value="30" id="teamSlider">
+            </div>
+
+            <div class="calc-results">
+                <div class="calc-result">
+                    <span>8 Mahuhu Crescent</span>
+                    <strong id="calc1">$716,800</strong>
+                    <small>$4,779 per person p.a.</small>
+                </div>
+                <div class="calc-result best">
+                    <span>12 Madden Street</span>
+                    <strong id="calc2" style="color:var(--blue)">$694,500</strong>
+                    <small>$4,630 per person p.a.</small>
+                </div>
+                <div class="calc-result">
+                    <span>155 Fanshawe Street</span>
+                    <strong id="calc3">$588,000</strong>
+                    <small>$3,920 per person p.a.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Next Steps -->
+    <div class="section" id="next">
+        <div class="section-label">What's Next</div>
+        <h2 class="section-title">Ready to move forward?</h2>
+        <p class="section-desc">Choose your next step and we'll take care of the rest.</p>
+
+        <div class="next-steps">
+            <div class="step-card">
+                <div class="step-icon blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <h4>Book a Viewing</h4>
+                <p>Schedule a private inspection of your preferred properties at a time that suits.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                </div>
+                <h4>Ask a Question</h4>
+                <p>Discuss any aspect of these options directly with your Bayleys advisor.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <h4>Request Full Lease</h4>
+                <p>Get the complete ADLS Agreement to Lease for your preferred property to review.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="report-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="bayleys-logo.png" alt="Bayleys" style="height:20px;opacity:0.6;margin-right:8px;">
+                Walter Intelligence
+            </div>
+            <p>This report was generated by Walter, Bayleys' commercial intelligence platform.<br>Data sourced from Bayleys CRM, realestate.co.nz, RBNZ, and Stats NZ as at 5 April 2026.</p>
+            <div class="footer-agent">
+                <strong>Will Alexander</strong>
+                <span>Head of Innovation | National Director — Property Management<br>
+                D +64 9 309 6020 | M +64 21 66 1234 | will.alexander@bayleys.co.nz<br>
+                Bayleys Real Estate, 30 Gaunt Street, Auckland</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive Cost Calculator
+        const termSlider = document.getElementById('termSlider');
+        const teamSlider = document.getElementById('teamSlider');
+        const termValue = document.getElementById('termValue');
+        const teamValue = document.getElementById('teamValue');
+
+        function updateCalc() {
+            const years = parseInt(termSlider.value);
+            const team = parseInt(teamSlider.value);
+            termValue.textContent = years + ' years';
+            teamValue.textContent = team + ' staff';
+
+            const costs = [143360, 138900, 117600];
+            const cpi = 1.025;
+
+            let totals = costs.map(c => {
+                let total = 0;
+                for (let i = 0; i < years; i++) total += c * Math.pow(cpi, i);
+                return Math.round(total);
+            });
+
+            const perPerson = totals.map(t => Math.round(t / team / years));
+
+            const els = [
+                document.getElementById('calc1'),
+                document.getElementById('calc2'),
+                document.getElementById('calc3')
+            ];
+
+            totals.forEach((t, i) => {
+                els[i].textContent = '$' + t.toLocaleString();
+                els[i].parentElement.querySelector('small').textContent = '$' + perPerson[i].toLocaleString() + ' per person p.a.';
+            });
+        }
+
+        termSlider.addEventListener('input', updateCalc);
+        teamSlider.addEventListener('input', updateCalc);
+
+        // Sticky nav active state
+        const sections = document.querySelectorAll('.section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => {
+                if (window.scrollY >= s.offsetTop - 100) current = s.id;
+            });
+            navLinks.forEach(l => {
+                l.classList.remove('active');
+                if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

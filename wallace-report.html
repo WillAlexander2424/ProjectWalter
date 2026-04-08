@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallace Matching Report — 33 Crummer Road | Bayleys</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{--dark:#0a0f1a;--blue:#2563eb;--blue2:#3b82f6;--green:#059669;--gold:#d4a853;--text:#2d3748;--text2:#64748b;--text3:#94a3b8;--white:#fff;--cream:#faf8f5;--border:#e2e8f0}
+        html{font-size:15px;scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;color:var(--text);background:var(--cream);-webkit-font-smoothing:antialiased}
+
+        .hero{background:linear-gradient(135deg,#0f1b3d 0%,#1a3a6b 50%,#2563eb 100%);color:white;padding:64px 0 48px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;top:-40%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 70%);border-radius:50%}
+        .hero-inner{max-width:1100px;margin:0 auto;padding:0 48px;position:relative;z-index:1}
+        .hero-brand{display:flex;align-items:center;gap:12px;margin-bottom:36px}
+        .hero-brand img{height:22px;opacity:0.7}
+        .hero-brand span{opacity:0.4;font-size:13px}
+        .hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px}
+        .hero h1{font-size:36px;font-weight:800;letter-spacing:-0.5px;margin-bottom:10px}
+        .hero-sub{font-size:16px;color:rgba(255,255,255,0.6);max-width:550px;line-height:1.6;margin-bottom:32px}
+        .hero-stats{display:flex;gap:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)}
+        .hero-stat span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.35)}
+        .hero-stat strong{font-size:22px;font-weight:800}
+
+        .nav{position:sticky;top:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100}
+        .nav-inner{max-width:1100px;margin:0 auto;padding:0 48px;display:flex;align-items:center;gap:24px}
+        .nav a{padding:13px 0;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;border-bottom:2px solid transparent}
+        .nav a:hover,.nav a.active{color:var(--dark);border-bottom-color:var(--dark)}
+
+        .section{max-width:1100px;margin:0 auto;padding:56px 48px}
+        .section-eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+        .section-title{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px}
+        .section-desc{font-size:15px;color:var(--text2);max-width:600px;line-height:1.7;margin-bottom:36px}
+        .divider{height:1px;background:var(--border);max-width:1100px;margin:0 auto}
+
+        .match-full{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px;transition:all 0.2s}
+        .match-full:hover{box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+        .match-full-header{padding:24px 28px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #f1f5f9}
+        .match-full-header h3{font-size:18px;font-weight:650;margin-bottom:2px}
+        .match-full-header p{font-size:13px;color:var(--text2)}
+        .score-badge{padding:6px 16px;border-radius:24px;font-size:14px;font-weight:700}
+        .score-badge.high{background:#ecfdf5;color:#059669}
+        .score-badge.medium{background:#eff6ff;color:#2563eb}
+        .match-full-body{padding:24px 28px}
+        .match-details{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+        .md{padding:12px 14px;background:#f8fafc;border-radius:8px}
+        .md span{display:block;font-size:11px;color:var(--text3)}
+        .md strong{font-size:14px;font-weight:600}
+        .match-insight{padding:14px 18px;background:#fffbeb;border-radius:8px;border-left:3px solid var(--gold);font-size:13px;color:var(--text);line-height:1.6;margin-bottom:16px}
+        .match-insight strong{display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:var(--gold)}
+        .match-agency{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-size:13px}
+        .agency-tag{padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600}
+        .agency-tag.bayleys{background:#1a2744;color:white}
+        .agency-tag.external{background:#fef3c7;color:#92400e}
+        .agency-tag.signal{background:#ecfdf5;color:#059669}
+        .match-actions{display:flex;gap:8px;margin-top:16px}
+        .match-btn{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;border:none;text-decoration:none;transition:all 0.2s}
+        .match-btn.primary{background:var(--dark);color:white}
+        .match-btn.secondary{background:white;color:var(--text);border:1px solid var(--border)}
+        .match-btn:hover{opacity:0.9}
+
+        .compat-bar{display:flex;align-items:center;gap:10px;margin:8px 0}
+        .compat-track{flex:1;height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden}
+        .compat-fill{height:100%;border-radius:4px}
+        .compat-fill.high{background:linear-gradient(90deg,#10b981,#059669)}
+        .compat-fill.medium{background:linear-gradient(90deg,#60a5fa,#2563eb)}
+        .compat-label{font-size:12px;color:var(--text2);width:80px;flex-shrink:0}
+        .compat-value{font-size:12px;font-weight:600;width:35px}
+
+        .footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:40px 48px;text-align:center;font-size:12px}
+        .footer img{height:20px;opacity:0.5;margin-bottom:10px}
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-inner">
+            <div class="hero-brand">
+                <img src="bayleys-logo.png" alt="Bayleys">
+                <span>|</span>
+                <span style="opacity:0.7;font-size:13px">Wallace — Commercial Matchmaker</span>
+            </div>
+            <div class="hero-eyebrow">Opportunity Matching Report</div>
+            <h1>Investor & Tenant Matches<br>for 33 Crummer Road</h1>
+            <p class="hero-sub">Wallace has scanned the entire market — Bayleys, Colliers, CBRE, JLL and direct enquiries — to find the highest-compatibility opportunities for your property.</p>
+            <div class="hero-stats">
+                <div class="hero-stat"><span>Matches found</span><strong>8</strong></div>
+                <div class="hero-stat"><span>High compatibility</span><strong>5</strong></div>
+                <div class="hero-stat"><span>Conjunctional</span><strong>2</strong></div>
+                <div class="hero-stat"><span>New signals</span><strong>1</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav"><div class="nav-inner">
+        <a href="#investors" class="active">Investor Opportunities</a>
+        <a href="#tenants">Tenant Matches</a>
+        <a href="#signals">New Signals</a>
+    </div></nav>
+
+    <!-- Investors -->
+    <div class="section" id="investors">
+        <div class="section-eyebrow">Investor Opportunities</div>
+        <div class="section-title">Comparable sales & investment benchmarks</div>
+        <p class="section-desc">Recent and current transactions that benchmark your property's value and demonstrate returns for potential investors.</p>
+
+        <div class="match-full">
+            <div class="match-full-header">
+                <div><h3>28 Monmouth Street, Grey Lynn</h3><p>Character office · Sold Feb 2026 · Direct comparable</p></div>
+                <span class="score-badge high">94%</span>
+            </div>
+            <div class="match-full-body">
+                <div class="match-details">
+                    <div class="md"><span>Sale Price</span><strong>$2.65M</strong></div>
+                    <div class="md"><span>Area</span><strong>220 sqm</strong></div>
+                    <div class="md"><span>$/sqm (capital)</span><strong>$12,045</strong></div>
+                    <div class="md"><span>Net Yield</span><strong>5.2%</strong></div>
+                </div>
+                <div class="match-insight">
+                    <strong>Wallace insight</strong>
+                    At $12,045/sqm capital value, this sets a strong benchmark for 33 Crummer Rd (306 sqm). Applying this rate to your property suggests a capital value of <strong>$3.69M</strong> post-improvement — significantly above the current $2.1M CV. Even at a conservative discount, this validates the value-add opportunity Molloy has identified.
+                </div>
+                <div class="match-agency"><span class="agency-tag bayleys">Bayleys</span> Sold by Matt Bayley · Direct relationship — ideal for valuation discussion</div>
+            </div>
+        </div>
+
+        <div class="match-full">
+            <div class="match-full-header">
+                <div><h3>12 Pollen Street, Grey Lynn</h3><p>Converted warehouse office · Currently for sale</p></div>
+                <span class="score-badge high">89%</span>
+            </div>
+            <div class="match-full-body">
+                <div class="match-details">
+                    <div class="md"><span>Asking</span><strong>$2.4M</strong></div>
+                    <div class="md"><span>Area</span><strong>290 sqm</strong></div>
+                    <div class="md"><span>Net Yield</span><strong>5.6%</strong></div>
+                    <div class="md"><span>Tenant</span><strong>Narrative Digital (3+3)</strong></div>
+                </div>
+                <div class="match-insight">
+                    <strong>Wallace insight</strong>
+                    Listed with Colliers but has been on market for 62 days. Price may be negotiable. This presents a conjunctional opportunity — introduce qualified Bayleys investors to the listing and earn a shared fee. The property also provides a direct rental rate comparison for 33 Crummer Rd ($328/sqm vs your $302/sqm).
+                </div>
+                <div class="match-agency"><span class="agency-tag external">Colliers</span> Listed by Colliers International · Conjunctional opportunity available</div>
+                <div class="match-actions">
+                    <button class="match-btn primary">Contact Colliers for conjunctional</button>
+                    <button class="match-btn secondary">Share with investor database</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="match-full">
+            <div class="match-full-header">
+                <div><h3>8 Williamson Avenue, Grey Lynn</h3><p>Modern office · For sale by deadline</p></div>
+                <span class="score-badge medium">82%</span>
+            </div>
+            <div class="match-full-body">
+                <div class="match-details">
+                    <div class="md"><span>Guide</span><strong>$3.1M+</strong></div>
+                    <div class="md"><span>Area</span><strong>340 sqm</strong></div>
+                    <div class="md"><span>Net Yield</span><strong>4.8%</strong></div>
+                    <div class="md"><span>Tenant</span><strong>Good Good Ltd (3+3)</strong></div>
+                </div>
+                <div class="match-insight">
+                    <strong>Wallace insight</strong>
+                    Premium asset showing where the top end of Grey Lynn sits. Useful for positioning 33 Crummer Rd's post-renovation value. Listed with JLL — another conjunctional opportunity for Bayleys investors.
+                </div>
+                <div class="match-agency"><span class="agency-tag external">JLL</span> Listed by JLL · Deadline sale closing 28 April 2026</div>
+                <div class="match-actions">
+                    <button class="match-btn primary">Contact JLL for conjunctional</button>
+                    <button class="match-btn secondary">Alert Bayleys investors</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Tenants -->
+    <div class="section" id="tenants">
+        <div class="section-eyebrow">Prospective Tenants</div>
+        <div class="section-title">Businesses actively seeking space</div>
+        <p class="section-desc">Matched by location preference, size requirement, budget, and industry fit. These businesses are looking for space that matches what 33 Crummer Rd offers.</p>
+
+        <div class="match-full">
+            <div class="match-full-header">
+                <div><h3>Tidal Creative Ltd</h3><p>Branding & design agency · 18 staff · Growing</p></div>
+                <span class="score-badge high">92%</span>
+            </div>
+            <div class="match-full-body">
+                <div class="match-details">
+                    <div class="md"><span>Requirement</span><strong>250-350 sqm</strong></div>
+                    <div class="md"><span>Budget</span><strong>$300-350/sqm</strong></div>
+                    <div class="md"><span>Preferred</span><strong>Grey Lynn / Ponsonby</strong></div>
+                    <div class="md"><span>Timeline</span><strong>Q1 2027</strong></div>
+                </div>
+                <h4 style="font-size:12px;font-weight:600;color:var(--text3);margin:12px 0 8px">Compatibility breakdown</h4>
+                <div class="compat-bar"><span class="compat-label">Size</span><div class="compat-track"><div class="compat-fill high" style="width:95%"></div></div><span class="compat-value">95%</span></div>
+                <div class="compat-bar"><span class="compat-label">Budget</span><div class="compat-track"><div class="compat-fill high" style="width:88%"></div></div><span class="compat-value">88%</span></div>
+                <div class="compat-bar"><span class="compat-label">Location</span><div class="compat-track"><div class="compat-fill high" style="width:98%"></div></div><span class="compat-value">98%</span></div>
+                <div class="compat-bar"><span class="compat-label">Industry</span><div class="compat-track"><div class="compat-fill high" style="width:90%"></div></div><span class="compat-value">90%</span></div>
+                <div class="compat-bar"><span class="compat-label">Timeline</span><div class="compat-track"><div class="compat-fill high" style="width:92%"></div></div><span class="compat-value">92%</span></div>
+                <div class="match-insight" style="margin-top:16px">
+                    <strong>Wallace insight</strong>
+                    Near-perfect match. Tidal Creative's lease at their current K Road premises expires Dec 2026 — they're actively looking. Their requirement aligns exactly with 33 Crummer Rd post-renovation. At their budget ceiling ($350/sqm), a modernised 33 Crummer Rd could generate $107,100 p.a. — a 16% uplift on current rent.
+                </div>
+                <div class="match-agency"><span class="agency-tag bayleys">Bayleys</span> Active enquiry in Bayleys database · Contact: Sarah Mitchell (Leasing)</div>
+                <div class="match-actions">
+                    <button class="match-btn primary">Connect with Tidal Creative</button>
+                    <button class="match-btn secondary">Schedule introduction</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="match-full">
+            <div class="match-full-header">
+                <div><h3>Clearpoint Advisory Group</h3><p>Financial advisory · 12 staff · Relocating from CBD</p></div>
+                <span class="score-badge medium">81%</span>
+            </div>
+            <div class="match-full-body">
+                <div class="match-details">
+                    <div class="md"><span>Requirement</span><strong>200-300 sqm</strong></div>
+                    <div class="md"><span>Budget</span><strong>$280-320/sqm</strong></div>
+                    <div class="md"><span>Preferred</span><strong>CBD fringe / Grey Lynn</strong></div>
+                    <div class="md"><span>Timeline</span><strong>Mid 2027</strong></div>
+                </div>
+                <div class="match-insight">
+                    <strong>Wallace insight</strong>
+                    Currently listed with CBRE as a tenant requirement. Their budget sits at the lower end but still within range for 33 Crummer Rd at current rates ($302/sqm). Conjunctional opportunity — approach CBRE to introduce the property. Financial advisory firms typically sign longer leases (5+3 avg), which would improve the property's WALE.
+                </div>
+                <div class="match-agency"><span class="agency-tag external">CBRE</span> Tenant requirement listing · Conjunctional fee opportunity</div>
+                <div class="match-actions">
+                    <button class="match-btn primary">Contact CBRE for conjunctional</button>
+                    <button class="match-btn secondary">Add to watchlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Signals -->
+    <div class="section" id="signals">
+        <div class="section-eyebrow">New Signals</div>
+        <div class="section-title">Emerging opportunities detected by Walter</div>
+        <p class="section-desc">These leads were identified through ICP activations, NZBN filings, Seek listings, and web reconnaissance — not yet on any agency's radar.</p>
+
+        <div class="match-full">
+            <div class="match-full-header">
+                <div><h3>Kotui Health NZ Ltd</h3><p>Health-tech startup · Series A funded · 22 staff, projecting 40+</p></div>
+                <span class="score-badge medium">78%</span>
+            </div>
+            <div class="match-full-body">
+                <div class="match-details">
+                    <div class="md"><span>Requirement</span><strong>280-400 sqm (est.)</strong></div>
+                    <div class="md"><span>Budget</span><strong>$310-380/sqm (est.)</strong></div>
+                    <div class="md"><span>Signals</span><strong>ICP + 8 Seek listings</strong></div>
+                    <div class="md"><span>NZBN</span><strong>Active, filed on time</strong></div>
+                </div>
+                <div class="match-insight">
+                    <strong>Wallace insight</strong>
+                    This is a pure Walter lead — not listed with any agency. Kotui Health has 8 active Seek listings (including "Office Manager" and "Head of Operations" — strong expansion signals). Their current Parnell office ICP data shows increasing consumption, suggesting they're outgrowing the space. A proactive approach here could secure a premium tenant before they hit the open market.
+                </div>
+                <div class="match-agency"><span class="agency-tag signal">Walter Signal</span> Not listed with any agency — first-mover advantage</div>
+                <div class="match-actions">
+                    <button class="match-btn primary">Proactive outreach via Zara</button>
+                    <button class="match-btn secondary">Monitor for 30 days</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <img src="bayleys-logo.png" alt="Bayleys"><br>
+        Generated by Wallace — Bayleys' AI Commercial Matchmaker, powered by Walter Intelligence.<br>
+        Data sourced from Bayleys CRM, Colliers, CBRE, JLL, realestate.co.nz, NZBN, and ICP Registry.<br><br>
+        <strong style="color:rgba(255,255,255,0.7)">Will Alexander</strong> · Head of Innovation | Bayleys Real Estate · will.alexander@bayleys.co.nz
+    </div>
+</body>
+</html>
