@@ -1840,28 +1840,763 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Carlisle Rd Listing Deep Dive Modal ---
+    // ============ LISTING DEEP DIVE MODAL — data-driven for all 6 listings ============
     const carlisleModal = document.getElementById('carlisleModal');
     const carlisleClose = document.getElementById('carlisleClose');
-    const carlisleListingCard = document.getElementById('carlisleListingCard');
+
+    // Full listing data — each property has its own complete content set
+    const LISTING_DATA = {
+        carlisle: {
+            badge: 'Office · Investment',
+            badgeClass: 'office',
+            breadCity: 'North Shore',
+            breadType: 'Office Investment',
+            title: '170-174 Carlisle Road',
+            sub: 'Northcross, North Shore City, Auckland · Listing #1507246',
+            priceLabel: 'Method of sale',
+            priceValue: 'Deadline Sale',
+            priceSub: 'Closes 4:00 PM, 30 April 2026',
+            images: [
+                'carlisle-01.jpg','carlisle-02.jpg','carlisle-03.jpg','carlisle-04.jpg',
+                'carlisle-05.jpg','carlisle-06.jpg','carlisle-07.jpg','carlisle-08.jpg',
+                'carlisle-09.jpg','carlisle-10.jpg','carlisle-11.jpg','carlisle-12.jpg','carlisle-13.jpg'
+            ],
+            heroFallback: 'listing-carlisle.jpg',
+            metrics: [
+                ['Floor Area', '1,050', 'sqm'],
+                ['Land Area', '3,143', 'sqm'],
+                ['Net Income', '$509', 'k'],
+                ['Lease Term', '15', 'years'],
+                ['Rent Review', '2', '% p.a.'],
+                ['Zoning', 'Mixed', 'Housing Urban']
+            ],
+            overviewTitle: 'Investment Highlights',
+            overview: `<p class="cl-body-text">A rare long-WALE commercial investment offering passive income security with built-in growth. New 15-year lease commencing 1 February 2026 to <strong>Magic Garden Early Childhood Education</strong> &mdash; a well-established operator with strong financial covenant backed by bank guarantees.</p>
+                       <p class="cl-body-text">The substantial 3,143 sqm corner site provides significant land banking value under Mixed Housing Urban zoning, offering long-term development potential in addition to secure holding income.</p>`,
+            summaryTitle: 'Lease Summary',
+            summary: [
+                ['Tenant', 'Magic Garden Early Childhood Education'],
+                ['Lease Start', '1 February 2026'],
+                ['Term', '15 years'],
+                ['Annual Rent', '$509,600 + GST and outgoings'],
+                ['Rent Reviews', '2% annual fixed + 5-yearly market'],
+                ['Security', 'Bank guarantees in place'],
+                ['Rights of Renewal', 'Further terms available']
+            ],
+            agent: { initials: 'MN', name: 'Michael Nees', role: 'Licensee Salesperson', office: 'Bayleys North Shore C&I', agency: 'Bayleys', phone: '021 182 3085' },
+            locStats: [
+                ['Schools within 1km', '7'],
+                ['Residential within 500m', '480+'],
+                ['Median household income', '$118k'],
+                ['ECE demand (waitlist)', 'High']
+            ],
+            aiScanText: 'Visual analysis complete · 13 images processed',
+            aiDesc: "Walter's computer vision model analysed every listing image to extract property attributes, condition, and fit-out characteristics. These insights power the Wallace matching engine below.",
+            aiFeatures: [
+                'Purpose-built childcare fit-out with nature-inspired design',
+                'Professional outdoor play area with artificial turf, pergolas, shade sails',
+                'Sandpit, garden beds, nature play structures — premium ECE spec',
+                'High-ceiling interiors with abundant natural light',
+                'Modern commercial kitchen facilities',
+                'Dedicated on-site parking — est. 25+ spaces (aerial count)',
+                'Full perimeter fencing and secure entry points',
+                'Corner site with dual street frontage'
+            ],
+            aiScores: [
+                ['Interior finish', 0.88],
+                ['Exterior condition', 0.82],
+                ['Outdoor amenity', 0.94],
+                ['Fit-out specification', 0.91],
+                ['Overall PCI', 0.89, 'highlight']
+            ],
+            aiSummary: "This is a <strong>top-tier ECE asset</strong> &mdash; the visual analysis places it in the 95th percentile of North Shore childcare properties. Combined with the 15-year lease and bank guarantees, this represents one of the lowest-risk commercial investments currently in the Auckland market. The 3,143 sqm landholding adds substantial underlying asset value that isn't fully reflected in the yield-based pricing.",
+            wallaceTitle: 'Wallace has matched 6 prospects from the Bayleys network',
+            wallaceDesc: 'Based on visual analysis, lease structure, and database criteria. Even though this is a Bayleys listing, Wallace continuously scans your entire contact network to find the right buyer.',
+            wallaceCta: 'Send all 6 intros via Zara',
+            wallaceHigh: [
+                { score: 96, name: 'Harbour Capital Partners', tag: 'Passive investor · Auckland · Syndicate', criteria: ['Long WALE mandate (10+ yrs)','$7-12M budget','ECE sector preference','North Shore focus'], contact: 'David Chen · 021 XXX 8421' },
+                { score: 92, name: 'Meridian Family Office', tag: 'HNWI · Passive income · Healthcare/ECE', criteria: ['Commercial yield 5-6%','Bank guarantee backing','Bayleys Reserve Private client','Active in last 30 days'], contact: 'Via Matt Bayley' },
+                { score: 88, name: 'Tauranga Property Trust', tag: 'Diversifying portfolio · Auckland entry', criteria: ['Long-income focus','Under-leveraged ($15M cash)','Mixed-use zoning preferred','Seeking first AKL asset'], contact: 'Sarah Thompson · 027 XXX 5512' }
+            ],
+            wallaceLow: [
+                { score: 78, name: 'Ngā Puna Wai Iwi Trust', tag: 'Iwi investment arm · Social + commercial return', criteria: ['ECE aligns with whānau outcomes','Long-term hold strategy'], cons: ['First commercial purchase'], contact: 'Via Jamie Nuku' },
+                { score: 73, name: 'Pacific Childcare Group Ltd', tag: 'Existing ECE operator · Vertical integration', criteria: ['Sector expertise','Owner-operator exit preferred'], cons: ["Tenanted doesn't suit owner-occupy"], contact: 'Via Sunil Bhana' },
+                { score: 68, name: 'North Shore Developer Consortium', tag: 'Land-bank play · Mixed Housing Urban zoning', criteria: ['3,143 sqm developable site','Long lease provides holding income'], cons: ['Long-term play (15 yr lease)'], contact: 'Walter signal · Not yet contacted' }
+            ],
+            molloyDesc: "Based on visual analysis, zoning, and comparable sales, Molloy has identified 4 pathways to enhance the asset's long-term value beyond the current yield play.",
+            molloyCards: [
+                { title: 'Residential development upside', body: 'The 3,143 sqm site under Mixed Housing Urban zoning supports up to <strong>18 dwellings</strong> or a 3-storey townhouse development at end-of-lease. Current ECE income effectively funds the land bank.', impactLabel: 'Est. residential land value', impactValue: '$3.2M – $4.1M' },
+                { title: 'Rent-to-market opportunity (Year 5)', body: 'Current rent of $485/sqm is slightly below the North Shore prime ECE benchmark of <strong>$510–$540/sqm</strong>. The 5-yearly market review in 2031 presents a structured uplift opportunity.', impactLabel: 'Potential rental uplift', impactValue: '+$26k – $58k p.a.' },
+                { title: 'Solar + EV infrastructure', body: 'The large north-facing roofline and open car park area suit solar PV + EV charging installation. Can be offered as a tenant incentive or sub-let to a third-party operator for additional income.', impactLabel: 'Capital cost vs annual return', impactValue: '$180k / ~$22k p.a.' },
+                { title: 'Seismic strengthening sign-off', body: 'Visual analysis suggests the building is modern construction. A formal IEP assessment confirming 100% NBS would unlock <strong>premium institutional buyers</strong> (KiwiSaver funds, corporate investment trusts) who require 100% NBS minimum.', impactLabel: 'Capital value uplift from buyer pool expansion', impactValue: '+5% – 8%' }
+            ],
+            molloySummary: [
+                ['Current asking (implied)', '~$8.5M'],
+                ['Post value-add projection', '$9.8M – $11.2M'],
+                ['Total upside opportunity', '+$1.3M – $2.7M', 'highlight']
+            ]
+        },
+
+        parnell: {
+            badge: 'Retail · For Lease',
+            badgeClass: 'retail',
+            breadCity: 'Auckland Central',
+            breadType: 'Retail Lease',
+            title: '135 Parnell Road',
+            sub: 'Parnell, Auckland · Listing #67033709',
+            priceLabel: 'Lease type',
+            priceValue: 'By Negotiation',
+            priceSub: 'Available immediately · Vacant possession',
+            images: ['listing-parnell.jpg'],
+            heroFallback: 'listing-parnell.jpg',
+            metrics: [
+                ['Floor Area', '208', 'sqm'],
+                ['Frontage', 'Wide', 'main road'],
+                ['Car Parks', '4', 'stacked'],
+                ['Position', 'Ground', 'floor'],
+                ['Use', 'Retail /', 'Hospitality'],
+                ['Zoning', 'Business', 'Mixed Use']
+            ],
+            overviewTitle: 'Leasing Highlights',
+            overview: `<p class="cl-body-text">Prime ground-floor retail space in the heart of Parnell Village &mdash; one of Auckland's most affluent and high-foot-traffic commercial precincts. Excellent main road frontage on Parnell Road with established hospitality and retail neighbours including <strong>Smashed It, Tank, Papa Viet Eatery, Toshi Sushi, The Healthy Habit, Portofino and Nottinghill</strong>.</p>
+                       <p class="cl-body-text">208 sqm of versatile space ideal for a hospitality operator, premium retailer or boutique service business. Includes 4 stacked car parks &mdash; rare for Parnell Village &mdash; with bus and train links and major state highway access immediately adjacent.</p>`,
+            summaryTitle: 'Lease Terms',
+            summary: [
+                ['Floor Area', '208 sqm'],
+                ['Type', 'Ground floor retail premises'],
+                ['Rent', 'Negotiable — contact agent'],
+                ['Lease Term', 'Negotiable'],
+                ['Possession', 'Vacant — available now'],
+                ['Outgoings', 'Tenant share + GST'],
+                ['Listing Source', 'Colliers New Zealand']
+            ],
+            agent: { initials: 'DM', name: 'Danielle McLaughlin', role: 'Commercial Lease Specialist', office: 'Colliers New Zealand', agency: 'Colliers', phone: '021 029 91107' },
+            locStats: [
+                ['Daily foot traffic (Parnell Rd)', '8,400'],
+                ['Cafés / restaurants within 200m', '24+'],
+                ['Median household income', '$152k'],
+                ['Walk score', '92 / 100']
+            ],
+            aiScanText: 'Visual + locational analysis complete',
+            aiDesc: "Walter's vision model analysed the listing imagery and combined it with Parnell Village street-level data, foot-traffic counts, and the 24+ surrounding F&B operators to score the leasability of this premises.",
+            aiFeatures: [
+                'Wide frontage with double-shopfront glazing — high visibility',
+                'High-stud interior with structural columns — open floor plate',
+                'Existing kitchen rough-in suggests prior F&B fit-out',
+                'Rear loading access via service lane',
+                'Heritage-style awning typical of Parnell precinct',
+                'Adjacent to high-performing Smashed It and Tank tenancies',
+                '4 stacked car parks — rare retention asset for Parnell',
+                'Bus stops within 50m, Parnell train station 600m'
+            ],
+            aiScores: [
+                ['Foot traffic exposure', 0.94],
+                ['Frontage / visibility', 0.88],
+                ['Fit-out flexibility', 0.79],
+                ['F&B suitability', 0.85],
+                ['Overall leasability', 0.86, 'highlight']
+            ],
+            aiSummary: 'This is a <strong>top-decile Parnell Village retail premise</strong>. The wide frontage, evidence of prior F&B fit-out, and 4 included car parks make it well-suited for a hospitality operator. Walter rates this in the 88th percentile of Parnell retail vacancies over the last 24 months. Strong likelihood of leasing within 4-6 weeks if marketed to the right operator pool.',
+            wallaceTitle: 'Wallace has matched 5 tenant prospects',
+            wallaceDesc: 'Wallace cross-referenced this Parnell Village location with active tenant searches, growing F&B operators, and flagged retailers with expansion signals from the Bayleys CRM, LinkedIn hiring data, and OpenClaw business activity feeds.',
+            wallaceCta: 'Send all 5 tenant intros via Zara',
+            wallaceHigh: [
+                { score: 94, name: 'Bestie Café Group', tag: 'Boutique café operator · Expanding · 4 sites', criteria: ['Active Parnell search','Fit-out budget $200k+','Existing F&B fit-out preferred','High foot-traffic mandate'], contact: 'Olivia Park · 021 442 8801' },
+                { score: 89, name: 'Honest Burgers NZ', tag: 'UK chain entering NZ · 6-site Auckland rollout', criteria: ['Parnell shortlisted','Wants 180-250 sqm','Ground-floor priority','3-year fit-out amortisation'], contact: 'Via Anish Mehta' },
+                { score: 85, name: 'Major & Tom Boutique', tag: 'Premium fashion retailer · Ponsonby flagship', criteria: ['Second site planned','Wide-frontage requirement','Affluent catchment'], contact: 'Sasha Reed · 027 XXX 6633' }
+            ],
+            wallaceLow: [
+                { score: 76, name: 'Coco Espresso', tag: 'Specialty coffee · 3 cafés', criteria: ['Active Parnell scout','Strong covenant'], cons: ['Budget below market for premises'], contact: 'Via Wallace signal' },
+                { score: 68, name: 'Nordic Kitchen Concept', tag: 'Pop-up to permanent F&B', criteria: ['Parnell resonance','First permanent site'], cons: ['No previous F&B operator history','Bond may need to be increased'], contact: 'Walter signal · Cold' }
+            ],
+            molloyDesc: 'Molloy has identified 4 ways to maximise the rent and capital position of this premises through targeted leasing strategy.',
+            molloyCards: [
+                { title: 'Hospitality fit-out incentive package', body: 'Marketing as a turn-key F&B opportunity with a <strong>$60-80k landlord contribution</strong> to fit-out can attract a higher-quality covenant and command a 15-20% rent premium over a vanilla retail letting.', impactLabel: 'Net rent uplift over 6yr term', impactValue: '+$120k – $180k' },
+                { title: 'Bundle parking as a revenue line', body: 'The 4 stacked car parks can be offered separately at <strong>$40-50/wk per bay</strong> to nearby office tenants outside hospitality hours. Alternatively, charge them into the lease as an inclusion premium.', impactLabel: 'Additional annual income', impactValue: '+$8.3k – $10.4k p.a.' },
+                { title: 'Mezzanine / first-floor add-on', body: 'High stud interior allows for a structural mezzanine adding ~60 sqm of ancillary space. Particularly suits a café/restaurant needing back-of-house storage or office.', impactLabel: 'Capital cost vs uplift', impactValue: '$140k / +$32k rent p.a.' },
+                { title: 'Heritage awning + facade refresh', body: 'A coordinated facade refresh ($45-65k) lifts the leasability rating from 0.86 to ~0.93 and signals to operators that the landlord invests in their tenancies.', impactLabel: 'Lease-up time saving', impactValue: '~3 weeks faster' }
+            ],
+            molloySummary: [
+                ['Standard market rent (est.)', '$520 / sqm'],
+                ['Optimised rent target', '$595 – $640 / sqm'],
+                ['Total revenue uplift', '+$15.6k – $25k p.a.', 'highlight']
+            ]
+        },
+
+        henrytayler: {
+            badge: 'Retail · Investment',
+            badgeClass: 'retail',
+            breadCity: 'Rodney',
+            breadType: 'Retail Investment',
+            title: '2 & 12 Henry Tayler Rise',
+            sub: 'Wainui, Rodney, Auckland · Listing #67039188',
+            priceLabel: 'Method of sale',
+            priceValue: 'By Negotiation',
+            priceSub: '6.0% net yield · Two freehold titles',
+            images: ['listing-wainui.jpg'],
+            heroFallback: 'listing-wainui.jpg',
+            metrics: [
+                ['Combined Floor', '1,337', 'sqm'],
+                ['Combined Land', '1,798', 'sqm'],
+                ['Net Income', '$754', 'k p.a.'],
+                ['Yield', '6.0', '% net'],
+                ['Tenants', '14', 'in total'],
+                ['Zoning', 'Local', 'Centre']
+            ],
+            overviewTitle: 'Investment Highlights',
+            overview: `<p class="cl-body-text">Two fully-leased freehold neighbourhood retail investments on adjacent prominent corner sites directly opposite Waterloo Reserve. Combined annual income of <strong>$754,903 p.a. + GST</strong> from 14 essential-services tenants including <strong>Juno Café, Pizza Hut, Superette, Ray White, Fulton Hogan</strong> and others.</p>
+                       <p class="cl-body-text">Located in the Milldale growth corridor, with the local catchment forecasted to reach 15,000+ residents and 4,000+ dwellings on completion. Mix of cash bonds and bank guarantees, fixed annual or CPI-linked rent reviews. High-quality development by Broadway Property Group.</p>`,
+            summaryTitle: 'Investment Summary',
+            summary: [
+                ['Sites', '2 & 12 Henry Tayler Rise (separate titles)'],
+                ['Combined Floor Area', '1,337 sqm (819 + 518)'],
+                ['Combined Land Area', '1,798 sqm (994 + 804)'],
+                ['Total Tenants', '14 (8 + 6)'],
+                ['Annual Income', '$754,903 + GST'],
+                ['Yield', '6.0% net'],
+                ['Lease Security', 'Cash bonds + bank guarantees'],
+                ['Rent Reviews', 'Fixed annual or CPI-linked']
+            ],
+            agent: { initials: 'SC', name: 'Shoneet Chand', role: 'Licensee Salesperson', office: 'Colliers New Zealand', agency: 'Colliers', phone: '021 400 765' },
+            locStats: [
+                ['Forecast catchment population', '15,000+'],
+                ['Forecast dwellings', '4,000+'],
+                ['Distance to Waterloo Reserve', '0m (opposite)'],
+                ['Tenancy occupancy', '100%']
+            ],
+            aiScanText: 'Visual + tenancy mix analysis complete',
+            aiDesc: "Walter's models analysed both buildings together with the surrounding Milldale growth corridor demographics to score this as a defensive neighbourhood retail income asset.",
+            aiFeatures: [
+                'Two adjacent corner sites with dual street frontage',
+                'Modern build by Broadway Property Group (2021)',
+                'Prominent positioning opposite reserve',
+                'Essential-services tenant mix (food, services, real estate)',
+                'Generous on-site parking across both sites',
+                'Anchor tenants: Juno Café, Pizza Hut, Superette',
+                'High-traffic intersection with good sightlines',
+                'Within Milldale master-planned community'
+            ],
+            aiScores: [
+                ['Tenant covenant strength', 0.86],
+                ['Location resilience', 0.92],
+                ['Lease length distribution', 0.78],
+                ['Building condition (modern build)', 0.95],
+                ['Overall PCI', 0.88, 'highlight']
+            ],
+            aiSummary: 'This is a <strong>defensive neighbourhood retail investment</strong> in one of Rodney\'s fastest-growing master-planned communities. The combination of essential-services tenant mix, modern build, and forecast 4,000+ dwellings nearby gives it strong income resilience. Walter rates the asset class in the 90th percentile for syndicated buyers and family offices targeting $10-15M passive investments.',
+            wallaceTitle: 'Wallace has matched 6 buyer prospects',
+            wallaceDesc: 'Wallace identified buyers actively searching for sub-$15M passive neighbourhood retail with strong tenant covenants and growing demographic catchments.',
+            wallaceCta: 'Send all 6 intros via Zara',
+            wallaceHigh: [
+                { score: 95, name: 'Northland Syndicate Partners', tag: 'Passive investor · Sub-$15M tickets · Yield-driven', criteria: ['Active retail mandate','6%+ yield target','Multi-tenant preferred','Auckland fringe focus'], contact: 'Andrew Carmichael · 021 XXX 9912' },
+                { score: 91, name: 'Oyster Property Group', tag: 'Property fund manager · Diversified retail', criteria: ['Looking for Rodney exposure','Expansion phase','Buys $10-25M','Modern build preferred'], contact: 'Via Mark Schiele' },
+                { score: 87, name: 'Maitland Family Office', tag: 'HNWI · Generational hold strategy', criteria: ['Defensive income preference','Essential-services tenants','Dual title appeal','15-20yr horizon'], contact: 'Sarah Maitland · 027 XXX 4422' }
+            ],
+            wallaceLow: [
+                { score: 79, name: 'Augusta Capital', tag: 'Listed property fund · Retail subsection', criteria: ['Auckland fringe interest','Yield mandate'], cons: ['Typically buys $20M+'], contact: 'Via Mark Francis' },
+                { score: 74, name: 'PMG Generation Fund', tag: 'Diversified syndicate', criteria: ['Active retail buyer','Growth corridor focus'], cons: ['Currently fully deployed'], contact: 'Via Daniel Lem' },
+                { score: 69, name: 'Hong Kong Family Office', tag: 'Offshore HNWI · OIA approval needed', criteria: ['Strong AKL appetite','Yield 6%+ matches mandate'], cons: ['OIA process adds 60-90 days'], contact: 'Walter signal · OIA flagged' }
+            ],
+            molloyDesc: 'Molloy has identified 4 value-add pathways to take this from a 6.0% passive yield play to a 6.8-7.4% optimised position over the next 24 months.',
+            molloyCards: [
+                { title: 'Lease re-gear: extend WALE on top 4 tenants', body: 'Approach <strong>Juno Café, Pizza Hut, Superette and Ray White</strong> with extension proposals 6 months before their first review. Locking in 5-year extensions adds significant capital value via WALE expansion.', impactLabel: 'WALE uplift impact on cap rate', impactValue: '~25 bps tightening' },
+                { title: 'Single-title consolidation', body: 'Two separate freehold titles add legal complexity for buyers. Consolidating into a single title before sale (or marketing as a parcel) appeals to a wider institutional buyer pool.', impactLabel: 'Buyer pool expansion', impactValue: '+30% interest est.' },
+                { title: 'Solar PV + tenant rebill', body: 'Modern build with large north-facing rooflines suits a 80-100kW solar installation. Sub-meter and rebill tenants at retail rate &mdash; net positive cash flow plus ESG marketing edge.', impactLabel: 'Annual net income', impactValue: '+$18-24k p.a.' },
+                { title: 'Outdoor seating activation (Juno + Pizza Hut)', body: 'Convert footpath area opposite the reserve into licensed outdoor seating for the F&B tenants. Increases their rent capacity at next review by 8-12%.', impactLabel: 'Rent uplift at next review', impactValue: '+$12-18k p.a.' }
+            ],
+            molloySummary: [
+                ['Current net income', '$754,903'],
+                ['Optimised position (24 months)', '$795k – $815k'],
+                ['Implied capital value uplift', '+$700k – $1.0M', 'highlight']
+            ]
+        },
+
+        jervois: {
+            badge: 'Development · Tender',
+            badgeClass: 'retail',
+            breadCity: 'Auckland Central',
+            breadType: 'Development Site',
+            title: '10-12 Jervois Road',
+            sub: 'Ponsonby, Auckland · Listing #1780211',
+            priceLabel: 'Method of sale',
+            priceValue: 'Tender',
+            priceSub: 'Resource consent granted · Freehold development site',
+            images: ['listing-jervois.jpg'],
+            heroFallback: 'listing-jervois.jpg',
+            metrics: [
+                ['Existing Floor', '307', 'sqm'],
+                ['Land Area', '847', 'sqm'],
+                ['Consent', '5', 'storey'],
+                ['Apartments', '15', 'units'],
+                ['Retail', '4', 'units'],
+                ['Position', 'Three', 'Lamps corner']
+            ],
+            overviewTitle: 'Development Highlights',
+            overview: `<p class="cl-body-text">A rare freehold development site in one of central Ponsonby's last remaining sizeable holdings. High-profile corner position within the popular <strong>Three Lamps precinct</strong> with extensive frontages to both Jervois Road and Redmond Street.</p>
+                       <p class="cl-body-text">Resource Consent has been granted for the construction of a <strong>five-storey apartment building with basement car parking</strong>. The ground floor comprises 4 retail units with 15 apartment units across the upper levels. Strategically centered amongst an array of upmarket cafés, bars and retail with a surrounding population that is both established and affluent.</p>`,
+            summaryTitle: 'Site & Consent Summary',
+            summary: [
+                ['Site Area', '847 sqm freehold'],
+                ['Existing Building', '307 sqm (vacant possession)'],
+                ['Consent Status', 'Granted'],
+                ['Consent Type', '5-storey mixed-use + basement parking'],
+                ['Approved Apartments', '15 units'],
+                ['Approved Retail', '4 ground-floor units'],
+                ['Sale Method', 'Tender'],
+                ['Holding Position', 'Three Lamps corner']
+            ],
+            agent: { initials: 'JM', name: 'James Macready', role: 'Director, Commercial', office: 'Bayleys Auckland Central', agency: 'Bayleys', phone: '021 415 091' },
+            locStats: [
+                ['Three Lamps daily traffic', '14,200 vehicles'],
+                ['Cafés / bars within 300m', '38'],
+                ['Median household income (Ponsonby)', '$148k'],
+                ['Apartment median sale (300m)', '$1.45M']
+            ],
+            aiScanText: 'Visual + zoning + comparable site analysis complete',
+            aiDesc: "Walter's models analysed the consented scheme drawings, the comparable Ponsonby development sales, and apartment absorption rates in the surrounding 500m to value this development opportunity.",
+            aiFeatures: [
+                'Corner site with dual frontage (Jervois Rd + Redmond St)',
+                'High-profile Three Lamps positioning',
+                'Existing 1920s commercial villa — character demolition pathway clear',
+                'Resource consent granted — 4-6 month time saving for buyer',
+                'Five-storey scheme maximises height envelope',
+                'Basement car parking = 16-18 spaces',
+                'Walking distance to Ponsonby Road retail strip',
+                'Positioned amongst upmarket F&B operators'
+            ],
+            aiScores: [
+                ['Site geometry / efficiency', 0.91],
+                ['Location desirability', 0.96],
+                ['Consent value (time saving)', 0.88],
+                ['Apartment absorption potential', 0.89],
+                ['Overall development score', 0.91, 'highlight']
+            ],
+            aiSummary: 'This is a <strong>top-tier Ponsonby development opportunity</strong>. The combination of the consented scheme, the corner site, and the Three Lamps location places it in the 95th percentile of central Auckland development sites. Strong matches across local boutique developers and value-add residential funds. Apartment yield in the area supports an end-value of $22-26M based on consented unit count.',
+            wallaceTitle: 'Wallace has matched 5 developer prospects',
+            wallaceDesc: 'Wallace cross-referenced active boutique developer searches, value-add residential funds, and known Ponsonby specialists across the Bayleys network.',
+            wallaceCta: 'Send all 5 developer intros via Zara',
+            wallaceHigh: [
+                { score: 96, name: 'Williams Corporation', tag: 'Boutique residential developer · Multi-site', criteria: ['Active Ponsonby search','Consent-ready preference','15-25 unit sweet spot','$8-12M land budget'], contact: 'Matthew Horncastle · 021 XXX 7711' },
+                { score: 92, name: 'Conrad Properties', tag: 'Mixed-use specialist · Consent expertise', criteria: ['Three Lamps focus','5-storey scheme expertise','Strong banking position'], contact: 'Via Conrad Brown' },
+                { score: 88, name: 'Wallace Development Fund', tag: 'Closed-end residential development fund', criteria: ['Currently raising new fund','Consent-derisked sites only','15-20 unit profile fit'], contact: 'Sarah Wallace · 027 XXX 3344' }
+            ],
+            wallaceLow: [
+                { score: 78, name: 'Du Val Group', tag: 'BTR specialist · Ponsonby track record', criteria: ['Active development pipeline','Three Lamps area expertise'], cons: ['Currently focused on larger sites'], contact: 'Via Charlotte Connell' },
+                { score: 71, name: 'Singapore Family Office', tag: 'Offshore developer · OIA approval needed', criteria: ['NZ entry mandate','Premium AKL focus'], cons: ['OIA timeline risk','First NZ project'], contact: 'Walter signal · OIA flagged' }
+            ],
+            molloyDesc: 'Molloy has identified 4 ways to extract maximum value from this development site beyond the as-consented scheme.',
+            molloyCards: [
+                { title: 'Plan-change to 6-storey scheme', body: 'The Auckland Unitary Plan supports up to 6 storeys in this precinct subject to design controls. A variation to add <strong>3-4 additional apartments</strong> via a 6th storey could be lodged within 6 months at a cost of ~$120k consent fees.', impactLabel: 'End-value uplift', impactValue: '+$2.4M – $3.2M' },
+                { title: 'Pre-sell apartments off-the-plan', body: 'Ponsonby off-plan apartments are achieving <strong>$14,500 – $16,800/sqm</strong>. Pre-selling 50% before construction reduces banking margins and accelerates the project IRR significantly.', impactLabel: 'Equity reduction', impactValue: '~40% less capital required' },
+                { title: 'Premium retail tenancy positioning', body: 'The 4 retail units sit on a Three Lamps corner. Marketing to <strong>premium F&B operators</strong> (not chains) targets $700-850/sqm rents vs the $480-520/sqm assumed in the consent feasibility.', impactLabel: 'Annual retail rent uplift', impactValue: '+$95k – $130k p.a.' },
+                { title: 'Heritage facade retention pathway', body: 'Retaining and restoring the existing 1920s villa facade reduces objector risk, fast-tracks consent variations, and may unlock heritage incentives. Adds character that lifts apartment pricing by 4-7%.', impactLabel: 'Apartment pricing premium', impactValue: '+$880k – $1.5M' }
+            ],
+            molloySummary: [
+                ['Current land value (as consented)', '$8.2M – $9.4M'],
+                ['Optimised value-add pathway', '$11.0M – $13.8M'],
+                ['Total upside opportunity', '+$2.8M – $4.4M', 'highlight']
+            ]
+        },
+
+        dacre: {
+            badge: 'Office · CBD Fringe',
+            badgeClass: 'office',
+            breadCity: 'Auckland Central',
+            breadType: 'Office / Development',
+            title: '31-35 Dacre Street',
+            sub: 'Newton, Auckland · Listing #1780259',
+            priceLabel: 'Method of sale',
+            priceValue: 'By Negotiation',
+            priceSub: 'Last sold $7.4M · Mostly vacant possession',
+            images: ['listing-dacre.jpg'],
+            heroFallback: 'listing-dacre.jpg',
+            metrics: [
+                ['Floor Area', '1,533', 'sqm'],
+                ['Land Area', '912', 'sqm'],
+                ['Office (L1)', '870', 'sqm'],
+                ['Warehouse', '318', 'sqm'],
+                ['Height Limit', '35', 'metres'],
+                ['Zoning', 'City', 'Centre']
+            ],
+            overviewTitle: 'Site & Building Highlights',
+            overview: `<p class="cl-body-text">A two-level freehold standalone office/warehouse building with car parking on a 912 sqm landholding with wide road frontage. The building features <strong>870 sqm of contemporary first-floor office</strong> plus 318 sqm of warehousing &mdash; an extensively refurbished 1960s structure offering immediate occupier or holding-income utility.</p>
+                       <p class="cl-body-text">Zoned <strong>City Centre</strong>, enabling the most intensive development permitted under the Auckland Unitary Plan up to a height limit of 35 metres. Strategic CBD-fringe positioning a few hundred metres from the future Karangahape CRL station &mdash; expected to drive significant uplift in surrounding commercial property activity.</p>`,
+            summaryTitle: 'Property Summary',
+            summary: [
+                ['Building Type', 'Two-level office + warehouse'],
+                ['Total Floor Area', '1,533 sqm'],
+                ['First Floor Office', '870 sqm contemporary'],
+                ['Warehouse', '318 sqm'],
+                ['Land Area', '912 sqm freehold'],
+                ['Zoning', 'City Centre · 35m height'],
+                ['Last Sold', '$7.4M (mostly vacant)'],
+                ['Possession', 'Mostly vacant — owner occupier ready']
+            ],
+            agent: { initials: 'TR', name: 'Tonia Robertson', role: 'Director, Commercial', office: 'Bayleys Auckland Central', agency: 'Bayleys', phone: '021 466 094' },
+            locStats: [
+                ['Distance to K Rd CRL station', '~400m'],
+                ['CRL opening', '2026'],
+                ['Office vacancy (Newton/CBD fringe)', '6.8%'],
+                ['Average $/sqm (CBD fringe office)', '$385']
+            ],
+            aiScanText: 'Visual + zoning + CRL impact analysis complete',
+            aiDesc: "Walter's models analysed the building condition, the City Centre zoning envelope, and the Karangahape CRL station's projected uplift on surrounding sites to score this as a dual-use opportunity.",
+            aiFeatures: [
+                'Wide road frontage with strong sightlines',
+                'Contemporary first-floor office refurb (recently completed)',
+                'Original 1960s structural shell — sound condition',
+                'On-site car parking',
+                'Warehouse component allows mixed occupier use',
+                'Two-level configuration with separate access',
+                'Within walking distance of K Road CRL station',
+                'City Centre zoning unlocks 35m height envelope'
+            ],
+            aiScores: [
+                ['Office finish quality', 0.84],
+                ['Building structural integrity', 0.78],
+                ['Site development potential', 0.94],
+                ['CRL proximity impact', 0.92],
+                ['Overall opportunity score', 0.87, 'highlight']
+            ],
+            aiSummary: 'This is a <strong>dual-purpose CBD-fringe asset</strong>. In the short-term it offers an owner-occupier or income holder a refurbished office with warehousing &mdash; in the medium-term it presents a major development site one block from the Karangahape CRL station. Walter places it in the 92nd percentile of City Centre zoned sites for development optionality, with expected land value uplift of 12-18% over 24 months as CRL opens.',
+            wallaceTitle: 'Wallace has matched 5 buyer prospects across two strategies',
+            wallaceDesc: "Wallace identified two distinct buyer pools: owner-occupiers needing CBD-fringe office now, and developers/funds positioning ahead of the CRL station's opening.",
+            wallaceCta: 'Send all 5 intros via Zara',
+            wallaceHigh: [
+                { score: 94, name: 'Acme Architects Ltd', tag: 'Owner-occupier · Outgrowing K Rd lease', criteria: ['800-1,200 sqm requirement','CBD fringe priority','Owner-occupy budget $7-9M','Q3 occupation target'], contact: 'David Linton · 021 XXX 5566' },
+                { score: 90, name: 'Newcrest Property Fund', tag: 'Value-add development fund · CRL play', criteria: ['Active K Rd CRL search','Holding income required','3-5 year develop horizon','$6-10M land value mandate'], contact: 'Via Henry Cooper' },
+                { score: 86, name: 'Lockwood Industries Ltd', tag: 'ASX-listed firm · NZ HQ relocation', criteria: ['1,200-1,500 sqm need','Brand visibility important','Long-stay occupier'], contact: 'Sasha Bishop · 027 XXX 8800' }
+            ],
+            wallaceLow: [
+                { score: 78, name: 'CrL-Proximity Land Trust', tag: 'Land bank syndicate · CRL stations focus', criteria: ['Specifically targeting K Rd','Long horizon hold','Holding income tolerance'], cons: ['Slower decision-making'], contact: 'Via Walter signal' },
+                { score: 72, name: 'Korean Construction Group', tag: 'Offshore developer · NZ entry', criteria: ['Active AKL site search','Strong financial position'], cons: ['OIA process','First NZ project'], contact: 'Via Walter signal' }
+            ],
+            molloyDesc: 'Molloy has identified 4 value-add pathways across the dual office-occupier and development scenarios.',
+            molloyCards: [
+                { title: 'Lease + hold strategy', body: 'Lease the refurbished office at <strong>$420-450/sqm</strong> for a 3-year term with right to terminate for development. Generates ~$390k holding income while CRL completes and surrounding sites trade up.', impactLabel: '36-month holding income', impactValue: '$1.17M – $1.25M' },
+                { title: 'Resource consent application now', body: 'Lodging a resource consent for a <strong>9-storey mixed-use scheme</strong> (residential above podium retail) before CRL opens captures the development upside without exposure to construction. A consented site is worth 25-35% more.', impactLabel: 'Land value uplift on consent', impactValue: '+$1.8M – $2.6M' },
+                { title: 'Ground-floor warehouse → retail conversion', body: 'The 318 sqm warehouse can be reconfigured as <strong>2 retail units</strong> with frontage to Dacre Street. K Rd-style operators (specialty F&B, boutique fitness) will pay $550-620/sqm rents.', impactLabel: 'Annual rent uplift on warehouse area', impactValue: '+$80k – $115k p.a.' },
+                { title: 'CRL-station-opening sale window', body: 'The optimum sale window is <strong>6-12 months after CRL opens</strong>. Walter\'s models suggest sites within 500m of new CRL stations have historically appreciated 14-22% in the year following opening.', impactLabel: 'Capital value uplift (CRL effect)', impactValue: '+$1.0M – $1.6M' }
+            ],
+            molloySummary: [
+                ['Current asking (estimated)', '$8.5M – $9.2M'],
+                ['Post value-add + CRL opening', '$11.5M – $13.6M'],
+                ['Total upside opportunity', '+$3.0M – $4.4M', 'highlight']
+            ]
+        },
+
+        manukau: {
+            badge: 'Retail · Investment',
+            badgeClass: 'industrial',
+            breadCity: 'Franklin',
+            breadType: 'Retail Investment',
+            title: '162 Manukau Road',
+            sub: 'Pukekohe, Franklin · Listing #1906577',
+            priceLabel: 'Method of sale',
+            priceValue: 'By Negotiation',
+            priceSub: 'Fully tenanted · High-profile main road position',
+            images: ['listing-manukau.jpg'],
+            heroFallback: 'listing-manukau.jpg',
+            metrics: [
+                ['Floor Area', '389', 'sqm'],
+                ['Annual Income', '$55', 'k + GST'],
+                ['Tenancy', 'Fully', 'leased'],
+                ['Position', 'Main', 'road'],
+                ['Type', 'Retail', 'investment'],
+                ['Title', 'Free', 'hold']
+            ],
+            overviewTitle: 'Investment Highlights',
+            overview: `<p class="cl-body-text">A <strong>fully tenanted commercial investment</strong> in a high-profile position on Pukekohe's busiest road. 389 sqm of retail space returning <strong>$55,000 + GST</strong> per annum from established local operators with long-standing tenancy histories.</p>
+                       <p class="cl-body-text">Entry-level pricing makes this an ideal first commercial asset for new investors entering the market. Pukekohe is the fastest-growing satellite town in the Auckland region, with the local industrial and retail sectors both seeing sustained rental growth driven by population inflows and the Franklin growth corridor.</p>`,
+            summaryTitle: 'Investment Summary',
+            summary: [
+                ['Floor Area', '389 sqm'],
+                ['Annual Income', '$55,000 + GST'],
+                ['Tenancies', 'Fully leased'],
+                ['Tenant Type', 'Local established operators'],
+                ['Position', 'Pukekohe main road'],
+                ['Title', 'Freehold'],
+                ['Sale Method', 'By Negotiation'],
+                ['Listing Source', 'Bayleys Pukekohe']
+            ],
+            agent: { initials: 'GG', name: 'Gareth Gibson', role: 'Sales Manager, Pukekohe', office: 'Bayleys Pukekohe', agency: 'Bayleys', phone: '021 822 200' },
+            locStats: [
+                ['Pukekohe population (2025)', '32,400'],
+                ['Pop growth (5yr)', '+18.4%'],
+                ['Manukau Rd daily traffic', '21,800 vehicles'],
+                ['Retail vacancy (Pukekohe)', '3.1%']
+            ],
+            aiScanText: 'Visual + Pukekohe market analysis complete',
+            aiDesc: "Walter's models analysed Pukekohe retail trends, Manukau Road foot/vehicle traffic, and comparable entry-level investment sales to score this opportunity for first-time commercial investors.",
+            aiFeatures: [
+                'Wide street frontage on Pukekohe\'s arterial road',
+                'Multi-tenant configuration (income diversification)',
+                'Free-standing or attached retail (visual analysis)',
+                'On-street parking + likely rear parking',
+                'Established tenants with operating histories',
+                'Modern signage opportunities',
+                'Walking distance to Pukekohe town centre',
+                'Surrounded by complementary retail/services'
+            ],
+            aiScores: [
+                ['Tenant covenant strength', 0.74],
+                ['Location traffic exposure', 0.88],
+                ['Building condition', 0.72],
+                ['Entry-level affordability', 0.96],
+                ['Overall opportunity score', 0.82, 'highlight']
+            ],
+            aiSummary: 'A solid <strong>entry-level commercial investment</strong> in NZ\'s fastest-growing satellite town. The 3.1% retail vacancy rate, 18.4% population growth, and high traffic exposure on Manukau Road make this a defensible income asset. Walter rates this in the 78th percentile of sub-$1.5M commercial investments nationally. Best fit for first-time commercial investors and SMSF buyers seeking yield with growth.',
+            wallaceTitle: 'Wallace has matched 5 buyer prospects',
+            wallaceDesc: 'Wallace cross-referenced first-time commercial investors, SMSF buyers seeking sub-$1.5M assets, and Pukekohe-focused regional investors across the Bayleys CRM.',
+            wallaceCta: 'Send all 5 intros via Zara',
+            wallaceHigh: [
+                { score: 92, name: 'Patel Family SMSF', tag: 'First commercial purchase · Self-managed super', criteria: ['Sub-$1.5M budget','Yield-focused','Auckland fringe acceptable','Hands-off preference'], contact: 'Raj Patel · 021 XXX 4422' },
+                { score: 88, name: 'Franklin Retail Trust', tag: 'Local syndicate · Pukekohe portfolio', criteria: ['Active Manukau Rd search','Local operator preference','Long hold mandate','5-7% yield range'], contact: 'Via Mike Reid' },
+                { score: 84, name: 'Stevens Investments Ltd', tag: 'Doctor SMSF buyer · 4 commercial assets', criteria: ['Adding to existing portfolio','Manukau Rd familiarity','Modest covenant tolerance'], contact: 'Dr Greg Stevens · 027 XXX 9921' }
+            ],
+            wallaceLow: [
+                { score: 76, name: 'First-Time Buyer Pipeline', tag: '14 first-time investors on Bayleys watchlist', criteria: ['Sub-$1.5M criteria match','Pukekohe interest from 5'], cons: ['Education cycle required'], contact: 'Walter signal · Group nurture' },
+                { score: 70, name: 'Franklin Maori Land Trust', tag: 'Iwi commercial diversification', criteria: ['Local rohe asset','Cultural alignment'], cons: ['Slow decision process'], contact: 'Via Te Aroha Henare' }
+            ],
+            molloyDesc: 'Molloy has identified 4 ways to optimise this entry-level retail investment for income and capital growth over 5 years.',
+            molloyCards: [
+                { title: 'Rent review benchmarking', body: 'Current rent of <strong>$141/sqm</strong> is below the Pukekohe Manukau Road benchmark of $165-$185/sqm. Restructuring leases to market on next review unlocks meaningful uplift.', impactLabel: 'Rent uplift on next reviews', impactValue: '+$9k – $17k p.a.' },
+                { title: 'Signage rental income', body: 'Manukau Road sees <strong>21,800 vehicles per day</strong>. The roof and side wall support a leased billboard or pole-sign tenancy at $4-7k p.a. &mdash; pure incremental income.', impactLabel: 'Annual signage income', impactValue: '+$4k – $7k p.a.' },
+                { title: 'Cosmetic refurbishment', body: 'Visual analysis suggests the building would benefit from a <strong>$25-40k cosmetic refresh</strong> (paint, signage, awning). This protects existing rents and enables a market-rate review at next renewal.', impactLabel: 'Rent retention + uplift', impactValue: '~$8k p.a. avoided loss' },
+                { title: 'Subdivide title for resale', body: 'The 389 sqm building could be strata-titled into 2 separate retail units, broadening the buyer pool and enabling an arbitrage between bulk and individual sale values.', impactLabel: 'Strata sale uplift', impactValue: '+$120k – $180k' }
+            ],
+            molloySummary: [
+                ['Current asking (estimated)', '$1.05M – $1.20M'],
+                ['Post value-add 5yr position', '$1.40M – $1.65M'],
+                ['Total upside opportunity', '+$350k – $550k', 'highlight']
+            ]
+        }
+    };
+
+    let clCurrentListing = 'carlisle';
+    let clCurrentImgIdx = 0;
+
     const clHeroImg = document.getElementById('clHeroImg');
     const clImgCounter = document.getElementById('clImgCounter');
-    const carlisleImages = Array.from(document.querySelectorAll('#clThumbs .cl-thumb')).map(t => t.dataset.img);
-    let carlisleIdx = 0;
+    const clImgTotal = document.getElementById('clImgTotal');
+    const clCounterWrap = document.getElementById('clCounterWrap');
+    const clThumbsContainer = document.getElementById('clThumbs');
+    const clPrevBtn = document.getElementById('clPrevImg');
+    const clNextBtn = document.getElementById('clNextImg');
 
-    function showCarlisleImg(idx) {
-        if (idx < 0) idx = carlisleImages.length - 1;
-        if (idx >= carlisleImages.length) idx = 0;
-        carlisleIdx = idx;
-        if (clHeroImg) clHeroImg.src = carlisleImages[idx];
+    function clShowImg(idx) {
+        const data = LISTING_DATA[clCurrentListing];
+        if (!data) return;
+        const imgs = data.images || [data.heroFallback];
+        if (idx < 0) idx = imgs.length - 1;
+        if (idx >= imgs.length) idx = 0;
+        clCurrentImgIdx = idx;
+        if (clHeroImg) clHeroImg.src = imgs[idx];
         if (clImgCounter) clImgCounter.textContent = idx + 1;
         document.querySelectorAll('#clThumbs .cl-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
     }
 
-    carlisleListingCard?.addEventListener('click', (e) => {
-        e.preventDefault();
-        carlisleModal?.classList.add('active');
-        showCarlisleImg(0);
+    function clRenderGallery(data) {
+        const imgs = data.images || [data.heroFallback];
+        // Hero image
+        if (clHeroImg) clHeroImg.src = imgs[0];
+        // Thumb strip
+        if (clThumbsContainer) {
+            if (imgs.length > 1) {
+                clThumbsContainer.innerHTML = imgs.map((src, i) =>
+                    `<img src="${src}" alt="" class="cl-thumb${i === 0 ? ' active' : ''}" data-img="${src}">`
+                ).join('');
+                clThumbsContainer.style.display = '';
+                // Wire thumb clicks
+                clThumbsContainer.querySelectorAll('.cl-thumb').forEach((thumb, i) => {
+                    thumb.addEventListener('click', () => clShowImg(i));
+                });
+                // Show counter, prev/next
+                if (clCounterWrap) clCounterWrap.style.display = '';
+                if (clPrevBtn) clPrevBtn.style.display = '';
+                if (clNextBtn) clNextBtn.style.display = '';
+                if (clImgTotal) clImgTotal.textContent = imgs.length;
+                if (clImgCounter) clImgCounter.textContent = '1';
+            } else {
+                clThumbsContainer.innerHTML = '';
+                clThumbsContainer.style.display = 'none';
+                if (clCounterWrap) clCounterWrap.style.display = 'none';
+                if (clPrevBtn) clPrevBtn.style.display = 'none';
+                if (clNextBtn) clNextBtn.style.display = 'none';
+            }
+        }
+    }
+
+    function clRenderMatch(m, isHigh) {
+        const score = m.score;
+        const cls = score >= 85 ? 'high' : 'medium';
+        const criteriaHtml = (m.criteria || []).map(c => `<span>&#10003; ${c}</span>`).join('');
+        const consHtml = (m.cons || []).map(c => `<span>&#10008; ${c}</span>`).join('');
+        return `
+            <div class="cl-match-row">
+                <div class="cl-match-score ${cls}">${score}%</div>
+                <div class="cl-match-info">
+                    <div class="cl-match-name">${m.name}</div>
+                    <div class="cl-match-tag">${m.tag}</div>
+                    <div class="cl-match-criteria">
+                        ${criteriaHtml}
+                        ${consHtml}
+                    </div>
+                </div>
+                <div class="cl-match-actions">
+                    <div class="cl-match-contact">${m.contact}</div>
+                    <button class="cl-match-btn">Send intro</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function populateListingModal(id) {
+        const data = LISTING_DATA[id];
+        if (!data) return;
+        clCurrentListing = id;
+        clCurrentImgIdx = 0;
+
+        // Gallery
+        clRenderGallery(data);
+
+        // Hero badge
+        const heroBadge = document.getElementById('clHeroBadge');
+        if (heroBadge) {
+            heroBadge.textContent = data.badge;
+            heroBadge.className = 'cl-gallery-badge ' + (data.badgeClass || 'office');
+        }
+
+        // Header
+        const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        setText('clBreadCity', data.breadCity);
+        setText('clBreadType', data.breadType);
+        setText('clTitle', data.title);
+        setText('clSubMeta', data.sub);
+        setText('clPriceLabel', data.priceLabel);
+        setText('clPriceValue', data.priceValue);
+        setText('clPriceSub', data.priceSub);
+
+        // Metrics
+        const metricsEl = document.getElementById('clMetrics');
+        if (metricsEl) {
+            metricsEl.innerHTML = (data.metrics || []).map(([label, value, unit]) =>
+                `<div class="cl-metric">
+                    <span class="cl-metric-label">${label}</span>
+                    <span class="cl-metric-value">${value} <em>${unit}</em></span>
+                </div>`
+            ).join('');
+        }
+
+        // Overview tab
+        setText('clOverviewTitle', data.overviewTitle);
+        const overviewBody = document.getElementById('clOverviewBody');
+        if (overviewBody) overviewBody.innerHTML = data.overview;
+
+        setText('clSummaryTitle', data.summaryTitle);
+        const summaryDL = document.getElementById('clSummaryDL');
+        if (summaryDL) {
+            summaryDL.innerHTML = (data.summary || []).map(([dt, dd]) =>
+                `<dt>${dt}</dt><dd>${dd}</dd>`
+            ).join('');
+        }
+
+        // Agent
+        if (data.agent) {
+            setText('clAgentInitials', data.agent.initials);
+            setText('clAgentName', data.agent.name);
+            setText('clAgentRole', data.agent.role);
+            setText('clAgentOffice', data.agent.office);
+            setText('clAgentPhone', data.agent.phone);
+            const agencyEl = document.getElementById('clAgentAgency');
+            if (agencyEl) {
+                agencyEl.textContent = data.agent.agency;
+                agencyEl.className = 'agency-tag ' + (data.agent.agency === 'Bayleys' ? 'bayleys' : 'colliers');
+            }
+        }
+
+        // Location stats
+        const locStatsEl = document.getElementById('clLocStats');
+        if (locStatsEl) {
+            locStatsEl.innerHTML = (data.locStats || []).map(([label, val]) =>
+                `<div class="cl-loc-stat"><span>${label}</span><strong>${val}</strong></div>`
+            ).join('');
+        }
+
+        // AI tab
+        setText('clAiScanText', data.aiScanText);
+        setText('clAiDesc', data.aiDesc);
+        const aiFeaturesEl = document.getElementById('clAiFeatures');
+        if (aiFeaturesEl) {
+            aiFeaturesEl.innerHTML = (data.aiFeatures || []).map(f =>
+                `<li><span class="cl-ai-dot positive"></span>${f}</li>`
+            ).join('');
+        }
+        const aiScoresEl = document.getElementById('clAiScores');
+        if (aiScoresEl) {
+            aiScoresEl.innerHTML = (data.aiScores || []).map(([label, score, mod]) => {
+                const pct = Math.round(score * 100);
+                const isHighlight = mod === 'highlight';
+                return `<div class="cl-ai-score${isHighlight ? ' highlight' : ''}">
+                    <div class="cl-ai-score-top"><span>${isHighlight ? '<strong>' + label + '</strong>' : label}</span><strong>${score.toFixed(2)}</strong></div>
+                    <div class="cl-ai-score-bar"><div class="cl-ai-score-fill${isHighlight ? ' premium' : ''}" style="width:${pct}%"></div></div>
+                </div>`;
+            }).join('');
+        }
+        const aiSummaryEl = document.getElementById('clAiSummary');
+        if (aiSummaryEl) aiSummaryEl.innerHTML = data.aiSummary;
+
+        // Wallace tab
+        setText('clWallaceTitle', data.wallaceTitle);
+        setText('clWallaceDesc', data.wallaceDesc);
+        const wallaceCtaEl = document.getElementById('clWallaceCta');
+        if (wallaceCtaEl) wallaceCtaEl.textContent = data.wallaceCta;
+        const wallaceHighEl = document.getElementById('clWallaceHigh');
+        if (wallaceHighEl) wallaceHighEl.innerHTML = (data.wallaceHigh || []).map(m => clRenderMatch(m, true)).join('');
+        const wallaceLowEl = document.getElementById('clWallaceLow');
+        if (wallaceLowEl) wallaceLowEl.innerHTML = (data.wallaceLow || []).map(m => clRenderMatch(m, false)).join('');
+
+        // Molloy tab
+        setText('clMolloyDesc', data.molloyDesc);
+        const molloyCardsEl = document.getElementById('clMolloyCards');
+        if (molloyCardsEl) {
+            molloyCardsEl.innerHTML = (data.molloyCards || []).map((card, i) =>
+                `<div class="cl-molloy-card">
+                    <div class="cl-molloy-rank">${i + 1}</div>
+                    <div class="cl-molloy-body">
+                        <h5>${card.title}</h5>
+                        <p>${card.body}</p>
+                        <div class="cl-molloy-impact">
+                            <span>${card.impactLabel}</span>
+                            <strong>${card.impactValue}</strong>
+                        </div>
+                    </div>
+                </div>`
+            ).join('');
+        }
+        const molloySummaryEl = document.getElementById('clMolloySummary');
+        if (molloySummaryEl) {
+            molloySummaryEl.innerHTML = (data.molloySummary || []).map(([label, value, mod]) =>
+                `<div class="cl-molloy-summary-row${mod === 'highlight' ? ' highlight' : ''}">
+                    <span>${label}</span>
+                    <strong>${value}</strong>
+                </div>`
+            ).join('');
+        }
+
+        // Reset to Overview tab
+        document.querySelectorAll('.cl-tab').forEach(t => t.classList.toggle('active', t.dataset.clTab === 'overview'));
+        document.querySelectorAll('.cl-tab-panel').forEach(p => p.classList.toggle('active', p.dataset.clPanel === 'overview'));
+    }
+
+    // Wire all listing cards to open the shared modal with their data
+    document.querySelectorAll('.listing-card[data-listing]').forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            const id = card.dataset.listing;
+            populateListingModal(id);
+            carlisleModal?.classList.add('active');
+        });
     });
 
     carlisleClose?.addEventListener('click', () => carlisleModal?.classList.remove('active'));
@@ -1869,14 +2604,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === carlisleModal) carlisleModal.classList.remove('active');
     });
 
-    document.getElementById('clPrevImg')?.addEventListener('click', () => showCarlisleImg(carlisleIdx - 1));
-    document.getElementById('clNextImg')?.addEventListener('click', () => showCarlisleImg(carlisleIdx + 1));
+    clPrevBtn?.addEventListener('click', () => clShowImg(clCurrentImgIdx - 1));
+    clNextBtn?.addEventListener('click', () => clShowImg(clCurrentImgIdx + 1));
 
-    document.querySelectorAll('#clThumbs .cl-thumb').forEach((thumb, i) => {
-        thumb.addEventListener('click', () => showCarlisleImg(i));
-    });
-
-    // Carlisle tabs (Overview / AI Analysis / Wallace / Molloy)
+    // Listing modal tabs (Overview / AI Analysis / Wallace / Molloy)
     document.querySelectorAll('.cl-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.cl-tab').forEach(t => t.classList.remove('active'));
@@ -1886,6 +2617,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector(`.cl-tab-panel[data-cl-panel="${panelKey}"]`)?.classList.add('active');
         });
     });
+
+    // Populate Carlisle by default so the modal is in a valid state on first open
+    populateListingModal('carlisle');
 
     // --- Crummer Rd Property Detail Modal ---
     const crummerModal = document.getElementById('crummerModal');

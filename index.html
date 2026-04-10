@@ -1460,11 +1460,11 @@
             <div class="listings-grid">
 
                 <!-- 135 Parnell Road -->
-                <div class="listing-card">
+                <div class="listing-card" data-listing="parnell">
                     <div class="listing-image">
                         <img src="listing-parnell.jpg" alt="135 Parnell Road" class="listing-img">
                         <span class="listing-badge retail">Retail</span>
-                        <span class="listing-status for-sale">For Sale</span>
+                        <span class="listing-status for-lease">For Lease</span>
                     </div>
                     <div class="listing-body">
                         <div class="listing-title-row">
@@ -1495,7 +1495,7 @@
                 </div>
 
                 <!-- 2 & 12 Henry Tayler Rise -->
-                <div class="listing-card">
+                <div class="listing-card" data-listing="henrytayler">
                     <div class="listing-image">
                         <img src="listing-wainui.jpg" alt="2 & 12 Henry Tayler Rise" class="listing-img">
                         <span class="listing-badge retail">Retail</span>
@@ -1530,7 +1530,7 @@
                 </div>
 
                 <!-- 170-174 Carlisle Road -->
-                <div class="listing-card" id="carlisleListingCard">
+                <div class="listing-card" id="carlisleListingCard" data-listing="carlisle">
                     <div class="listing-image">
                         <img src="listing-carlisle.jpg" alt="170-174 Carlisle Road" class="listing-img">
                         <span class="listing-badge office">Office</span>
@@ -1565,7 +1565,7 @@
                 </div>
 
                 <!-- 10-12 Jervois Road -->
-                <div class="listing-card">
+                <div class="listing-card" data-listing="jervois">
                     <div class="listing-image">
                         <img src="listing-jervois.jpg" alt="10-12 Jervois Road" class="listing-img">
                         <span class="listing-badge retail">Retail</span>
@@ -1600,7 +1600,7 @@
                 </div>
 
                 <!-- 31-35 Dacre Street -->
-                <div class="listing-card">
+                <div class="listing-card" data-listing="dacre">
                     <div class="listing-image">
                         <img src="listing-dacre.jpg" alt="31-35 Dacre Street" class="listing-img">
                         <span class="listing-badge office">Office</span>
@@ -1635,7 +1635,7 @@
                 </div>
 
                 <!-- 162 Manukau Road -->
-                <div class="listing-card">
+                <div class="listing-card" data-listing="manukau">
                     <div class="listing-image">
                         <img src="listing-manukau.jpg" alt="162 Manukau Road" class="listing-img">
                         <span class="listing-badge industrial">Industrial</span>
@@ -4359,9 +4359,9 @@
                 <!-- HERO GALLERY -->
                 <div class="cl-gallery">
                     <div class="cl-gallery-main">
-                        <img src="carlisle-01.jpg" alt="170-174 Carlisle Road — hero" id="clHeroImg">
-                        <span class="cl-gallery-badge office">Office · Investment</span>
-                        <span class="cl-gallery-counter"><span id="clImgCounter">1</span> / 13</span>
+                        <img src="carlisle-01.jpg" alt="" id="clHeroImg">
+                        <span class="cl-gallery-badge office" id="clHeroBadge">Office · Investment</span>
+                        <span class="cl-gallery-counter" id="clCounterWrap"><span id="clImgCounter">1</span> / <span id="clImgTotal">13</span></span>
                         <button class="cl-gallery-nav prev" id="clPrevImg">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
@@ -4369,21 +4369,7 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                         </button>
                     </div>
-                    <div class="cl-gallery-thumbs" id="clThumbs">
-                        <img src="carlisle-01.jpg" alt="" class="cl-thumb active" data-img="carlisle-01.jpg">
-                        <img src="carlisle-02.jpg" alt="" class="cl-thumb" data-img="carlisle-02.jpg">
-                        <img src="carlisle-03.jpg" alt="" class="cl-thumb" data-img="carlisle-03.jpg">
-                        <img src="carlisle-04.jpg" alt="" class="cl-thumb" data-img="carlisle-04.jpg">
-                        <img src="carlisle-05.jpg" alt="" class="cl-thumb" data-img="carlisle-05.jpg">
-                        <img src="carlisle-06.jpg" alt="" class="cl-thumb" data-img="carlisle-06.jpg">
-                        <img src="carlisle-07.jpg" alt="" class="cl-thumb" data-img="carlisle-07.jpg">
-                        <img src="carlisle-08.jpg" alt="" class="cl-thumb" data-img="carlisle-08.jpg">
-                        <img src="carlisle-09.jpg" alt="" class="cl-thumb" data-img="carlisle-09.jpg">
-                        <img src="carlisle-10.jpg" alt="" class="cl-thumb" data-img="carlisle-10.jpg">
-                        <img src="carlisle-11.jpg" alt="" class="cl-thumb" data-img="carlisle-11.jpg">
-                        <img src="carlisle-12.jpg" alt="" class="cl-thumb" data-img="carlisle-12.jpg">
-                        <img src="carlisle-13.jpg" alt="" class="cl-thumb" data-img="carlisle-13.jpg">
-                    </div>
+                    <div class="cl-gallery-thumbs" id="clThumbs"></div>
                 </div>
 
                 <!-- HEADER -->
@@ -4392,49 +4378,24 @@
                         <div class="cl-breadcrumb">
                             <span>Active Listings</span>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                            <span>North Shore</span>
+                            <span id="clBreadCity">North Shore</span>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                            <span>Office Investment</span>
+                            <span id="clBreadType">Office Investment</span>
                         </div>
-                        <h2>170-174 Carlisle Road</h2>
-                        <p class="cl-sub">Northcross, North Shore City, Auckland · Listing #1507246</p>
+                        <h2 id="clTitle">170-174 Carlisle Road</h2>
+                        <p class="cl-sub" id="clSubMeta">Northcross, North Shore City, Auckland · Listing #1507246</p>
                     </div>
                     <div class="cl-header-right">
                         <div class="cl-price-block">
-                            <span class="cl-price-label">Method of sale</span>
-                            <span class="cl-price">Deadline Sale</span>
-                            <span class="cl-price-sub">Closes 4:00 PM, 30 April 2026</span>
+                            <span class="cl-price-label" id="clPriceLabel">Method of sale</span>
+                            <span class="cl-price" id="clPriceValue">Deadline Sale</span>
+                            <span class="cl-price-sub" id="clPriceSub">Closes 4:00 PM, 30 April 2026</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- KEY METRICS -->
-                <div class="cl-metrics">
-                    <div class="cl-metric">
-                        <span class="cl-metric-label">Floor Area</span>
-                        <span class="cl-metric-value">1,050 <em>sqm</em></span>
-                    </div>
-                    <div class="cl-metric">
-                        <span class="cl-metric-label">Land Area</span>
-                        <span class="cl-metric-value">3,143 <em>sqm</em></span>
-                    </div>
-                    <div class="cl-metric">
-                        <span class="cl-metric-label">Net Income</span>
-                        <span class="cl-metric-value">$509<em>k</em></span>
-                    </div>
-                    <div class="cl-metric">
-                        <span class="cl-metric-label">Lease Term</span>
-                        <span class="cl-metric-value">15 <em>years</em></span>
-                    </div>
-                    <div class="cl-metric">
-                        <span class="cl-metric-label">Rent Review</span>
-                        <span class="cl-metric-value">2<em>% p.a.</em></span>
-                    </div>
-                    <div class="cl-metric">
-                        <span class="cl-metric-label">Zoning</span>
-                        <span class="cl-metric-value">Mixed<em> Housing Urban</em></span>
-                    </div>
-                </div>
+                <div class="cl-metrics" id="clMetrics"></div>
 
                 <!-- TABS -->
                 <div class="cl-tabs">
@@ -4461,39 +4422,28 @@
                         <div class="cl-overview-grid">
                             <div class="cl-overview-main">
                                 <div class="cl-section">
-                                    <h4>Investment Highlights</h4>
-                                    <p class="cl-body-text">A rare long-WALE commercial investment offering passive income security with built-in growth. New 15-year lease commencing 1 February 2026 to <strong>Magic Garden Early Childhood Education</strong> — a well-established operator with strong financial covenant backed by bank guarantees.</p>
-                                    <p class="cl-body-text">The substantial 3,143 sqm corner site provides significant land banking value under Mixed Housing Urban zoning, offering long-term development potential in addition to secure holding income.</p>
+                                    <h4 id="clOverviewTitle">Investment Highlights</h4>
+                                    <div id="clOverviewBody"></div>
                                 </div>
-
                                 <div class="cl-section">
-                                    <h4>Lease Summary</h4>
-                                    <dl class="cl-dl">
-                                        <dt>Tenant</dt><dd>Magic Garden Early Childhood Education</dd>
-                                        <dt>Lease Start</dt><dd>1 February 2026</dd>
-                                        <dt>Term</dt><dd>15 years</dd>
-                                        <dt>Annual Rent</dt><dd>$509,600 + GST and outgoings</dd>
-                                        <dt>Rent Reviews</dt><dd>2% annual fixed + 5-yearly market</dd>
-                                        <dt>Security</dt><dd>Bank guarantees in place</dd>
-                                        <dt>Rights of Renewal</dt><dd>Further terms available</dd>
-                                    </dl>
+                                    <h4 id="clSummaryTitle">Lease Summary</h4>
+                                    <dl class="cl-dl" id="clSummaryDL"></dl>
                                 </div>
                             </div>
-
                             <div class="cl-overview-side">
                                 <div class="cl-agent-card">
-                                    <div class="cl-agent-avatar">MN</div>
+                                    <div class="cl-agent-avatar" id="clAgentInitials">MN</div>
                                     <div class="cl-agent-info">
-                                        <div class="cl-agent-name">Michael Nees</div>
-                                        <div class="cl-agent-role">Licensee Salesperson</div>
-                                        <div class="cl-agent-office">Bayleys North Shore C&amp;I</div>
+                                        <div class="cl-agent-name" id="clAgentName">Michael Nees</div>
+                                        <div class="cl-agent-role" id="clAgentRole">Licensee Salesperson</div>
+                                        <div class="cl-agent-office" id="clAgentOffice">Bayleys North Shore C&amp;I</div>
                                     </div>
-                                    <span class="agency-tag bayleys">Bayleys</span>
+                                    <span class="agency-tag bayleys" id="clAgentAgency">Bayleys</span>
                                 </div>
                                 <div class="cl-agent-contact">
                                     <a href="#" class="cl-contact-btn">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-                                        021 182 3085
+                                        <span id="clAgentPhone">021 182 3085</span>
                                     </a>
                                     <a href="#" class="cl-contact-btn">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
@@ -4506,12 +4456,7 @@
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                         <span>Location Intelligence</span>
                                     </div>
-                                    <div class="cl-loc-stats">
-                                        <div class="cl-loc-stat"><span>Schools within 1km</span><strong>7</strong></div>
-                                        <div class="cl-loc-stat"><span>Residential within 500m</span><strong>480+</strong></div>
-                                        <div class="cl-loc-stat"><span>Median household income</span><strong>$118k</strong></div>
-                                        <div class="cl-loc-stat"><span>ECE demand (waitlist)</span><strong>High</strong></div>
-                                    </div>
+                                    <div class="cl-loc-stats" id="clLocStats"></div>
                                 </div>
                             </div>
                         </div>
@@ -4522,9 +4467,9 @@
                         <div class="cl-ai-header">
                             <div class="cl-ai-scan-badge">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span>Visual analysis complete · 13 images processed</span>
+                                <span id="clAiScanText">Visual analysis complete · 13 images processed</span>
                             </div>
-                            <p class="cl-ai-desc">Walter's computer vision model analysed every listing image to extract property attributes, condition, and fit-out characteristics. These insights power the Wallace matching engine below.</p>
+                            <p class="cl-ai-desc" id="clAiDesc">Walter's computer vision model analysed every listing image to extract property attributes, condition, and fit-out characteristics. These insights power the Wallace matching engine below.</p>
                         </div>
 
                         <div class="cl-ai-grid">
@@ -4533,16 +4478,7 @@
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                     <span>Detected Features</span>
                                 </div>
-                                <ul class="cl-ai-list">
-                                    <li><span class="cl-ai-dot positive"></span>Purpose-built childcare fit-out with nature-inspired design</li>
-                                    <li><span class="cl-ai-dot positive"></span>Professional outdoor play area with artificial turf, pergolas, shade sails</li>
-                                    <li><span class="cl-ai-dot positive"></span>Sandpit, garden beds, nature play structures — premium ECE spec</li>
-                                    <li><span class="cl-ai-dot positive"></span>High-ceiling interiors with abundant natural light</li>
-                                    <li><span class="cl-ai-dot positive"></span>Modern commercial kitchen facilities</li>
-                                    <li><span class="cl-ai-dot positive"></span>Dedicated on-site parking — est. 25+ spaces (aerial count)</li>
-                                    <li><span class="cl-ai-dot positive"></span>Full perimeter fencing and secure entry points</li>
-                                    <li><span class="cl-ai-dot positive"></span>Corner site with dual street frontage</li>
-                                </ul>
+                                <ul class="cl-ai-list" id="clAiFeatures"></ul>
                             </div>
 
                             <div class="cl-ai-card">
@@ -4550,34 +4486,13 @@
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                                     <span>Property Condition Index</span>
                                 </div>
-                                <div class="cl-ai-scores">
-                                    <div class="cl-ai-score">
-                                        <div class="cl-ai-score-top"><span>Interior finish</span><strong>0.88</strong></div>
-                                        <div class="cl-ai-score-bar"><div class="cl-ai-score-fill" style="width:88%"></div></div>
-                                    </div>
-                                    <div class="cl-ai-score">
-                                        <div class="cl-ai-score-top"><span>Exterior condition</span><strong>0.82</strong></div>
-                                        <div class="cl-ai-score-bar"><div class="cl-ai-score-fill" style="width:82%"></div></div>
-                                    </div>
-                                    <div class="cl-ai-score">
-                                        <div class="cl-ai-score-top"><span>Outdoor amenity</span><strong>0.94</strong></div>
-                                        <div class="cl-ai-score-bar"><div class="cl-ai-score-fill" style="width:94%"></div></div>
-                                    </div>
-                                    <div class="cl-ai-score">
-                                        <div class="cl-ai-score-top"><span>Fit-out specification</span><strong>0.91</strong></div>
-                                        <div class="cl-ai-score-bar"><div class="cl-ai-score-fill" style="width:91%"></div></div>
-                                    </div>
-                                    <div class="cl-ai-score highlight">
-                                        <div class="cl-ai-score-top"><span><strong>Overall PCI</strong></span><strong>0.89</strong></div>
-                                        <div class="cl-ai-score-bar"><div class="cl-ai-score-fill premium" style="width:89%"></div></div>
-                                    </div>
-                                </div>
+                                <div class="cl-ai-scores" id="clAiScores"></div>
                             </div>
                         </div>
 
                         <div class="cl-ai-insight">
                             <div class="cl-ai-insight-label">Walter's Summary</div>
-                            <p>This is a <strong>top-tier ECE asset</strong> — the visual analysis places it in the 95th percentile of North Shore childcare properties. Combined with the 15-year lease and bank guarantees, this represents one of the lowest-risk commercial investments currently in the Auckland market. The 3,143 sqm landholding adds substantial underlying asset value that isn't fully reflected in the yield-based pricing.</p>
+                            <p id="clAiSummary"></p>
                         </div>
                     </div>
 
@@ -4586,122 +4501,19 @@
                         <div class="cl-wallace-header">
                             <div class="agent-avatar wallace">W</div>
                             <div>
-                                <h4>Wallace has matched 6 prospects from the Bayleys network</h4>
-                                <p>Based on visual analysis, lease structure, and database criteria. Even though this is a Bayleys listing, Wallace continuously scans your entire contact network to find the right buyer.</p>
+                                <h4 id="clWallaceTitle">Wallace has matched 6 prospects from the Bayleys network</h4>
+                                <p id="clWallaceDesc">Based on visual analysis, lease structure, and database criteria. Even though this is a Bayleys listing, Wallace continuously scans your entire contact network to find the right buyer.</p>
                             </div>
                         </div>
 
                         <div class="cl-wallace-section">
                             <div class="cl-wallace-label">High-compatibility buyers</div>
-
-                            <div class="cl-match-row">
-                                <div class="cl-match-score high">96%</div>
-                                <div class="cl-match-info">
-                                    <div class="cl-match-name">Harbour Capital Partners</div>
-                                    <div class="cl-match-tag">Passive investor · Auckland · Syndicate</div>
-                                    <div class="cl-match-criteria">
-                                        <span>&#10003; Long WALE mandate (10+ yrs)</span>
-                                        <span>&#10003; $7-12M budget</span>
-                                        <span>&#10003; ECE sector preference</span>
-                                        <span>&#10003; North Shore focus</span>
-                                    </div>
-                                </div>
-                                <div class="cl-match-actions">
-                                    <div class="cl-match-contact">David Chen · 021 XXX 8421</div>
-                                    <button class="cl-match-btn">Send intro</button>
-                                </div>
-                            </div>
-
-                            <div class="cl-match-row">
-                                <div class="cl-match-score high">92%</div>
-                                <div class="cl-match-info">
-                                    <div class="cl-match-name">Meridian Family Office</div>
-                                    <div class="cl-match-tag">HNWI · Passive income · Healthcare/ECE</div>
-                                    <div class="cl-match-criteria">
-                                        <span>&#10003; Commercial yield 5-6%</span>
-                                        <span>&#10003; Bank guarantee backing</span>
-                                        <span>&#10003; Bayleys Reserve Private client</span>
-                                        <span>&#10003; Active in last 30 days</span>
-                                    </div>
-                                </div>
-                                <div class="cl-match-actions">
-                                    <div class="cl-match-contact">Via Matt Bayley</div>
-                                    <button class="cl-match-btn">Send intro</button>
-                                </div>
-                            </div>
-
-                            <div class="cl-match-row">
-                                <div class="cl-match-score high">88%</div>
-                                <div class="cl-match-info">
-                                    <div class="cl-match-name">Tauranga Property Trust</div>
-                                    <div class="cl-match-tag">Diversifying portfolio · Auckland entry</div>
-                                    <div class="cl-match-criteria">
-                                        <span>&#10003; Long-income focus</span>
-                                        <span>&#10003; Under-leveraged ($15M cash)</span>
-                                        <span>&#10003; Mixed-use zoning preferred</span>
-                                        <span>&#10003; Seeking first AKL asset</span>
-                                    </div>
-                                </div>
-                                <div class="cl-match-actions">
-                                    <div class="cl-match-contact">Sarah Thompson · 027 XXX 5512</div>
-                                    <button class="cl-match-btn">Send intro</button>
-                                </div>
-                            </div>
+                            <div id="clWallaceHigh"></div>
                         </div>
 
                         <div class="cl-wallace-section">
                             <div class="cl-wallace-label">Strategic prospects (emerging signals)</div>
-
-                            <div class="cl-match-row">
-                                <div class="cl-match-score medium">78%</div>
-                                <div class="cl-match-info">
-                                    <div class="cl-match-name">Ngā Puna Wai Iwi Trust</div>
-                                    <div class="cl-match-tag">Iwi investment arm · Social + commercial return</div>
-                                    <div class="cl-match-criteria">
-                                        <span>&#10003; ECE aligns with whānau outcomes</span>
-                                        <span>&#10003; Long-term hold strategy</span>
-                                        <span>&#10008; First commercial purchase</span>
-                                    </div>
-                                </div>
-                                <div class="cl-match-actions">
-                                    <div class="cl-match-contact">Via Jamie Nuku</div>
-                                    <button class="cl-match-btn">Send intro</button>
-                                </div>
-                            </div>
-
-                            <div class="cl-match-row">
-                                <div class="cl-match-score medium">73%</div>
-                                <div class="cl-match-info">
-                                    <div class="cl-match-name">Pacific Childcare Group Ltd</div>
-                                    <div class="cl-match-tag">Existing ECE operator · Vertical integration</div>
-                                    <div class="cl-match-criteria">
-                                        <span>&#10003; Sector expertise</span>
-                                        <span>&#10003; Owner-operator exit preferred</span>
-                                        <span>&#10008; Tenanted doesn't suit owner-occupy</span>
-                                    </div>
-                                </div>
-                                <div class="cl-match-actions">
-                                    <div class="cl-match-contact">Via Sunil Bhana</div>
-                                    <button class="cl-match-btn">Send intro</button>
-                                </div>
-                            </div>
-
-                            <div class="cl-match-row">
-                                <div class="cl-match-score medium">68%</div>
-                                <div class="cl-match-info">
-                                    <div class="cl-match-name">North Shore Developer Consortium</div>
-                                    <div class="cl-match-tag">Land-bank play · Mixed Housing Urban zoning</div>
-                                    <div class="cl-match-criteria">
-                                        <span>&#10003; 3,143 sqm developable site</span>
-                                        <span>&#10003; Long lease provides holding income</span>
-                                        <span>&#10008; Long-term play (15 yr lease)</span>
-                                    </div>
-                                </div>
-                                <div class="cl-match-actions">
-                                    <div class="cl-match-contact">Walter signal · Not yet contacted</div>
-                                    <button class="cl-match-btn">Send intro</button>
-                                </div>
-                            </div>
+                            <div id="clWallaceLow"></div>
                         </div>
 
                         <div class="cl-wallace-footer">
@@ -4709,7 +4521,7 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                                 <span>Wallace will continue scanning the network 24/7 and alert you to new matches.</span>
                             </div>
-                            <button class="btn-primary">Send all 6 intros via Zara</button>
+                            <button class="btn-primary" id="clWallaceCta">Send all 6 intros via Zara</button>
                         </div>
                     </div>
 
@@ -4719,74 +4531,12 @@
                             <div class="agent-avatar molloy">M</div>
                             <div>
                                 <h4>Molloy's value-add analysis</h4>
-                                <p>Based on visual analysis, zoning, and comparable sales, Molloy has identified 4 pathways to enhance the asset's long-term value beyond the current yield play.</p>
+                                <p id="clMolloyDesc">Based on visual analysis, zoning, and comparable sales, Molloy has identified 4 pathways to enhance the asset's long-term value beyond the current yield play.</p>
                             </div>
                         </div>
 
-                        <div class="cl-molloy-cards">
-                            <div class="cl-molloy-card">
-                                <div class="cl-molloy-rank">1</div>
-                                <div class="cl-molloy-body">
-                                    <h5>Residential development upside</h5>
-                                    <p>The 3,143 sqm site under Mixed Housing Urban zoning supports up to <strong>18 dwellings</strong> or a 3-storey townhouse development at end-of-lease. Current ECE income effectively funds the land bank.</p>
-                                    <div class="cl-molloy-impact">
-                                        <span>Est. residential land value</span>
-                                        <strong>$3.2M – $4.1M</strong>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="cl-molloy-card">
-                                <div class="cl-molloy-rank">2</div>
-                                <div class="cl-molloy-body">
-                                    <h5>Rent-to-market opportunity (Year 5)</h5>
-                                    <p>Current rent of $485/sqm is slightly below the North Shore prime ECE benchmark of <strong>$510–$540/sqm</strong>. The 5-yearly market review in 2031 presents a structured uplift opportunity.</p>
-                                    <div class="cl-molloy-impact">
-                                        <span>Potential rental uplift</span>
-                                        <strong>+$26k – $58k p.a.</strong>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="cl-molloy-card">
-                                <div class="cl-molloy-rank">3</div>
-                                <div class="cl-molloy-body">
-                                    <h5>Solar + EV infrastructure</h5>
-                                    <p>The large north-facing roofline and open car park area suit solar PV + EV charging installation. Can be offered as a tenant incentive or sub-let to a third-party operator for additional income.</p>
-                                    <div class="cl-molloy-impact">
-                                        <span>Capital cost vs annual return</span>
-                                        <strong>$180k / ~$22k p.a.</strong>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="cl-molloy-card">
-                                <div class="cl-molloy-rank">4</div>
-                                <div class="cl-molloy-body">
-                                    <h5>Seismic strengthening sign-off</h5>
-                                    <p>Visual analysis suggests the building is modern construction. A formal IEP assessment confirming 100% NBS would unlock <strong>premium institutional buyers</strong> (KiwiSaver funds, corporate investment trusts) who require 100% NBS minimum.</p>
-                                    <div class="cl-molloy-impact">
-                                        <span>Capital value uplift from buyer pool expansion</span>
-                                        <strong>+5% – 8%</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="cl-molloy-summary">
-                            <div class="cl-molloy-summary-row">
-                                <span>Current asking (implied)</span>
-                                <strong>~$8.5M</strong>
-                            </div>
-                            <div class="cl-molloy-summary-row">
-                                <span>Post value-add projection</span>
-                                <strong>$9.8M – $11.2M</strong>
-                            </div>
-                            <div class="cl-molloy-summary-row highlight">
-                                <span>Total upside opportunity</span>
-                                <strong>+$1.3M – $2.7M</strong>
-                            </div>
-                        </div>
+                        <div class="cl-molloy-cards" id="clMolloyCards"></div>
+                        <div class="cl-molloy-summary" id="clMolloySummary"></div>
                     </div>
                 </div>
 
@@ -6060,6 +5810,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=26"></script>
+    <script src="app.js?v=28"></script>
 </body>
 </html>
