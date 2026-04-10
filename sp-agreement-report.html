@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P Review — DVBTR / McKenzie ATL | Bayleys</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800;900&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #fafafa; --white: #ffffff; --dark: #0f172a; --dark2: #134e4a;
+            --text: #334155; --text2: #64748b; --text3: #94a3b8;
+            --accent: #1a1a2e; --blue: #3b82f6; --green: #10b981; --orange: #f59e0b;
+            --purple: #8b5cf6; --red: #ef4444; --teal: #14b8a6; --indigo: #6366f1;
+            --border: #e2e8f0; --border2: #f1f5f9;
+            --radius: 16px; --radius-sm: 10px;
+        }
+        html { font-size: 15px; scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+        /* ===== HERO ===== */
+        .report-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #134e4a 50%, #1e3a8a 100%);
+            color: white;
+            padding: 90px 0 70px;
+            position: relative;
+            overflow: hidden;
+        }
+        .report-hero::before {
+            content: '';
+            position: absolute;
+            top: -40%; right: -10%;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(20,184,166,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .report-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%; left: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+        .hero-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 44px; opacity: 0.7; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+        .hero-brand-icon { width: 30px; height: 30px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+        .hero-label { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 14px; }
+        .hero-title { font-size: 46px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.05; margin-bottom: 16px; max-width: 760px; }
+        .hero-title span {
+            background: linear-gradient(90deg, #5eead4, #818cf8, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle { font-size: 17px; color: rgba(255,255,255,0.7); font-weight: 400; max-width: 640px; line-height: 1.6; }
+        .hero-meta { display: flex; gap: 36px; margin-top: 36px; flex-wrap: wrap; }
+        .hero-meta-item { display: flex; flex-direction: column; }
+        .hero-meta-item span { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; font-weight: 600; }
+        .hero-meta-item strong { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.92); }
+
+        /* LLM badge in hero */
+        .hero-llm {
+            position: absolute;
+            top: 80px;
+            right: 40px;
+            z-index: 2;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 18px 22px;
+            min-width: 240px;
+        }
+        .hero-llm-label { font-size: 9.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 8px; }
+        .hero-llm-name { font-size: 17px; font-weight: 800; color: white; letter-spacing: -0.3px; line-height: 1.2; }
+        .hero-llm-name span {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            background: linear-gradient(135deg, #14b8a6, #6366f1);
+            border-radius: 5px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .hero-llm-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .hero-llm-stat { display: flex; flex-direction: column; }
+        .hero-llm-stat strong { font-size: 18px; font-weight: 800; color: white; line-height: 1; letter-spacing: -0.4px; }
+        .hero-llm-stat span { font-size: 9.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px; }
+
+        /* ===== NAV ===== */
+        .report-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; gap: 24px; overflow-x: auto; }
+        .nav-link {
+            padding: 16px 0;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .nav-cta {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #14b8a6, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(20,184,166,0.3); }
+
+        /* ===== SECTIONS ===== */
+        .section { max-width: 1100px; margin: 0 auto; padding: 70px 40px 30px; }
+        .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+        .section-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 10px; color: var(--dark); }
+        .section-desc { font-size: 15px; color: var(--text2); max-width: 680px; line-height: 1.6; margin-bottom: 40px; }
+
+        /* ===== KEY TERMS GRID ===== */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+        .term-group {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 26px 28px;
+        }
+        .term-group-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--teal);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border2);
+        }
+        .term-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 9px 0;
+            gap: 12px;
+            border-bottom: 1px dashed var(--border2);
+        }
+        .term-row:last-child { border-bottom: none; }
+        .term-label { font-size: 12.5px; color: var(--text2); font-weight: 500; flex-shrink: 0; }
+        .term-value {
+            font-size: 13.5px;
+            color: var(--dark);
+            font-weight: 700;
+            text-align: right;
+            letter-spacing: -0.1px;
+            font-variant-numeric: tabular-nums;
+        }
+        .term-value small { font-size: 11px; color: var(--text3); font-weight: 500; margin-left: 2px; }
+
+        /* ===== RISK SCORECARD ===== */
+        .scorecard {
+            background: linear-gradient(135deg, #0f172a 0%, #134e4a 60%, #1e3a8a 100%);
+            border-radius: var(--radius);
+            padding: 36px 40px;
+            color: white;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .scorecard::before {
+            content: '';
+            position: absolute;
+            top: -30%; right: -10%;
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(20,184,166,0.2), transparent 70%);
+            border-radius: 50%;
+        }
+        .sc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+        .sc-item { display: flex; flex-direction: column; }
+        .sc-item span { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin-bottom: 8px; }
+        .sc-item strong { font-size: 36px; font-weight: 800; line-height: 1; letter-spacing: -1px; color: white; }
+        .sc-item small { font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 6px; font-weight: 500; }
+        .sc-item.red strong { color: #fca5a5; }
+        .sc-item.amber strong { color: #fcd34d; }
+        .sc-item.green strong { color: #6ee7b7; }
+
+        /* ===== ADVISORY CARDS ===== */
+        .adv-stack { display: flex; flex-direction: column; gap: 14px; }
+        .adv-card {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 18px;
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 26px 30px;
+            border: 1px solid var(--border);
+            border-left: 4px solid;
+            transition: all 0.2s;
+        }
+        .adv-card:hover {
+            transform: translateX(2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .adv-card.red { border-left-color: var(--red); }
+        .adv-card.amber { border-left-color: var(--orange); }
+        .adv-card.green { border-left-color: var(--green); }
+        .adv-flag-label {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 5px 11px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .adv-card.red .adv-flag-label { background: #fef2f2; color: #b91c1c; }
+        .adv-card.amber .adv-flag-label { background: #fffbeb; color: #b45309; }
+        .adv-card.green .adv-flag-label { background: #ecfdf5; color: #047857; }
+        .adv-body strong.adv-title {
+            display: block;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .adv-body p {
+            font-size: 13.5px;
+            color: var(--text2);
+            line-height: 1.65;
+            margin-bottom: 12px;
+        }
+        .adv-body p b {
+            background: var(--border2);
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+        .adv-recommend {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(20,184,166,0.06), rgba(99,102,241,0.06));
+            border: 1px solid rgba(20,184,166,0.2);
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        .adv-recommend-tag {
+            font-size: 9.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--teal);
+            padding: 4px 10px;
+            background: var(--white);
+            border: 1px solid rgba(20,184,166,0.3);
+            border-radius: 5px;
+        }
+        .adv-recommend b { font-weight: 700; color: var(--dark); }
+
+        /* ===== SOLICITOR QUESTIONS ===== */
+        .sq-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 40px; }
+        .sq-section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border2);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .sq-section-head h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.4px;
+        }
+        .sq-section-head p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+        .sq-print-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .sq-print-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+        .sq-grid { display: flex; flex-direction: column; gap: 12px; }
+        .sq-card {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 18px;
+            padding: 20px 22px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.15s;
+        }
+        .sq-card:hover {
+            border-color: var(--teal);
+            box-shadow: 0 6px 18px rgba(20,184,166,0.08);
+        }
+        .sq-num-pill {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #14b8a6, #6366f1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(20,184,166,0.2);
+        }
+        .sq-q-text {
+            font-size: 14.5px;
+            font-style: italic;
+            color: var(--dark);
+            line-height: 1.55;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .sq-q-tag {
+            display: inline-block;
+            font-size: 11px;
+            color: var(--text2);
+            padding: 4px 10px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+        }
+
+        /* ===== CHECKLIST ===== */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 22px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        .check-item.complete { border-left-color: var(--green); }
+        .check-item.missing { border-left-color: var(--red); background: #fef9f9; }
+        .check-item.warning { border-left-color: var(--orange); background: #fffdf6; }
+        .check-mark {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .check-item.complete .check-mark { background: var(--green); }
+        .check-item.missing .check-mark { background: var(--red); }
+        .check-item.warning .check-mark { background: var(--orange); }
+        .check-item strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 650;
+            color: var(--dark);
+            margin-bottom: 2px;
+            letter-spacing: -0.1px;
+        }
+        .check-item span {
+            display: block;
+            font-size: 12px;
+            color: var(--text2);
+        }
+
+        /* ===== DOWNLOAD CTA ===== */
+        .download-card {
+            background: linear-gradient(135deg, #0f172a 0%, #134e4a 100%);
+            border-radius: var(--radius);
+            padding: 36px 44px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .download-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -10%;
+            width: 360px; height: 360px;
+            background: radial-gradient(circle, rgba(20,184,166,0.18), transparent 70%);
+            border-radius: 50%;
+        }
+        .download-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #14b8a6, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 12px 32px rgba(20,184,166,0.4);
+        }
+        .download-body { flex: 1; position: relative; }
+        .download-body h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .download-body p {
+            font-size: 13.5px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.55;
+        }
+        .download-meta {
+            display: flex;
+            gap: 18px;
+            margin-top: 12px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+        .download-meta span { display: flex; align-items: center; gap: 6px; }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 24px;
+            background: white;
+            color: var(--dark);
+            border: 0;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            position: relative;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .download-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,0.3); }
+
+        /* ===== FOOTER ===== */
+        .report-footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.5);
+            padding: 60px 40px;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 80px;
+        }
+        .footer-inner { max-width: 1100px; margin: 0 auto; }
+        .footer-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; color: rgba(255,255,255,0.85); font-weight: 600; font-size: 15px; }
+        .footer-brand .hero-brand-icon { background: rgba(255,255,255,0.1); }
+        .footer-disclaimer {
+            font-size: 11.5px;
+            color: rgba(255,255,255,0.4);
+            max-width: 720px;
+            margin: 16px auto 0;
+            line-height: 1.6;
+        }
+        .footer-agent { margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-agent strong { color: rgba(255,255,255,0.85); display: block; font-size: 14px; }
+        .footer-agent span { font-size: 12px; }
+
+        @media (max-width: 960px) {
+            .hero-title { font-size: 34px; }
+            .hero-llm { position: static; margin-top: 30px; }
+            .terms-grid { grid-template-columns: 1fr; }
+            .sc-grid { grid-template-columns: repeat(2, 1fr); }
+            .checklist-grid { grid-template-columns: 1fr; }
+            .download-card { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HERO ========== -->
+    <section class="report-hero">
+        <div class="hero-inner">
+            <div class="hero-brand">
+                <div class="hero-brand-icon">W</div>
+                <span>Walter</span>
+                <span style="opacity:0.3;margin:0 4px;">|</span>
+                <img src="bayleys-logo.png" alt="Bayleys" style="height:20px;opacity:0.85;filter:brightness(0) invert(1);">
+            </div>
+            <div class="hero-label">Sale &amp; Purchase Review</div>
+            <h1 class="hero-title">DVBTR / McKenzie ATL <span>— Reviewed</span></h1>
+            <p class="hero-subtitle">A Walter-assisted clause-by-clause review of the proposed Sale &amp; Purchase agreement, with 8 questions drafted for your solicitor before signing.</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item"><span>Vendor</span><strong>Du Val BTR Ltd</strong></div>
+                <div class="hero-meta-item"><span>Purchaser</span><strong>Whanau Ora / McKenzie ATL</strong></div>
+                <div class="hero-meta-item"><span>Purchase price</span><strong>$28,400,000 + GST</strong></div>
+                <div class="hero-meta-item"><span>Reviewed</span><strong>9 April 2026</strong></div>
+            </div>
+        </div>
+        <div class="hero-llm">
+            <div class="hero-llm-label">Powered by</div>
+            <div class="hero-llm-name">Walter Legal LLM<span>v3.1</span></div>
+            <div class="hero-llm-stats">
+                <div class="hero-llm-stat"><strong>14,200+</strong><span>NZ agreements</span></div>
+                <div class="hero-llm-stat"><strong>38 yrs</strong><span>REINZ case law</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== NAV ========== -->
+    <nav class="report-nav">
+        <div class="nav-inner">
+            <a href="#terms" class="nav-link active">Key Terms</a>
+            <a href="#scorecard" class="nav-link">Risk Scorecard</a>
+            <a href="#advisory" class="nav-link">Walter Advisory</a>
+            <a href="#questions" class="nav-link">Solicitor Questions</a>
+            <a href="#checklist" class="nav-link">Checklist</a>
+            <a href="#download" class="nav-link">Download</a>
+            <a href="#" class="nav-cta">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                Discuss with Will
+            </a>
+        </div>
+    </nav>
+
+    <!-- ========== KEY TERMS ========== -->
+    <section class="section" id="terms">
+        <div class="section-label">Section 01 · Key Terms</div>
+        <h2 class="section-title">Every key term, extracted automatically</h2>
+        <p class="section-desc">Walter read the full 47-page agreement and pulled every material term into a structured view so you can verify accuracy without hunting through the document.</p>
+
+        <div class="terms-grid">
+            <div class="term-group">
+                <div class="term-group-label">Parties</div>
+                <div class="term-row"><span class="term-label">Vendor</span><span class="term-value">Du Val BTR Ltd</span></div>
+                <div class="term-row"><span class="term-label">Purchaser</span><span class="term-value">Whanau Ora / McKenzie ATL</span></div>
+                <div class="term-row"><span class="term-label">Vendor solicitor</span><span class="term-value">Anderson Lloyd</span></div>
+                <div class="term-row"><span class="term-label">Property</span><span class="term-value">McKenzie BTR development</span></div>
+            </div>
+            <div class="term-group">
+                <div class="term-group-label">Financial</div>
+                <div class="term-row"><span class="term-label">Purchase price</span><span class="term-value">$28,400,000 <small>+ GST</small></span></div>
+                <div class="term-row"><span class="term-label">Deposit</span><span class="term-value">$2,840,000 <small>10%</small></span></div>
+                <div class="term-row"><span class="term-label">Balance</span><span class="term-value">$25,560,000</span></div>
+                <div class="term-row"><span class="term-label">Default interest</span><span class="term-value">14% p.a.</span></div>
+            </div>
+            <div class="term-group">
+                <div class="term-group-label">Dates &amp; Conditions</div>
+                <div class="term-row"><span class="term-label">Agreement date</span><span class="term-value">27 Jul 2024</span></div>
+                <div class="term-row"><span class="term-label">Settlement</span><span class="term-value">90 days from CCC</span></div>
+                <div class="term-row"><span class="term-label">DD period</span><span class="term-value">15 working days</span></div>
+                <div class="term-row"><span class="term-label">Conditional on</span><span class="term-value">Finance, DD, OIA</span></div>
+            </div>
+        </div>
+
+        <!-- Risk scorecard -->
+        <div class="scorecard" id="scorecard">
+            <div class="sc-grid">
+                <div class="sc-item">
+                    <span>Walter rating</span>
+                    <strong>6.4<small style="font-size:18px;color:rgba(255,255,255,0.55);">/10</small></strong>
+                    <small>Acceptable with negotiation</small>
+                </div>
+                <div class="sc-item red">
+                    <span>Red flags</span>
+                    <strong>2</strong>
+                    <small>Material concerns</small>
+                </div>
+                <div class="sc-item amber">
+                    <span>Reviews</span>
+                    <strong>2</strong>
+                    <small>Worth negotiating</small>
+                </div>
+                <div class="sc-item green">
+                    <span>Standard</span>
+                    <strong>2</strong>
+                    <small>Market-aligned</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ADVISORY ========== -->
+    <section class="section" id="advisory">
+        <div class="section-label">Section 02 · Walter Advisory</div>
+        <h2 class="section-title">Clause-by-clause review</h2>
+        <p class="section-desc">Each material clause assessed against 14,200+ comparable NZ commercial agreements and contemporary case law. Where Walter has a recommendation, it's clearly marked.</p>
+
+        <div class="adv-stack">
+            <div class="adv-card red">
+                <div><span class="adv-flag-label">Alert</span></div>
+                <div class="adv-body">
+                    <strong class="adv-title">Clause 8.7 — Vendor warranty exclusions are unusually broad</strong>
+                    <p>The vendor has carved out warranties for any defect "discoverable upon reasonable inspection". Under NZ contract law (<b>Property Law Act 2007 s.225</b>), this is enforceable but the breadth here is well above market practice. In comparable BTR transactions reviewed, vendors typically warrant against latent defects for 12-24 months post-settlement.</p>
+                    <div class="adv-recommend">
+                        <span class="adv-recommend-tag">Recommend</span>
+                        Negotiate a <b>12-month latent defect warranty</b> with $500k cap
+                    </div>
+                </div>
+            </div>
+
+            <div class="adv-card amber">
+                <div><span class="adv-flag-label">Review</span></div>
+                <div class="adv-body">
+                    <strong class="adv-title">Clause 11.2 — Settlement extension mechanism is one-sided</strong>
+                    <p>Only the vendor has the right to extend settlement (up to 20 working days) if CCC is delayed. The purchaser has no equivalent extension right for finance or OIA delays. This is asymmetric and not consistent with current REINZ best practice for BTR transactions.</p>
+                    <div class="adv-recommend">
+                        <span class="adv-recommend-tag">Recommend</span>
+                        Mutual extension right of <b>15 working days</b> for finance/OIA
+                    </div>
+                </div>
+            </div>
+
+            <div class="adv-card amber">
+                <div><span class="adv-flag-label">Review</span></div>
+                <div class="adv-body">
+                    <strong class="adv-title">Clause 14 — Default interest rate at 14% is high</strong>
+                    <p>Default interest is set at 14% per annum on overdue balances. Current OCR is 4.25% — default rates of 12-18% are normal market range, but most comparable agreements set this at <b>OCR + 5%</b> (currently ~9.25%) which is more defensible if challenged as a penalty.</p>
+                    <div class="adv-recommend">
+                        <span class="adv-recommend-tag">Recommend</span>
+                        Cap at <b>OCR + 5%</b> or 11% — whichever is lower
+                    </div>
+                </div>
+            </div>
+
+            <div class="adv-card red">
+                <div><span class="adv-flag-label">Alert</span></div>
+                <div class="adv-body">
+                    <strong class="adv-title">Schedule 3 — Tenancy schedule incomplete (12 of 47 units listed)</strong>
+                    <p>Only 12 tenancies are detailed in Schedule 3. The remaining 35 units are described as "to be tenanted prior to settlement". Without confirmed tenancies, the rental yield calculation cannot be verified, and the purchaser is exposed to vacancy risk on ~74% of the asset.</p>
+                    <div class="adv-recommend">
+                        <span class="adv-recommend-tag">Recommend</span>
+                        Add a <b>vendor warranty of 90% occupancy</b> at settlement, with $/unit price reduction for shortfall
+                    </div>
+                </div>
+            </div>
+
+            <div class="adv-card green">
+                <div><span class="adv-flag-label">Good</span></div>
+                <div class="adv-body">
+                    <strong class="adv-title">Clause 5 — Due diligence period of 15 working days is generous</strong>
+                    <p>Standard market practice for BTR transactions of this scale is 10-15 working days. The 15 working days here gives Whanau Ora adequate time for full physical inspection and financial review.</p>
+                </div>
+            </div>
+
+            <div class="adv-card green">
+                <div><span class="adv-flag-label">Good</span></div>
+                <div class="adv-body">
+                    <strong class="adv-title">Clause 19 — OIA condition is standard</strong>
+                    <p>The Overseas Investment Act condition is drafted in line with the standard REINZ template. No amendments needed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SOLICITOR QUESTIONS ========== -->
+    <section class="section" id="questions">
+        <div class="section-label">Section 03 · For Your Solicitor</div>
+        <h2 class="section-title">8 questions to raise before signing</h2>
+        <p class="section-desc">Walter has drafted these for you to send straight to your solicitor — each one references the clause, the underlying legal principle, and the issue at stake.</p>
+
+        <div class="sq-section">
+            <div class="sq-section-head">
+                <div>
+                    <h3>Drafted questions</h3>
+                    <p>Print or email these directly to Anderson Lloyd</p>
+                </div>
+                <button class="sq-print-btn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                    Print all questions
+                </button>
+            </div>
+
+            <div class="sq-grid">
+                <div class="sq-card">
+                    <div class="sq-num-pill">01</div>
+                    <div>
+                        <div class="sq-q-text">"Can we negotiate a 12-month latent defect warranty under clause 8.7, with a $500k cap?"</div>
+                        <span class="sq-q-tag">Vendor warranty · Property Law Act s.225</span>
+                    </div>
+                </div>
+                <div class="sq-card">
+                    <div class="sq-num-pill">02</div>
+                    <div>
+                        <div class="sq-q-text">"Clause 11.2 only gives the vendor an extension right. Can this be made mutual to cover purchaser-side delays on finance and OIA?"</div>
+                        <span class="sq-q-tag">Settlement mechanics · Asymmetric drafting</span>
+                    </div>
+                </div>
+                <div class="sq-card">
+                    <div class="sq-num-pill">03</div>
+                    <div>
+                        <div class="sq-q-text">"What is our exposure if 35 of the 47 units are not tenanted at settlement? Should we insist on a vendor warranty of 90% occupancy?"</div>
+                        <span class="sq-q-tag">Tenancy risk · Schedule 3</span>
+                    </div>
+                </div>
+                <div class="sq-card">
+                    <div class="sq-num-pill">04</div>
+                    <div>
+                        <div class="sq-q-text">"Can clause 14's default interest of 14% be reduced to OCR + 5%, given the current 4.25% OCR makes 14% commercially aggressive?"</div>
+                        <span class="sq-q-tag">Default interest · Penalty clause risk</span>
+                    </div>
+                </div>
+                <div class="sq-card">
+                    <div class="sq-num-pill">05</div>
+                    <div>
+                        <div class="sq-q-text">"What is the impact of clause 22 on our ability to assign the agreement to a related entity before settlement?"</div>
+                        <span class="sq-q-tag">Assignment · Related-party transfers</span>
+                    </div>
+                </div>
+                <div class="sq-card">
+                    <div class="sq-num-pill">06</div>
+                    <div>
+                        <div class="sq-q-text">"Are there any GST implications we need to clarify given Whanau Ora's status as a charitable entity?"</div>
+                        <span class="sq-q-tag">GST · Charitable entity</span>
+                    </div>
+                </div>
+                <div class="sq-card">
+                    <div class="sq-num-pill">07</div>
+                    <div>
+                        <div class="sq-q-text">"Does the easements schedule (Schedule 5) cover all access and services we need? Any registered against the title we should be aware of?"</div>
+                        <span class="sq-q-tag">Title · Easements · LINZ check</span>
+                    </div>
+                </div>
+                <div class="sq-card">
+                    <div class="sq-num-pill">08</div>
+                    <div>
+                        <div class="sq-q-text">"What is our position if the CCC is delayed beyond 12 months? The current drafting only contemplates short delays."</div>
+                        <span class="sq-q-tag">CCC delay · Long-stop date</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CHECKLIST ========== -->
+    <section class="section" id="checklist">
+        <div class="section-label">Section 04 · Best Practice</div>
+        <h2 class="section-title">Best practice checklist</h2>
+        <p class="section-desc">How this agreement compares to Walter's checklist of best-practice items for NZ commercial Sale &amp; Purchase agreements of this scale.</p>
+
+        <div class="checklist-grid">
+            <div class="check-item complete">
+                <span class="check-mark">&#10003;</span>
+                <div><strong>OIA condition included</strong><span>Clause 19 — standard REINZ drafting</span></div>
+            </div>
+            <div class="check-item complete">
+                <span class="check-mark">&#10003;</span>
+                <div><strong>Due diligence period adequate</strong><span>15 working days — generous for BTR scale</span></div>
+            </div>
+            <div class="check-item complete">
+                <span class="check-mark">&#10003;</span>
+                <div><strong>Settlement mechanics defined</strong><span>Clauses 11-12 — but see asymmetry note</span></div>
+            </div>
+            <div class="check-item missing">
+                <span class="check-mark">&#10005;</span>
+                <div><strong>Vendor warranty — latent defects</strong><span>Missing — recommend adding</span></div>
+            </div>
+            <div class="check-item missing">
+                <span class="check-mark">&#10005;</span>
+                <div><strong>Occupancy warranty</strong><span>Missing — only 12/47 units tenanted</span></div>
+            </div>
+            <div class="check-item complete">
+                <span class="check-mark">&#10003;</span>
+                <div><strong>Easements schedule attached</strong><span>Schedule 5 — verify with LINZ</span></div>
+            </div>
+            <div class="check-item warning">
+                <span class="check-mark">!</span>
+                <div><strong>Default interest reasonable</strong><span>14% — high vs market 9-11%</span></div>
+            </div>
+            <div class="check-item complete">
+                <span class="check-mark">&#10003;</span>
+                <div><strong>Long-stop / sunset date</strong><span>Clause 24 — 18 months</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== DOWNLOAD ========== -->
+    <section class="section" id="download">
+        <div class="section-label">Section 05 · Original Document</div>
+        <h2 class="section-title">Download the agreement</h2>
+        <p class="section-desc">The original PDF you uploaded, available to download for your records or to forward to your solicitor.</p>
+
+        <div class="download-card">
+            <div class="download-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="download-body">
+                <h3>DVBTR &amp; Whanau Ora — Sale &amp; Purchase Agreement</h3>
+                <p>Original document signed by McKenzie ATL via DocuSign — 47 pages, version of record</p>
+                <div class="download-meta">
+                    <span>📄 PDF · 7.6 MB</span>
+                    <span>📅 Signed 27 Jul 2024</span>
+                    <span>🔒 DocuSign verified</span>
+                </div>
+            </div>
+            <button class="download-btn" onclick="alert('In the live version, this downloads the original signed PDF.');">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download PDF
+            </button>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="report-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="hero-brand-icon">W</div>
+                <span>Walter</span>
+                <span style="opacity:0.3;margin:0 4px;">|</span>
+                <img src="bayleys-logo.png" alt="Bayleys" style="height:18px;opacity:0.7;filter:brightness(0) invert(1);">
+            </div>
+            <p>This S&amp;P review was generated by Walter Legal LLM v3.1, trained on 14,200+ NZ commercial agreements, 38 years of REINZ case law, the Property Law Act 2007 and contemporary contract precedents.</p>
+            <p class="footer-disclaimer">Walter is an AI advisory tool. The analysis above is intended to support, not replace, legal advice from a qualified solicitor. Always have material agreements reviewed by your solicitor before signing. Bayleys and Walter accept no liability for decisions made solely on the basis of this report.</p>
+            <div class="footer-agent">
+                <strong>Will Alexander</strong>
+                <span>Head of Innovation | National Director — Property Management</span><br>
+                <span>will.alexander@bayleys.co.nz · +64 21 66 1234</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Nav active state on scroll
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const top = section.offsetTop - 120;
+                if (window.scrollY >= top) current = section.id;
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

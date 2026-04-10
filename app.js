@@ -13,7 +13,728 @@ document.addEventListener('DOMContentLoaded', () => {
             target.classList.add('active');
             document.querySelector(`.nav-item[data-view="${viewId}"]`)?.classList.add('active');
         }
+        // Toggle body class so the floating Walter FAB hides while on the chat view
+        document.body.classList.toggle('on-chat-view', viewId === 'chat');
     }
+
+    // ============ Floating Walter — Quick-ask popout ============
+    const walterFab = document.getElementById('walterFab');
+    const walterPopout = document.getElementById('walterPopout');
+    const walterPopoutClose = document.getElementById('walterPopoutClose');
+    const walterPopoutForm = document.getElementById('walterPopoutForm');
+    const walterPopoutInput = document.getElementById('walterPopoutInput');
+    const walterPopoutSuggestions = document.getElementById('walterPopoutSuggestions');
+    const walterPopoutFullLink = document.getElementById('walterPopoutFullLink');
+    const walterPopoutSub = document.getElementById('walterPopoutSub');
+
+    // Context-aware suggestion sets
+    const SUGGESTION_SETS = {
+        home: {
+            sub: 'Your priority actions & AI surfaced insights',
+            chips: [
+                { icon: '&#9728;', text: "What's on today?", prompt: "What are my priority actions for today?" },
+                { icon: '&#9888;', text: 'Flight-risk tenants', prompt: 'Which industrial tenants in South Auckland have high flight risk?' },
+                { icon: '&#9993;', text: 'Draft client update', prompt: 'Draft a weekly update for my top 3 clients' },
+                { icon: '&#128200;', text: 'Market pulse', prompt: 'Give me a market pulse for Auckland commercial this week' }
+            ]
+        },
+        chat: null, // popout doesn't show on chat view
+        market: {
+            sub: 'Market trends & sector performance',
+            chips: [
+                { icon: '&#128200;', text: 'Trending suburbs this week', prompt: 'What are the trending commercial suburbs in Auckland this week?' },
+                { icon: '&#128176;', text: 'Office $/sqm vs last quarter', prompt: 'Compare office $/sqm in Auckland CBD vs last quarter' },
+                { icon: '&#127970;', text: 'Industrial vacancy rates', prompt: "What's the current industrial vacancy rate for South Auckland?" },
+                { icon: '&#128269;', text: 'Show me outliers', prompt: 'Show me any market outliers worth investigating' }
+            ]
+        },
+        properties: {
+            sub: 'Your portfolio at a glance',
+            chips: [
+                { icon: '&#9200;', text: 'Expiring in 3 months', prompt: 'Which properties in my portfolio expire in the next 3 months?' },
+                { icon: '&#9888;', text: 'At-risk tenants', prompt: 'List all properties with at-risk tenants and their stickiness scores' },
+                { icon: '&#127794;', text: 'Expansion opportunities', prompt: 'Which tenants are showing expansion signals?' },
+                { icon: '&#128202;', text: 'Portfolio summary', prompt: 'Give me a summary of my portfolio performance' }
+            ]
+        },
+        listings: {
+            sub: 'Your live listings & campaigns',
+            chips: [
+                { icon: '&#128200;', text: 'Listing performance', prompt: 'How are my listings performing this week?' },
+                { icon: '&#128100;', text: 'Top enquiries', prompt: 'Show me the top enquiries from my active listings' },
+                { icon: '&#9889;', text: 'Find a match', prompt: 'Find tenant matches for my vacant listings' },
+                { icon: '&#128198;', text: 'Campaign ideas', prompt: 'Suggest marketing ideas for my slow-moving listings' }
+            ]
+        },
+        documents: {
+            sub: 'Lease & contract advisory',
+            chips: [
+                { icon: '&#128196;', text: 'Analyse a new lease', prompt: 'I want to analyse a new lease for a client' },
+                { icon: '&#128181;', text: 'Build an OPEX budget', prompt: 'Generate an OPEX budget from a lease I uploaded' },
+                { icon: '&#9878;', text: 'Compare lease options', prompt: 'Compare multiple lease options for a client' },
+                { icon: '&#128269;', text: 'Flag unusual clauses', prompt: 'What unusual clauses should I watch for in ADLS 6th Ed leases?' }
+            ]
+        },
+        settings: {
+            sub: 'Configure Walter to work for you',
+            chips: [
+                { icon: '&#129302;', text: 'Explain AI agents', prompt: 'Explain what each AI agent does and which I should turn on' },
+                { icon: '&#128227;', text: 'Alert tuning tips', prompt: 'How should I tune my alert preferences for my patch?' },
+                { icon: '&#128279;', text: 'Integration setup', prompt: 'Walk me through setting up the Contactless CRM integrations' },
+                { icon: '&#128161;', text: "What's new?", prompt: "What's new in Walter this week?" }
+            ]
+        }
+    };
+
+    function getCurrentViewId() {
+        const active = document.querySelector('.view.active');
+        if (!active) return 'home';
+        return (active.id || '').replace('view-', '') || 'home';
+    }
+
+    function getPropertyContext() {
+        // Check if any property modal is open
+        const crummer = document.getElementById('crummerModal');
+        const beaumontSc = document.getElementById('strategyModal');
+        const property = document.getElementById('propertyModal');
+        const carlisle = document.getElementById('carlisleModal');
+        const propDrill = document.getElementById('propDrillModal');
+        if (crummer?.classList.contains('active')) return { address: '33 Crummer Road, Grey Lynn', tag: 'Property in focus' };
+        if (beaumontSc?.classList.contains('active')) return { address: '24-28 Beaumont Street, Freemans Bay', tag: 'Strategy Card open' };
+        if (carlisle?.classList.contains('active')) return { address: '170-174 Carlisle Road', tag: 'Listing in focus' };
+        if (propDrill?.classList.contains('active')) {
+            const addr = document.getElementById('pdAddress')?.textContent || 'Property';
+            return { address: addr, tag: 'Property drill-down' };
+        }
+        if (property?.classList.contains('active')) return { address: '88 Shortland Street, CBD', tag: 'Property in focus' };
+        return null;
+    }
+
+    function renderPopoutSuggestions() {
+        const viewId = getCurrentViewId();
+        const ctx = getPropertyContext();
+        const set = SUGGESTION_SETS[viewId] || SUGGESTION_SETS.home;
+
+        // Update subtitle
+        if (walterPopoutSub) {
+            walterPopoutSub.textContent = ctx ? `Looking at ${ctx.address}` : (set.sub || 'What can I look into?');
+        }
+
+        let html = '';
+
+        // If there's a property context, inject a context badge + 2 tailored prompts
+        if (ctx) {
+            html += `<div class="wp-context-badge"><span class="wp-context-dot"></span>${ctx.tag}</div>`;
+            html += `
+                <button class="wp-chip" data-prompt="Tell me everything you know about ${ctx.address}">
+                    <span class="wp-chip-icon">&#128269;</span>
+                    <span class="wp-chip-text">Tell me about ${ctx.address}</span>
+                    <svg class="wp-chip-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <button class="wp-chip" data-prompt="Generate a Walter Strategy Card for ${ctx.address}">
+                    <span class="wp-chip-icon">&#9889;</span>
+                    <span class="wp-chip-text">Generate a Strategy Card</span>
+                    <svg class="wp-chip-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            `;
+        }
+
+        // Standard suggestions for the current view
+        html += '<div class="wp-suggest-label">' + (ctx ? 'Or try' : 'Suggestions') + '</div>';
+        set.chips.forEach(chip => {
+            html += `
+                <button class="wp-chip" data-prompt="${chip.prompt.replace(/"/g, '&quot;')}">
+                    <span class="wp-chip-icon">${chip.icon}</span>
+                    <span class="wp-chip-text">${chip.text}</span>
+                    <svg class="wp-chip-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            `;
+        });
+
+        walterPopoutSuggestions.innerHTML = html;
+
+        // Wire chip clicks
+        walterPopoutSuggestions.querySelectorAll('.wp-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                submitPopoutPrompt(chip.dataset.prompt);
+            });
+        });
+    }
+
+    function openPopout() {
+        renderPopoutSuggestions();
+        walterPopout?.classList.add('open');
+        walterFab?.classList.add('popout-open');
+        setTimeout(() => walterPopoutInput?.focus(), 250);
+    }
+
+    function closePopout() {
+        walterPopout?.classList.remove('open');
+        walterFab?.classList.remove('popout-open');
+        if (walterPopoutInput) walterPopoutInput.value = '';
+        // Reset to suggestions view next time it opens
+        setTimeout(() => {
+            walterPopout?.classList.remove('has-response');
+            walterPopoutResponse?.classList.remove('active');
+            if (walterPopoutResponseBody) {
+                walterPopoutResponseBody.innerHTML = '';
+                walterPopoutResponseBody.classList.remove('active');
+            }
+            if (walterPopoutResponseActions) walterPopoutResponseActions.style.display = 'none';
+            if (walterPopoutThinking) walterPopoutThinking.classList.remove('hidden');
+        }, 250);
+    }
+
+    function togglePopout() {
+        if (walterPopout?.classList.contains('open')) {
+            closePopout();
+        } else {
+            openPopout();
+        }
+    }
+
+    // ============ Inline response logic ============
+    const walterPopoutResponse = document.getElementById('walterPopoutResponse');
+    const walterPopoutThinking = document.getElementById('walterPopoutThinking');
+    const walterPopoutResponseBody = document.getElementById('walterPopoutResponseBody');
+    const walterPopoutResponseActions = document.getElementById('walterPopoutResponseActions');
+    const walterPopoutAnotherBtn = document.getElementById('walterPopoutAnotherBtn');
+    const walterPopoutMoreBtn = document.getElementById('walterPopoutMoreBtn');
+
+    let lastPopoutPrompt = '';
+    let lastResponseKey = '';
+    let lastResponseTier = 'brief'; // 'brief' or 'detailed'
+
+    // Detect which response template fits a question
+    function classifyQuery(text) {
+        const t = text.toLowerCase();
+        if (t.includes("what's on") || t.includes('today') || t.includes('priority') || t.includes('my day')) return 'today';
+        if (t.includes('flight') || (t.includes('risk') && t.includes('tenant'))) return 'flight';
+        if (t.includes('market pulse') || t.includes('market update') || t.includes('trending') || t.includes('vacancy') || (t.includes('market') && (t.includes('this week') || t.includes('auckland')))) return 'market';
+        if (t.includes('expir') || t.includes('next 3 months') || t.includes('upcoming')) return 'expiring';
+        if (t.includes('expansion') || t.includes('hiring')) return 'expansion';
+        if (t.includes('portfolio') && (t.includes('summary') || t.includes('overview') || t.includes('performance'))) return 'portfolio';
+        if (t.includes('listing') && (t.includes('perform') || t.includes('week'))) return 'listings';
+        if (t.includes('opex') || t.includes('outgoings') || t.includes('budget')) return 'opex';
+        if (t.includes('client update') || t.includes('draft client') || t.includes('weekly update')) return 'clientUpdate';
+        if (t.includes('agent') && (t.includes('explain') || t.includes('what'))) return 'agents';
+        return 'generic';
+    }
+
+    // Two-tier response library: brief (short, lands fast) + detailed (expands inline)
+    const RESPONSES = {
+        today: {
+            brief: `
+                <div class="wp-r-title">Your top 4 priorities today</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Marcus Miller call</strong> at 11am &mdash; Beaumont St Suite 2B (flagged urgent by Zara)</div></li>
+                    <li><div><strong>Property viewing</strong> 14 St Stephens Ave, Parnell at 11am &mdash; parking tight, Uber on standby</div></li>
+                    <li><div><strong>2 high-engagement reports</strong> opened by clients in the last 3 hours &mdash; follow-up window open</div></li>
+                    <li><div><strong>Costello market digest</strong> auto-generates at 5pm &mdash; review before send</div></li>
+                </ul>
+                <div class="wp-r-meta">5 events on calendar &middot; 2 AI agent tasks queued</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">Full day breakdown</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>9:00 AM</strong> &mdash; Solving the world's problems with AI &middot; M365</div></li>
+                    <li><div><strong>10:00 AM</strong> &mdash; Will/Alix RPM Conference catch-up</div></li>
+                    <li><div><strong>10:30 AM</strong> &mdash; Project Walter</div></li>
+                    <li><div><strong>11:00 AM</strong> &mdash; Marcus Miller call (Beaumont St) &middot; Property viewing Parnell</div></li>
+                    <li><div><strong>12:00 PM</strong> &mdash; Sarah Cincotta meeting</div></li>
+                    <li><div><strong>2:00 PM</strong> &mdash; SupaHuman.ai x Bayleys</div></li>
+                </ul>
+                <div class="wp-r-quote">Zara's flagged the Marcus Miller call as urgent &mdash; he's open to a 6-year extension on Suite 2A at $420/sqm if you bring comparables.</div>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Reports opened today</span>
+                        <span class="wp-r-stat-value">7</span>
+                        <span class="wp-r-stat-trend up">2 follow-up ready</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Brittany captures</span>
+                        <span class="wp-r-stat-value">23</span>
+                        <span class="wp-r-stat-trend">All filed</span>
+                    </div>
+                </div>
+            `
+        },
+        flight: {
+            brief: `
+                <div class="wp-r-title">8 flight-risk tenants in your patch</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Pacific Traders</strong> &middot; 45 Queen St &middot; Annual return 3mo overdue &middot; Score 28%</div></li>
+                    <li><div><strong>Atlas Logistics</strong> &middot; 22 Wiri Station Rd &middot; Director contagion &middot; Score 31%</div></li>
+                    <li><div><strong>Southern Steel</strong> &middot; 8 Kerrs Rd &middot; ICP -40% &middot; Score 35%</div></li>
+                </ul>
+                <div class="wp-r-meta">+ 5 more high-risk accounts</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">All 8 flight-risk tenants</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Pacific Traders Ltd</strong> &middot; 45 Queen St, Onehunga &middot; <strong>28%</strong> &middot; Annual return 3mo overdue, Google reviews declining</div></li>
+                    <li><div><strong>Atlas Logistics NZ</strong> &middot; 22 Wiri Station Rd &middot; <strong>31%</strong> &middot; Director linked to recent liquidation</div></li>
+                    <li><div><strong>Southern Steel Fab</strong> &middot; 8 Kerrs Rd, Manukau &middot; <strong>35%</strong> &middot; ICP consumption -40%</div></li>
+                    <li><div><strong>Cafe Nero Ltd</strong> &middot; 12 Ponsonby Rd &middot; <strong>34%</strong> &middot; Google reviews declining</div></li>
+                    <li><div><strong>Vibe Studio Ltd</strong> &middot; 88 Ponsonby Rd &middot; <strong>41%</strong> &middot; Late annual return</div></li>
+                    <li><div><strong>Good Dog Holdings</strong> &middot; 4/1179 Great North Rd &middot; <strong>30%</strong> &middot; Hiring frozen</div></li>
+                    <li><div><strong>Shaw NZ Ltd</strong> &middot; A/47 Dalgety Dr &middot; <strong>34%</strong> &middot; $485k/yr exposure</div></li>
+                    <li><div><strong>Shane Bradley</strong> &middot; B/32-38 Patiki Rd &middot; <strong>29%</strong> &middot; $334k/yr exposure</div></li>
+                </ul>
+                <div class="wp-r-quote">Total at-risk revenue: <strong>$1.8M annually</strong>. Wallace has 87 prospect matches for the top 4 properties &mdash; pre-emptive backfill recommended.</div>
+            `
+        },
+        market: {
+            brief: `
+                <div class="wp-r-title">Auckland commercial &mdash; this week</div>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Office $/sqm</span>
+                        <span class="wp-r-stat-value">$385</span>
+                        <span class="wp-r-stat-trend up">&#9650; 2.1%</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Industrial</span>
+                        <span class="wp-r-stat-value">$165</span>
+                        <span class="wp-r-stat-trend up">&#9650; 4.3%</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Retail</span>
+                        <span class="wp-r-stat-value">$520</span>
+                        <span class="wp-r-stat-trend down">&#9660; 0.8%</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Vacancy</span>
+                        <span class="wp-r-stat-value">8.2%</span>
+                        <span class="wp-r-stat-trend down">&#9650; 0.4%</span>
+                    </div>
+                </div>
+                <div class="wp-r-quote">Industrial South Auckland is the standout &mdash; tight supply, +4.3% rate movement, low vacancy. Worth pitching to investors.</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">Sector deep dive</div>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">CBD office prime</span>
+                        <span class="wp-r-stat-value">$485</span>
+                        <span class="wp-r-stat-trend up">&#9650; 1.8%</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">CBD office B-grade</span>
+                        <span class="wp-r-stat-value">$285</span>
+                        <span class="wp-r-stat-trend">flat</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Wynyard / Britomart</span>
+                        <span class="wp-r-stat-value">$425</span>
+                        <span class="wp-r-stat-trend up">&#9650; 3.2%</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Penrose industrial</span>
+                        <span class="wp-r-stat-value">$182</span>
+                        <span class="wp-r-stat-trend up">&#9650; 5.1%</span>
+                    </div>
+                </div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Hot suburbs:</strong> Wynyard Quarter, East Tamaki, Penrose, Albany Tech Park</div></li>
+                    <li><div><strong>Cooling:</strong> Newmarket retail, Queen St ground-floor retail</div></li>
+                    <li><div><strong>OCR:</strong> 4.25% trending down &mdash; favours longer lease commitments</div></li>
+                    <li><div><strong>CPI 2026-28 forecast:</strong> 2.1-2.4% &mdash; CPI-linked reviews favour tenants</div></li>
+                </ul>
+                <div class="wp-r-meta">Source: 847 comparable leases &middot; Last 24 months</div>
+            `
+        },
+        expiring: {
+            brief: `
+                <div class="wp-r-title">18 leases expiring in next 3 months</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>40A Spring St</strong>, Freemans Bay &middot; Integrity Food &middot; Jan 2026 (overdue)</div></li>
+                    <li><div><strong>Unit H, 195 Main Hwy</strong>, Ellerslie &middot; Latitude Homes &middot; Jan 2026</div></li>
+                    <li><div><strong>K117 Ormiston Town Centre</strong> &middot; Asaving Ltd &middot; Jan 2026</div></li>
+                    <li><div><strong>367 Remuera Rd</strong> &middot; Kooper Fushion &middot; May 2026</div></li>
+                </ul>
+                <div class="wp-r-meta">+ 14 more &middot; 4 are flight risks</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">All 18 expiring leases (next 3 months)</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>40A Spring St</strong> &middot; Integrity Food &middot; Jan 2026 &middot; <strong>$36k/yr</strong> &middot; Overdue</div></li>
+                    <li><div><strong>Unit H, 195 Main Hwy</strong> &middot; Latitude Homes &middot; Jan 2026 &middot; $55k/yr</div></li>
+                    <li><div><strong>K117 Ormiston</strong> &middot; Asaving Ltd &middot; Jan 2026 &middot; $46k/yr &middot; <strong>Renewing</strong></div></li>
+                    <li><div><strong>136 Fanshawe St</strong> &middot; Riru Ltd &middot; Jan 2026 &middot; $34k/yr</div></li>
+                    <li><div><strong>3 Pukemiro St</strong> &middot; Mr Cool Auto &middot; May 2026 &middot; <strong>Flight risk</strong></div></li>
+                    <li><div><strong>367 Remuera Rd</strong> &middot; Kooper Fushion &middot; May 2026 &middot; $76k/yr</div></li>
+                </ul>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Total at risk</span>
+                        <span class="wp-r-stat-value">$680k</span>
+                        <span class="wp-r-stat-trend">3-month window</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Likely renew</span>
+                        <span class="wp-r-stat-value">9</span>
+                        <span class="wp-r-stat-trend up">Stickiness &gt;70%</span>
+                    </div>
+                </div>
+                <div class="wp-r-meta">Backfill candidates surfaced by Wallace for 6 properties</div>
+            `
+        },
+        expansion: {
+            brief: `
+                <div class="wp-r-title">11 expansion opportunities</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Lumiere Design</strong> &middot; 24-28 Beaumont St &middot; 6 active job listings, $450k fit-out</div></li>
+                    <li><div><strong>Dawn Aerospace</strong> &middot; 12-14 Birmingham Dr &middot; 89% stickiness, hiring 4 engineers</div></li>
+                    <li><div><strong>Creative Dental Ceramics</strong> &middot; 168 Aviemore Dr &middot; 95% stickiness</div></li>
+                </ul>
+                <div class="wp-r-meta">+ 8 more &middot; All flagged by Wallace</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">All 11 expansion candidates</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Lumiere Design</strong> &middot; Beaumont St &middot; 6 jobs, $450k fit-out, 92% stickiness</div></li>
+                    <li><div><strong>Dawn Aerospace</strong> &middot; Birmingham Dr &middot; 4 engineering hires</div></li>
+                    <li><div><strong>Creative Dental Ceramics</strong> &middot; Aviemore Dr &middot; 95% stickiness</div></li>
+                    <li><div><strong>NZ Health Group</strong> &middot; Various &middot; Hiring surge, 12 roles</div></li>
+                    <li><div><strong>Pandher Enterprises</strong> &middot; 180 Moore St &middot; 93% stickiness</div></li>
+                    <li><div><strong>DB International Trading</strong> &middot; 81 Mays Rd &middot; 95% stickiness, blend &amp; extend ready</div></li>
+                </ul>
+                <div class="wp-r-quote">Wallace recommends focusing on Lumiere first &mdash; the renewal window opens in November and they've already flagged Suite 2B interest.</div>
+            `
+        },
+        portfolio: {
+            brief: `
+                <div class="wp-r-title">Your portfolio at a glance</div>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Properties</span>
+                        <span class="wp-r-stat-value">54</span>
+                        <span class="wp-r-stat-trend">7 regions</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Annual rent</span>
+                        <span class="wp-r-stat-value">$6.8M</span>
+                        <span class="wp-r-stat-trend up">+5.2%</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Avg stickiness</span>
+                        <span class="wp-r-stat-value">62%</span>
+                        <span class="wp-r-stat-trend up">+3% QoQ</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">At risk</span>
+                        <span class="wp-r-stat-value">10</span>
+                        <span class="wp-r-stat-trend down">$1.8M exposure</span>
+                    </div>
+                </div>
+                <div class="wp-r-meta">11 expansion opportunities &middot; 18 expiring in 12 months</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">Portfolio breakdown by sector</div>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Industrial</span>
+                        <span class="wp-r-stat-value">19</span>
+                        <span class="wp-r-stat-trend up">$2.1M rent</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Office</span>
+                        <span class="wp-r-stat-value">15</span>
+                        <span class="wp-r-stat-trend up">$2.4M rent</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Retail</span>
+                        <span class="wp-r-stat-value">20</span>
+                        <span class="wp-r-stat-trend">$2.3M rent</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Stable</span>
+                        <span class="wp-r-stat-value">24</span>
+                        <span class="wp-r-stat-trend up">Renewal &gt;70%</span>
+                    </div>
+                </div>
+                <ul class="wp-r-list">
+                    <li><div><strong>New signals this week:</strong> 9 properties (ICP, NZBN, hiring)</div></li>
+                    <li><div><strong>Rolling 30-day enquiries:</strong> 142 across all listings</div></li>
+                    <li><div><strong>Top performer:</strong> Industrial Penrose +5.1% $/sqm</div></li>
+                </ul>
+            `
+        },
+        listings: {
+            brief: `
+                <div class="wp-r-title">Your live listings &mdash; this week</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>4 active listings</strong> &middot; 2 sale, 2 lease</div></li>
+                    <li><div><strong>38 enquiries</strong> &middot; +12 vs last week</div></li>
+                    <li><div><strong>Avg days on market: 52</strong> &middot; -8 vs regional</div></li>
+                    <li><div><strong>Carlisle Rd</strong> standout &middot; 14 enquiries this week</div></li>
+                </ul>
+                <div class="wp-r-meta">Campaign spend: $4,220 &middot; $111 per enquiry</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">Listing performance breakdown</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>170-174 Carlisle Rd</strong> &middot; Office investment &middot; 14 enquiries, 3 inspections booked</div></li>
+                    <li><div><strong>33 Crummer Rd</strong> &middot; Office &middot; 8 enquiries, owner viewing this week</div></li>
+                    <li><div><strong>49 Bryce St, Whanganui</strong> &middot; Industrial &middot; 11 enquiries</div></li>
+                    <li><div><strong>88 Shortland St</strong> &middot; Office &middot; 5 enquiries, 1 hot lead from Wallace</div></li>
+                </ul>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Web views</span>
+                        <span class="wp-r-stat-value">2,847</span>
+                        <span class="wp-r-stat-trend up">+18% WoW</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Conversion</span>
+                        <span class="wp-r-stat-value">1.3%</span>
+                        <span class="wp-r-stat-trend up">Above average</span>
+                    </div>
+                </div>
+            `
+        },
+        opex: {
+            brief: `
+                <div class="wp-r-title">OPEX budget generator</div>
+                <p style="margin:0;">I can build a 12-month operating budget from any lease's Third Schedule &mdash; every line item mapped, benchmarked against the portfolio average, and projected forward 5 years. Auto-flags landlord-liability items.</p>
+                <div class="wp-r-meta">Head to Documents &rarr; Advisory 03 to upload a lease</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">What the OPEX generator does</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Extract</strong> &middot; Reads Third Schedule, identifies all OPEX categories</div></li>
+                    <li><div><strong>Map</strong> &middot; Each line tagged with accounting code</div></li>
+                    <li><div><strong>Benchmark</strong> &middot; Compares each line against 847 comparable leases</div></li>
+                    <li><div><strong>Flag</strong> &middot; Highlights items that should sit with the landlord (structural, capital)</div></li>
+                    <li><div><strong>Project</strong> &middot; 5-year forecast using CPI + category inflators</div></li>
+                    <li><div><strong>Export</strong> &middot; Excel, PDF, or push directly to Xero</div></li>
+                </ul>
+                <div class="wp-r-quote">Typical run on a 13-category Third Schedule takes about 4 seconds &mdash; agents have used it to identify $8-12k/yr savings on the average industrial lease.</div>
+            `
+        },
+        clientUpdate: {
+            brief: `
+                <div class="wp-r-title">Draft for your top 3 clients</div>
+                <p style="margin:0;">I can pre-draft a personalised weekly update for each client based on their property activity, market movements affecting their portfolio, and any recommendations from Costello.</p>
+                <div class="wp-r-meta">Costello has 3 drafts ready for your review</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">Drafts ready for your sign-off</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Des Radonich</strong> &middot; 33 Crummer Rd update + Grey Lynn office market &middot; <strong>Ready</strong></div></li>
+                    <li><div><strong>Marcus Miller</strong> &middot; Beaumont St renewal positioning + Suite 2B opportunity &middot; <strong>Ready</strong></div></li>
+                    <li><div><strong>Glenn Cotterill</strong> &middot; Q1 portfolio summary + Wallace expansion matches &middot; <strong>Ready</strong></div></li>
+                </ul>
+                <div class="wp-r-quote">Costello pulls in property data, market movements, and engagement signals automatically &mdash; you just review the tone and click send.</div>
+            `
+        },
+        agents: {
+            brief: `
+                <div class="wp-r-title">Your AI team &mdash; 5 agents</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Zara</strong> &middot; Admin &amp; task intelligence &mdash; runs your day</div></li>
+                    <li><div><strong>Wallace</strong> &middot; Lead &amp; tenant matchmaker</div></li>
+                    <li><div><strong>Costello</strong> &middot; Market reports &amp; data analysis</div></li>
+                    <li><div><strong>Molloy</strong> &middot; Investment &amp; value-add analyst</div></li>
+                    <li><div><strong>Brittany</strong> &middot; Contactless CRM &mdash; the data plumber</div></li>
+                </ul>
+            `,
+            detailed: `
+                <div class="wp-r-title">What each agent actually does</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Zara</strong> &middot; Schedules your week, prioritises tasks, monitors emails for follow-ups, books Ubers when parking is tight</div></li>
+                    <li><div><strong>Wallace</strong> &middot; Matches tenants to properties using business vitality, hiring trends, location preferences. Surfaces conjunctional opportunities</div></li>
+                    <li><div><strong>Costello</strong> &middot; Generates client market reports automatically. Pulls property data, market movements, comparable sales</div></li>
+                    <li><div><strong>Molloy</strong> &middot; Investment analysis, value-add opportunities (mezzanines, fit-outs), yield projections</div></li>
+                    <li><div><strong>Brittany</strong> &middot; Captures every conversation (calls, email, WhatsApp, WeChat, Plaud) and files into Vault RE automatically. Saves ~32hrs of admin per week</div></li>
+                </ul>
+                <div class="wp-r-meta">All 5 agents run simultaneously &middot; Configure under Settings &rarr; AI Agents</div>
+            `
+        },
+        generic: {
+            brief: `
+                <div class="wp-r-title">Here's what I know</div>
+                <p style="margin:0;">I can answer most quick questions about your portfolio, market trends, leases, contacts, and your daily activity. For property-specific deep dives I'll generate a Strategy Card, and for lease analysis I can run an Advisory or build an OPEX budget.</p>
+                <div class="wp-r-stat-row">
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Properties indexed</span>
+                        <span class="wp-r-stat-value">113k</span>
+                        <span class="wp-r-stat-trend">NZ-wide</span>
+                    </div>
+                    <div class="wp-r-stat">
+                        <span class="wp-r-stat-label">Comparables</span>
+                        <span class="wp-r-stat-value">847</span>
+                        <span class="wp-r-stat-trend">Last 24 months</span>
+                    </div>
+                </div>
+                <div class="wp-r-meta">Tap one of the suggestions or rephrase your question</div>
+            `,
+            detailed: `
+                <div class="wp-r-title">All the ways I can help</div>
+                <ul class="wp-r-list">
+                    <li><div><strong>Property analysis</strong> &middot; Strategy Cards, lease history, value-add opportunities</div></li>
+                    <li><div><strong>Tenant intelligence</strong> &middot; Stickiness scoring, flight risk, expansion signals</div></li>
+                    <li><div><strong>Market data</strong> &middot; $/sqm benchmarks, vacancy rates, sector trends</div></li>
+                    <li><div><strong>Lease advisory</strong> &middot; Single-lease review, multi-lease comparison, OPEX budget</div></li>
+                    <li><div><strong>Client engagement</strong> &middot; Drafts, reports, follow-up nudges</div></li>
+                    <li><div><strong>Contactless capture</strong> &middot; Brittany handles all data entry across 6 channels</div></li>
+                </ul>
+                <div class="wp-r-meta">Just ask &mdash; I'll either answer here or open the full chat for the deep dive</div>
+            `
+        }
+    };
+
+    function getInlineResponse(key, tier) {
+        const set = RESPONSES[key] || RESPONSES.generic;
+        return set[tier] || set.brief;
+    }
+
+    // Detect strictly-complex queries that warrant the full chat (specific addresses, agent names)
+    function isStrictlyComplexQuery(text) {
+        const t = text.toLowerCase();
+        const complexPatterns = [
+            'strategy card', 'tell me about', 'tell me everything', 'analyse',
+            'beaumont', 'crummer', 'osterley', 'parnell', 'lumiere',
+            'wallace', 'costello', 'molloy', 'find tenant', 'find investor',
+            'value-add', 'mezzanine', 'compare lease',
+            'lease review', 'send to', 'generate report'
+        ];
+        return complexPatterns.some(p => t.includes(p));
+    }
+
+    function showThinking() {
+        walterPopoutResponse?.classList.add('active');
+        walterPopout?.classList.add('has-response');
+        if (walterPopoutThinking) walterPopoutThinking.classList.remove('hidden');
+        if (walterPopoutResponseBody) {
+            walterPopoutResponseBody.classList.remove('active');
+            walterPopoutResponseBody.innerHTML = '';
+        }
+        if (walterPopoutResponseActions) walterPopoutResponseActions.style.display = 'none';
+    }
+
+    function showResponse(html) {
+        if (walterPopoutThinking) walterPopoutThinking.classList.add('hidden');
+        if (walterPopoutResponseBody) {
+            walterPopoutResponseBody.innerHTML = html;
+            walterPopoutResponseBody.classList.add('active');
+        }
+        if (walterPopoutResponseActions) walterPopoutResponseActions.style.display = 'flex';
+    }
+
+    function clearResponse() {
+        walterPopout?.classList.remove('has-response');
+        walterPopoutResponse?.classList.remove('active');
+        if (walterPopoutResponseBody) {
+            walterPopoutResponseBody.innerHTML = '';
+            walterPopoutResponseBody.classList.remove('active');
+        }
+        if (walterPopoutResponseActions) walterPopoutResponseActions.style.display = 'none';
+        if (walterPopoutThinking) walterPopoutThinking.classList.remove('hidden');
+        if (walterPopoutInput) walterPopoutInput.value = '';
+    }
+
+    function submitPopoutPrompt(text) {
+        if (!text || !text.trim()) return;
+        lastPopoutPrompt = text;
+        lastResponseKey = classifyQuery(text);
+        lastResponseTier = 'brief';
+
+        // Strictly-complex queries (specific properties / agent names) → still escalate to full chat
+        if (isStrictlyComplexQuery(text)) {
+            closePopout();
+            switchView('chat');
+            setTimeout(() => {
+                if (typeof simulateChat === 'function') {
+                    simulateChat(text);
+                }
+            }, 200);
+            return;
+        }
+
+        // Otherwise render the brief inline
+        showThinking();
+        if (walterPopoutInput) walterPopoutInput.value = '';
+        setTimeout(() => {
+            const html = getInlineResponse(lastResponseKey, 'brief');
+            showResponse(html);
+            updateMoreButton();
+        }, 1100);
+    }
+
+    function updateMoreButton() {
+        if (!walterPopoutMoreBtn) return;
+        const hasDetailed = RESPONSES[lastResponseKey]?.detailed && lastResponseTier === 'brief';
+        if (hasDetailed) {
+            walterPopoutMoreBtn.style.display = '';
+            walterPopoutMoreBtn.innerHTML = `
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                More detail
+            `;
+        } else {
+            // Already showing detailed — hide the button or show "Done" state
+            walterPopoutMoreBtn.style.display = 'none';
+        }
+    }
+
+    // Wire response action buttons
+    walterPopoutAnotherBtn?.addEventListener('click', () => {
+        clearResponse();
+        renderPopoutSuggestions();
+        setTimeout(() => walterPopoutInput?.focus(), 100);
+    });
+
+    walterPopoutMoreBtn?.addEventListener('click', () => {
+        // Show the detailed tier inline — no navigation
+        if (!RESPONSES[lastResponseKey]?.detailed) return;
+        showThinking();
+        setTimeout(() => {
+            lastResponseTier = 'detailed';
+            const html = getInlineResponse(lastResponseKey, 'detailed');
+            showResponse(html);
+            updateMoreButton();
+            // Scroll the response body to top so the new content is visible
+            if (walterPopoutResponseBody) walterPopoutResponseBody.scrollTop = 0;
+        }, 700);
+    });
+
+    // Wire interactions
+    walterFab?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        togglePopout();
+    });
+
+    walterPopoutClose?.addEventListener('click', closePopout);
+
+    walterPopoutForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = walterPopoutInput?.value.trim();
+        if (text) submitPopoutPrompt(text);
+    });
+
+    walterPopoutFullLink?.addEventListener('click', () => {
+        closePopout();
+        switchView('chat');
+        setTimeout(() => document.getElementById('chatInput')?.focus(), 150);
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (!walterPopout?.classList.contains('open')) return;
+        if (walterPopout.contains(e.target) || walterFab?.contains(e.target)) return;
+        closePopout();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && walterPopout?.classList.contains('open')) {
+            closePopout();
+        }
+    });
+
+    // simulateChat is defined inside this same closure so we need a reference
+    // It will be hoisted by function declaration, but we check dynamically above
 
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
@@ -52,18 +773,74 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Dropdown items navigate to settings + scroll to section
+    // --- Settings page switching ---
+    const settingsMeta = {
+        contactless: {
+            title: 'Contactless CRM',
+            subtitle: 'Brittany listens across every channel and files everything into Vault RE automatically'
+        },
+        integrations: {
+            title: 'Integrations',
+            subtitle: 'Workspace identity, CRM backbone, and signal sources — the foundations that feed Walter'
+        },
+        alerts: {
+            title: 'Alert Preferences',
+            subtitle: 'Choose which signals reach you — and when'
+        },
+        agents: {
+            title: 'AI Agents',
+            subtitle: 'Manage the autonomous agents working alongside you'
+        },
+        context: {
+            title: 'Personal Context',
+            subtitle: 'Build a rich profile that personalises every agent, report, and recommendation'
+        }
+    };
+
+    function showSettingsSection(section) {
+        if (!section || !settingsMeta[section]) section = 'contactless';
+        // Activate matching section panel
+        document.querySelectorAll('#view-settings .settings-section').forEach(s => {
+            s.classList.toggle('active', s.id === 'settings-' + section);
+        });
+        // Update tab active state
+        document.querySelectorAll('.settings-page-tab').forEach(t => {
+            t.classList.toggle('active', t.dataset.section === section);
+        });
+        // Update header title + subtitle
+        const meta = settingsMeta[section];
+        const titleEl = document.getElementById('settingsViewTitle');
+        const subtitleEl = document.getElementById('settingsViewSubtitle');
+        if (titleEl) titleEl.textContent = meta.title;
+        if (subtitleEl) subtitleEl.textContent = meta.subtitle;
+        // Scroll the view to the top
+        const viewEl = document.getElementById('view-settings');
+        if (viewEl) viewEl.scrollTo?.({ top: 0, behavior: 'smooth' });
+    }
+
+    // In-page tab clicks
+    document.querySelectorAll('.settings-page-tab').forEach(tab => {
+        tab.addEventListener('click', () => showSettingsSection(tab.dataset.section));
+    });
+
+    // Cross-page handoff links (e.g. Integrations → Contactless CRM)
+    document.querySelectorAll('[data-goto]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSettingsSection(el.dataset.goto);
+        });
+    });
+
+    // Dropdown items navigate to settings + activate section
     document.querySelectorAll('.dropdown-item[data-view]').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             settingsContainer.classList.remove('open');
             switchView(item.dataset.view);
             const section = item.dataset.section;
-            if (section) {
-                setTimeout(() => {
-                    const target = document.getElementById('settings-' + section);
-                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+            // Only switch section if the dropdown item has a matching settings page
+            if (section && settingsMeta[section]) {
+                setTimeout(() => showSettingsSection(section), 50);
             }
         });
     });
@@ -122,10 +899,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const isMaintenance = t.includes('maintenance') || t.includes('pla 2007') || t.includes('property law');
             const isREA = t.includes('rea') || t.includes('disclosure') || t.includes('disciplin');
             const isOPEX = t.includes('opex') && (t.includes('dispute') || t.includes('capital'));
+            const isWhoIsWalter = (
+                /\bwho(?:'s|\s+is)\s+walter\b/i.test(text) ||
+                /\bwhat\s+is\s+walter\b/i.test(text) ||
+                /\bwhere\s+is\s+walter\b/i.test(text) ||
+                /\bwalter\s+who\b/i.test(text) ||
+                t === 'walter?' || t === 'walter'
+            );
 
             let response = '';
 
-            if (isBeaumont) {
+            if (isWhoIsWalter) {
+                response = getWhoIsWalterResponse();
+            } else if (isBeaumont) {
                 response = getBeaumontResponse();
             } else if (isWallace) {
                 response = getWallaceResponse();
@@ -513,6 +1299,38 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
+    function getWhoIsWalterResponse() {
+        const theories = [
+            {
+                title: 'Theory #1 — The Grandfather Paradox',
+                body: `Honestly? <strong>We don't know who Walter is.</strong><br><br>Our best guess: Walter could be an example of the <em>Grandfather Paradox</em> in time travel. If he went back in time and prevented his grandfather from meeting his grandmother, he would never be born — which means he could never have gone back in time to stop them. So Walter both exists and doesn't exist, simultaneously. This may explain why nobody at Bayleys can confirm having met him.`
+            },
+            {
+                title: 'Theory #2 — Schrödinger\'s Agent',
+                body: `<strong>Walter is, by all available evidence, both a person and not a person.</strong><br><br>I queried the CRM, NZBN, LinkedIn, and three internal Slack channels. Walter appears in 47 references across Bayleys documentation, but no employee record exists. Until someone opens the box (i.e. actually meets him), Walter remains in a superposition of "legendary commercial property savant" and "elaborate group hallucination."`
+            },
+            {
+                title: 'Theory #3 — The Founding Ghost',
+                body: `<strong>Walter predates the data.</strong><br><br>Some say he was the first agent to ever close a deal on Queen Street. Others say he <em>is</em> the deal. The earliest mention of "Walter" in Bayleys archives is a 1973 note that simply reads: <em>"Walter says the warehouse is undervalued. He's usually right."</em> No surname. No follow-up. The warehouse sold for double a week later.`
+            }
+        ];
+        const pick = theories[Math.floor(Math.random() * theories.length)];
+        return `
+            <div class="processing-steps">
+                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched CRM, HR records, and NZBN</div>
+                <div class="processing-step"><span class="step-icon done">&#10003;</span> Cross-referenced 14 internal Slack channels</div>
+                <div class="processing-step"><span class="step-icon done">&#10003;</span> Consulted physics department (just in case)</div>
+                <div class="processing-step"><span class="step-icon done">&#10003;</span> Result: <em>inconclusive</em></div>
+            </div>
+            <strong>${pick.title}</strong><br><br>
+            ${pick.body}<br><br>
+            <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(59,130,246,0.08));border-left:3px solid #8b5cf6;border-radius:6px;font-size:12px;color:var(--text-secondary);font-style:italic;">
+                <span style="font-size:14px;line-height:1;">&#9758;</span>
+                <span>If you do meet Walter, please let the team know. We'd love to thank him.</span>
+            </div>
+        `;
+    }
+
     function getGenericResponse(text) {
         return `
             <div class="processing-steps">
@@ -669,16 +1487,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Document Result Switching ---
+    // --- Documents: workflow widget + recent doc switching ---
     function showDocResult(viewId) {
+        // Update active result view
         document.querySelectorAll('.doc-result-view').forEach(v => v.classList.remove('active'));
         document.getElementById(viewId)?.classList.add('active');
+
+        // Update active workflow widget
+        document.querySelectorAll('.docs-workflows-3 .docs-workflow').forEach(w => {
+            w.classList.toggle('active', w.dataset.result === viewId);
+        });
+
+        // Smoothly scroll the results panel into view
+        const panel = document.getElementById('docsResultPanel');
+        if (panel) {
+            setTimeout(() => {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+        }
     }
 
-    document.getElementById('docLeaseReview')?.addEventListener('click', () => showDocResult('docResultReview'));
-    document.getElementById('docLeaseCompare')?.addEventListener('click', () => showDocResult('docResultCompare'));
-    document.getElementById('uploadSingleBtn')?.addEventListener('click', () => showDocResult('docResultReview'));
-    document.getElementById('uploadCompareBtn')?.addEventListener('click', () => showDocResult('docResultCompare'));
+    // Wire up all data-result triggers (workflow widgets + recent doc cards)
+    document.querySelectorAll('[data-result]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            showDocResult(el.dataset.result);
+        });
+    });
+
+    // --- OPEX Budget: Regenerate animation ---
+    const opexRegenBtn = document.getElementById('opexRegenBtn');
+    const opexGenerating = document.getElementById('opexGenerating');
+    const opexOutput = document.getElementById('opexOutput');
+    opexRegenBtn?.addEventListener('click', () => {
+        if (!opexGenerating || !opexOutput) return;
+        opexOutput.style.display = 'none';
+        opexGenerating.style.display = 'flex';
+        setTimeout(() => {
+            opexGenerating.style.display = 'none';
+            opexOutput.style.display = '';
+        }, 1800);
+    });
 
     // --- Custom Agent Builder ---
     const createAgentBtn = document.getElementById('createAgentBtn');
@@ -693,6 +1542,31 @@ document.addEventListener('DOMContentLoaded', () => {
     cancelAgentBtn?.addEventListener('click', () => {
         createAgentForm.style.display = 'none';
         createAgentBtn.style.display = 'flex';
+    });
+
+    // --- Personal Context: Tag toggling ---
+    document.querySelectorAll('.pc-tag:not(.add)').forEach(tag => {
+        tag.addEventListener('click', () => {
+            tag.classList.toggle('active');
+        });
+    });
+
+    // --- Personal Context: Source pill switching (Bayleys / 365 / Manual) ---
+    document.querySelectorAll('.pc-source-pills').forEach(group => {
+        const pills = group.querySelectorAll('.pc-source-pill');
+        pills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                pills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+            });
+        });
+    });
+
+    // --- Personal Context: Communication style selection (multi-select) ---
+    document.querySelectorAll('.pc-style-card').forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.toggle('active');
+        });
     });
 
     // --- Market Intelligence Tabs ---
@@ -1035,6 +1909,787 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Agent Activity: show more/less toggle ---
+    const activityMoreBtn = document.getElementById('activityMoreBtn');
+    const activityMore = document.getElementById('activityMore');
+    if (activityMoreBtn && activityMore) {
+        activityMoreBtn.addEventListener('click', () => {
+            const expanded = activityMore.classList.toggle('open');
+            activityMoreBtn.setAttribute('aria-expanded', String(expanded));
+            activityMoreBtn.querySelector('.activity-more-label').textContent = expanded
+                ? 'Show less'
+                : 'Show 4 more activities';
+        });
+    }
+
+    // --- AI Agents: live pulse rings (toggle on/off) ---
+    document.querySelectorAll('.agent-card').forEach(card => {
+        const toggle = card.querySelector('.agent-card-header .toggle input[type="checkbox"]');
+        if (!toggle) return;
+        const sync = () => card.classList.toggle('paused', !toggle.checked);
+        sync();
+        toggle.addEventListener('change', sync);
+    });
+
+    // --- Contactless Capture: live feed ticker ---
+    // Every 20s, update the "last capture" time hints on the first feed item to simulate live activity
+    const ccFeed = document.getElementById('ccFeed');
+    if (ccFeed) {
+        const incomingCaptures = [
+            {
+                channel: 'sms',
+                time: 'Just now',
+                title: 'SMS from <strong>Karen Patel</strong> <span class="cc-feed-pill">Buyer enquiry</span>',
+                desc: '"Hi Will, saw the Ormiston listing online — are you doing viewings this Saturday?"',
+                route: 'Linked to <strong>R54 Ormiston Town Centre</strong> &middot; Intent: <span class="cc-intent warm">Buyer enquiry</span>'
+            },
+            {
+                channel: 'whatsapp',
+                time: 'Just now',
+                title: 'WhatsApp from <strong>Priya Shah</strong> <span class="cc-feed-pill">Investor</span>',
+                desc: '"Can you share the yield comparison for the Penrose industrial portfolio? Keen to progress this week."',
+                route: 'Linked to <strong>Penrose Industrial Portfolio</strong> &middot; Intent: <span class="cc-intent hot">Ready to transact</span>'
+            },
+            {
+                channel: 'email',
+                time: 'Just now',
+                title: 'Email from <strong>Nick Whitlow</strong> <span class="cc-feed-pill">Parnell owner</span>',
+                desc: 'Thread summarised: Nick confirmed OIA approval and wants to progress the deal quickly.',
+                route: 'Linked to <strong>14 St Stephens Ave</strong> &middot; <span class="cc-intent hot">OIA cleared</span>'
+            },
+            {
+                channel: 'calls',
+                time: 'Just now',
+                title: 'Inbound call from <strong>Rachel Kim</strong> <span class="cc-feed-pill">2m 15s</span>',
+                desc: 'Summary: Rachel asking about the Fanshawe St retail vacancy. Budget $450/sqm, timeline 30 days.',
+                route: 'Linked to <strong>136 Fanshawe St</strong> &middot; Task: <span class="cc-intent">Send floorplan</span>'
+            },
+            {
+                channel: 'plaud',
+                time: 'Just now',
+                title: 'Client meeting at <strong>Bayleys House</strong> <span class="cc-feed-pill plaud">Plaud</span>',
+                desc: 'Captured: Discussed Ponsonby portfolio. Prospect open to yield-driven plays above 6.2%.',
+                route: '1 contact enriched &middot; <span class="cc-intent">Sent to Wallace</span>'
+            },
+            {
+                channel: 'wechat',
+                time: 'Just now',
+                title: 'WeChat voice note from <strong>Mr Wong</strong> <span class="cc-feed-pill wechat">52s &middot; 粵語</span>',
+                desc: 'Transcribed from Cantonese: "The Botany retail strip — I\'m ready to move. Can we close before Chinese New Year?"',
+                route: 'Linked to <strong>Botany Retail Strip</strong> &middot; Intent: <span class="cc-intent hot">Ready to close</span>'
+            },
+            {
+                channel: 'wechat',
+                time: 'Just now',
+                title: 'WeChat Moments signal &mdash; <strong>Lucy Tan</strong> <span class="cc-feed-pill wechat">Moments</span>',
+                desc: 'Posted photo at Commercial Bay lobby with caption "new HQ vibes" — contact flagged as expansion lead.',
+                route: 'Linked to <strong>Lucy Tan &middot; ABC Imports</strong> &middot; Intent: <span class="cc-intent warm">Office expansion</span>'
+            }
+        ];
+        let captureIndex = 0;
+
+        function addLiveCapture() {
+            // Skip if feed not visible (user is on a different page)
+            const contactless = document.getElementById('settings-contactless');
+            if (!contactless?.classList.contains('active')) return;
+
+            const capture = incomingCaptures[captureIndex % incomingCaptures.length];
+            captureIndex++;
+
+            const iconSvgs = {
+                plaud: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>',
+                calls: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>',
+                sms: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+                whatsapp: '<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>',
+                email: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>',
+                wechat: '<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348z"/></svg>'
+            };
+
+            const newItem = document.createElement('div');
+            newItem.className = 'cc-feed-item just-in';
+            newItem.dataset.channel = capture.channel;
+            newItem.innerHTML = `
+                <div class="cc-feed-time">${capture.time}</div>
+                <div class="cc-feed-icon ${capture.channel}">${iconSvgs[capture.channel]}</div>
+                <div class="cc-feed-body">
+                    <div class="cc-feed-title">${capture.title}</div>
+                    <div class="cc-feed-desc">${capture.desc}</div>
+                    <div class="cc-feed-route"><span class="cc-feed-arrow">&rarr;</span> ${capture.route}</div>
+                </div>
+            `;
+            ccFeed.insertBefore(newItem, ccFeed.firstChild);
+
+            // Age all other time labels
+            const items = ccFeed.querySelectorAll('.cc-feed-item');
+            items.forEach((item, i) => {
+                if (i === 0) return;
+                const timeEl = item.querySelector('.cc-feed-time');
+                // Add a minute to each cascade (simple simulation)
+                const ageMap = ['3 min ago','12 min ago','42 min ago','1 hour ago','2 hours ago'];
+                timeEl.textContent = ageMap[Math.min(i - 1, ageMap.length - 1)];
+            });
+
+            // Trim to 5 items max
+            while (ccFeed.querySelectorAll('.cc-feed-item').length > 5) {
+                ccFeed.removeChild(ccFeed.lastChild);
+            }
+        }
+
+        setInterval(addLiveCapture, 22000);
+    }
+
+    // --- Pipeline Drill-down Modal ---
+    const pipelineModal = document.getElementById('pipelineModal');
+    const pipelineModalClose = document.getElementById('pipelineModalClose');
+    let pmCurrentTab = 'expiring';
+    let pmCurrentWindow = 3;
+
+    // Data model for drill-down list
+    const pipelineData = {
+        expiring: {
+            title: 'Expiring Leases',
+            subtitle: '142 leases expiring across your portfolio',
+            heroNumber: '142',
+            heroLabel: 'Expiring',
+            // counts by window
+            counts: { 3: 18, 6: 42, 12: 142, 18: 201 },
+            quickstats: [
+                { label: 'High-value (>$250k)', value: '23', sub: '16% of total', subClass: '' },
+                { label: 'Flight risk', value: '31', sub: 'Stickiness < 40%', subClass: 'down' },
+                { label: 'Auto-renewal predicted', value: '67', sub: 'Stickiness > 70%', subClass: 'up' }
+            ],
+            items: [
+                { addr: '40A Spring Street, Freemans Bay', tenant: 'Integrity Food Distributors', type: 'office', expiry: 'Jan 2026', days: 'Expired 68 days ago', stick: 63, stickClass: 'medium', action: 'Overdue', agent: 'Z' },
+                { addr: 'Unit H, 195 Main Highway, Ellerslie', tenant: 'Latitude Homes Ltd', type: 'office', expiry: 'Jan 2026', days: 'Expired 68 days', stick: 53, stickClass: 'medium', action: 'Overdue', agent: 'Z' },
+                { addr: 'K117 Ormiston Town Centre, Flat Bush', tenant: 'Asaving Limited', type: 'retail', expiry: 'Jan 2026', days: 'Expired 68 days', stick: 90, stickClass: 'high', action: 'Likely renewed', agent: 'Z' },
+                { addr: 'Ground Floor, 136 Fanshawe St, CBD', tenant: 'Riru Limited', type: 'retail', expiry: 'Jan 2026', days: 'Expired 68 days', stick: 49, stickClass: 'medium', action: 'Action req', agent: 'Z' },
+                { addr: '367 Remuera Rd, Remuera', tenant: 'Kooper Fushion Ltd', type: 'retail', expiry: 'May 2026', days: 'In 28 days', stick: 68, stickClass: 'medium', action: 'Schedule call', agent: 'Z' },
+                { addr: '3 Pukemiro Street, Onehunga', tenant: 'Mr Cool Auto Limited', type: 'industrial', expiry: 'May 2026', days: 'In 28 days', stick: 40, stickClass: 'low', action: 'Flight risk', agent: 'Z' }
+            ]
+        },
+        renewals: {
+            title: 'Renewals Likely',
+            subtitle: '38 properties with renewal probability above 70%',
+            heroNumber: '38',
+            heroLabel: 'Renewals',
+            counts: { 3: 9, 6: 17, 12: 38, 18: 54 },
+            quickstats: [
+                { label: 'Stickiness average', value: '84%', sub: '+4% vs portfolio', subClass: 'up' },
+                { label: 'Total annual rent', value: '$2.1M', sub: 'Secure income', subClass: '' },
+                { label: 'Blend & extend ready', value: '14', sub: 'Approach early', subClass: '' }
+            ],
+            items: [
+                { addr: '12-14 Birmingham Drive, Christchurch', tenant: 'Dawn Aerospace NZ Ltd', type: 'industrial', expiry: 'Apr 2029', days: 'Renewal target', stick: 89, stickClass: 'high', action: 'Blend & extend', agent: 'Z' },
+                { addr: '81 Mays Road, Onehunga', tenant: 'DB International Trading Ltd', type: 'industrial', expiry: 'Nov 2028', days: 'Renewal target', stick: 95, stickClass: 'high', action: 'Expansion', agent: 'W' },
+                { addr: 'G/168 Aviemore Drive, Highland Park', tenant: 'Creative Dental Ceramics', type: 'retail', expiry: 'Apr 2029', days: 'Renewal target', stick: 95, stickClass: 'high', action: 'Expansion', agent: 'W' },
+                { addr: '180 Moore Street, Howick', tenant: 'Pandher Enterprises Ltd', type: 'retail', expiry: 'Oct 2027', days: 'Renewal target', stick: 93, stickClass: 'high', action: 'Early close', agent: 'Z' },
+                { addr: '373 Remuera Road, Remuera', tenant: 'Yanfeng LI', type: 'retail', expiry: 'Jul 2028', days: 'Renewal target', stick: 91, stickClass: 'high', action: 'Early close', agent: 'Z' },
+                { addr: '24-28 Beaumont Street, Freemans Bay', tenant: 'Lumiere Design Group', type: 'office', expiry: 'Nov 2026', days: 'In 7 months', stick: 92, stickClass: 'high', action: 'Retention', agent: 'Z' }
+            ]
+        },
+        backfill: {
+            title: 'Backfill Needed',
+            subtitle: '24 properties need a new tenant within 12 months',
+            heroNumber: '24',
+            heroLabel: 'Backfill',
+            counts: { 3: 6, 6: 13, 12: 24, 18: 31 },
+            quickstats: [
+                { label: 'Wallace matches found', value: '87', sub: 'Active prospects', subClass: 'up' },
+                { label: 'Avg days vacant', value: '42', sub: '&#9660; 18 vs market', subClass: 'up' },
+                { label: 'Total $ at risk', value: '$1.8M', sub: 'Annual rent', subClass: 'down' }
+            ],
+            items: [
+                { addr: 'A/47 Dalgety Drive, Wiri', tenant: 'Shaw NZ Limited', type: 'industrial', expiry: 'Sep 2026', days: 'In 5 months', stick: 34, stickClass: 'low', action: 'Wallace · 12 matches', agent: 'W' },
+                { addr: '9/96 Rosedale Road, Albany', tenant: 'Unknown — ICP active', type: 'retail', expiry: 'Sep 2026', days: 'In 5 months', stick: 23, stickClass: 'low', action: 'Wallace · 8 matches', agent: 'W' },
+                { addr: '2A/3-7 High Street, CBD', tenant: 'ICP signal detected', type: 'office', expiry: 'Sep 2026', days: 'In 5 months', stick: 41, stickClass: 'medium', action: 'Wallace · 15 matches', agent: 'W' },
+                { addr: '4/1179 Great North Road, Pt Chevalier', tenant: 'Good Dog Holdings Ltd', type: 'retail', expiry: 'Feb 2027', days: 'In 10 months', stick: 30, stickClass: 'low', action: 'Pre-emptive', agent: 'W' },
+                { addr: 'B/32-38 Patiki Road, Avondale', tenant: 'Shane Bradley', type: 'industrial', expiry: 'Oct 2027', days: 'In 18 months', stick: 29, stickClass: 'low', action: 'Monitor', agent: 'W' },
+                { addr: '12 Ponsonby Rd, Ponsonby', tenant: 'Cafe Nero Ltd', type: 'retail', expiry: 'Aug 2026', days: 'In 4 months', stick: 34, stickClass: 'low', action: 'Flight risk', agent: 'W' }
+            ]
+        },
+        risk: {
+            title: 'Revenue at Risk',
+            subtitle: '$4.2M in annual rent tied to accounts showing risk signals',
+            heroNumber: '$4.2M',
+            heroLabel: 'At risk',
+            counts: { 3: 680000, 6: 1400000, 12: 4200000, 18: 5100000 },
+            quickstats: [
+                { label: 'Highest single risk', value: '$485k', sub: 'Shaw NZ · Wiri', subClass: 'down' },
+                { label: 'Flight-risk tenants', value: '31', sub: 'Across 4 sectors', subClass: 'down' },
+                { label: 'Mitigation actions', value: '18', sub: 'Zara in progress', subClass: 'up' }
+            ],
+            items: [
+                { addr: 'A/47 Dalgety Drive, Wiri', tenant: 'Shaw NZ Limited', type: 'industrial', expiry: 'Sep 2026', days: '$485k/yr', stick: 34, stickClass: 'low', action: '&#8595; Flight', agent: 'Z' },
+                { addr: 'B/32-38 Patiki Road, Avondale', tenant: 'Shane Bradley', type: 'industrial', expiry: 'Oct 2027', days: '$334k/yr', stick: 29, stickClass: 'low', action: '&#8595; Flight', agent: 'Z' },
+                { addr: '9/96 Rosedale Road, Albany', tenant: 'Unknown — ICP active', type: 'retail', expiry: 'Sep 2026', days: '$287k/yr', stick: 23, stickClass: 'low', action: '&#8595; Flight', agent: 'Z' },
+                { addr: '4/1179 Great North Road, Pt Chev', tenant: 'Good Dog Holdings Ltd', type: 'retail', expiry: 'Feb 2027', days: '$225k/yr', stick: 30, stickClass: 'low', action: '&#8595; Flight', agent: 'Z' },
+                { addr: '12 Ponsonby Rd, Ponsonby', tenant: 'Cafe Nero Ltd', type: 'retail', expiry: 'Aug 2026', days: '$198k/yr', stick: 34, stickClass: 'low', action: '&#8595; Declining', agent: 'Z' },
+                { addr: '88 Ponsonby Rd, Ponsonby', tenant: 'Vibe Studio Ltd', type: 'retail', expiry: 'Oct 2026', days: '$172k/yr', stick: 41, stickClass: 'medium', action: '&#8595; Declining', agent: 'Z' }
+            ]
+        }
+    };
+
+    function renderPipelineModal() {
+        const d = pipelineData[pmCurrentTab];
+        if (!d) return;
+        document.getElementById('pmTitle').textContent = d.title;
+        document.getElementById('pmHeroNumber').textContent = d.heroNumber;
+        document.getElementById('pmHeroLabel').textContent = d.heroLabel;
+        const subtitleEl = document.getElementById('pmSubtitle');
+        const countForWindow = d.counts[pmCurrentWindow];
+        const windowLabel = pmCurrentWindow === 3 ? 'next 3 months' : (pmCurrentWindow + ' months');
+        let countText;
+        if (pmCurrentTab === 'risk') {
+            countText = '$' + (countForWindow >= 1000000 ? (countForWindow/1000000).toFixed(1) + 'M' : Math.round(countForWindow/1000) + 'k');
+            subtitleEl.textContent = `${countText} at risk in the ${windowLabel} across your portfolio`;
+            document.getElementById('pmCtaCount').textContent = `See all high-risk accounts`;
+        } else {
+            subtitleEl.textContent = `${countForWindow} ${d.heroLabel.toLowerCase()} in the ${windowLabel} across your portfolio`;
+            document.getElementById('pmCtaCount').textContent = `See all ${countForWindow} properties`;
+        }
+
+        // Quickstats
+        const qsEl = document.getElementById('pmQuickstats');
+        qsEl.innerHTML = d.quickstats.map(q => `
+            <div class="pm-qs">
+                <span class="pm-qs-label">${q.label}</span>
+                <span class="pm-qs-value">${q.value}</span>
+                <span class="pm-qs-sub ${q.subClass}">${q.sub}</span>
+            </div>
+        `).join('');
+
+        // List
+        const listEl = document.getElementById('pmList');
+        // Show a subset based on window (visual cue that window matters)
+        const visibleCount = pmCurrentWindow === 3 ? 4 : (pmCurrentWindow === 6 ? 5 : 6);
+        const items = d.items.slice(0, visibleCount);
+        listEl.innerHTML = items.map(it => `
+            <div class="pm-item">
+                <div class="pm-item-main">
+                    <div class="pm-item-addr">${it.addr}</div>
+                    <div class="pm-item-tenant">
+                        <span class="pm-item-type ${it.type}">${it.type}</span>
+                        ${it.tenant}
+                    </div>
+                </div>
+                <div class="pm-item-expiry">
+                    <span class="pm-item-expiry-date">${it.expiry}</span>
+                    <span class="pm-item-expiry-days">${it.days}</span>
+                </div>
+                <div class="pm-item-stick">
+                    <div class="pm-item-stick-label"><span>Stickiness</span><span>${it.stick}%</span></div>
+                    <div class="pm-item-stick-bar"><div class="pm-item-stick-fill ${it.stickClass}" style="width:${it.stick}%"></div></div>
+                </div>
+                <div class="pm-item-action">
+                    <span class="agent-pip zara">${it.agent}</span>
+                    <span>${it.action}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openPipelineModal(tab) {
+        pmCurrentTab = tab || 'expiring';
+        pmCurrentWindow = 3;
+        // Update active tab button
+        document.querySelectorAll('.pm-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === pmCurrentTab));
+        document.querySelectorAll('.pm-chip[data-window]').forEach(c => c.classList.toggle('active', c.dataset.window === '3'));
+        renderPipelineModal();
+        pipelineModal?.classList.add('active');
+    }
+
+    // Wire home stats
+    document.querySelectorAll('.pipeline-stat').forEach(btn => {
+        btn.addEventListener('click', () => openPipelineModal(btn.dataset.pipeline));
+    });
+
+    // Tab switching inside modal
+    document.querySelectorAll('.pm-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            pmCurrentTab = tab.dataset.tab;
+            document.querySelectorAll('.pm-tab').forEach(t => t.classList.toggle('active', t === tab));
+            renderPipelineModal();
+        });
+    });
+
+    // Window chip switching
+    document.querySelectorAll('.pm-chip[data-window]').forEach(chip => {
+        chip.addEventListener('click', () => {
+            pmCurrentWindow = parseInt(chip.dataset.window, 10);
+            document.querySelectorAll('.pm-chip[data-window]').forEach(c => c.classList.toggle('active', c === chip));
+            renderPipelineModal();
+        });
+    });
+
+    pipelineModalClose?.addEventListener('click', () => pipelineModal.classList.remove('active'));
+    pipelineModal?.addEventListener('click', (e) => {
+        if (e.target === pipelineModal) pipelineModal.classList.remove('active');
+    });
+
+    // CTA → flow to My Properties with filter
+    document.getElementById('pmCtaBtn')?.addEventListener('click', () => {
+        const filterMap = {
+            expiring: 'expiring-12',
+            renewals: 'stable',
+            backfill: 'at-risk',
+            risk: 'at-risk'
+        };
+        pipelineModal.classList.remove('active');
+        switchView('properties');
+        setTimeout(() => applyPropertyFilter(filterMap[pmCurrentTab]), 150);
+    });
+
+    // --- My Properties: per-row action menu + drill-down modal ---
+    const propDrillModal = document.getElementById('propDrillModal');
+    const propDrillClose = document.getElementById('propDrillClose');
+    const pdAddress = document.getElementById('pdAddress');
+
+    function openPropDrill(address, tab) {
+        if (pdAddress && address) pdAddress.textContent = address;
+        // Activate the selected tab (default: history)
+        const targetTab = tab || 'history';
+        document.querySelectorAll('.pd-tab').forEach(t => t.classList.toggle('active', t.dataset.pdTab === targetTab));
+        document.querySelectorAll('.pd-panel').forEach(p => p.classList.toggle('active', p.id === 'pdPanel' + targetTab.charAt(0).toUpperCase() + targetTab.slice(1)));
+        propDrillModal?.classList.add('active');
+    }
+
+    propDrillClose?.addEventListener('click', () => propDrillModal.classList.remove('active'));
+    propDrillModal?.addEventListener('click', (e) => {
+        if (e.target === propDrillModal) propDrillModal.classList.remove('active');
+    });
+
+    // Tab switching inside drill-down modal
+    document.querySelectorAll('.pd-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const key = tab.dataset.pdTab;
+            document.querySelectorAll('.pd-tab').forEach(t => t.classList.toggle('active', t === tab));
+            document.querySelectorAll('.pd-panel').forEach(p => p.classList.toggle('active', p.id === 'pdPanel' + key.charAt(0).toUpperCase() + key.slice(1)));
+        });
+    });
+
+    // History category filter
+    document.querySelectorAll('.pd-hist-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const cat = chip.dataset.hist;
+            document.querySelectorAll('.pd-hist-chip').forEach(c => c.classList.toggle('active', c === chip));
+            document.querySelectorAll('.pd-tl-item').forEach(item => {
+                item.classList.toggle('filtered-out', cat !== 'all' && item.dataset.cat !== cat);
+            });
+        });
+    });
+
+    // Inject action cells into every property row
+    const propTableRows = document.querySelectorAll('#view-properties .properties-table tbody tr');
+    propTableRows.forEach((row) => {
+        // Don't double-inject
+        if (row.querySelector('.td-actions')) return;
+
+        const actionCell = document.createElement('td');
+        actionCell.className = 'td-actions';
+        // Stop row click-through so the action cell doesn't also open the property summary
+        actionCell.addEventListener('click', (e) => e.stopPropagation());
+        actionCell.innerHTML = `
+            <button class="prop-action-btn" aria-label="Property actions">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>
+            </button>
+            <div class="prop-action-menu">
+                <div class="pam-sub" style="padding:6px 12px 2px;">Property drill-down</div>
+                <button data-pd="history">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span class="pam-label">History</span>
+                </button>
+                <button data-pd="reports">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <span class="pam-label">Reports</span>
+                </button>
+                <button data-pd="insights">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    <span class="pam-label">Insights</span>
+                </button>
+                <button data-pd="data">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0018 0V5"/><path d="M3 12a9 3 0 0018 0"/></svg>
+                    <span class="pam-label">Data</span>
+                </button>
+                <div class="pam-divider"></div>
+                <button data-pd="summary">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <span class="pam-label">Open property summary</span>
+                </button>
+            </div>
+        `;
+        row.appendChild(actionCell);
+
+        const btn = actionCell.querySelector('.prop-action-btn');
+        const menu = actionCell.querySelector('.prop-action-menu');
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Close any other open menus first
+            document.querySelectorAll('.prop-action-menu.open').forEach(m => {
+                if (m !== menu) m.classList.remove('open');
+            });
+            document.querySelectorAll('.prop-action-btn.open').forEach(b => {
+                if (b !== btn) b.classList.remove('open');
+            });
+            menu.classList.toggle('open');
+            btn.classList.toggle('open');
+        });
+
+        // Menu item clicks
+        actionCell.querySelectorAll('.prop-action-menu button[data-pd]').forEach(mi => {
+            mi.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const tab = mi.dataset.pd;
+                const address = row.querySelector('.cell-primary')?.textContent?.trim() || 'Property';
+                menu.classList.remove('open');
+                btn.classList.remove('open');
+                if (tab === 'summary') {
+                    // Trigger the existing row-click behaviour
+                    if (address.includes('Crummer')) {
+                        document.getElementById('crummerModal')?.classList.add('active');
+                    } else {
+                        document.getElementById('propertyModal')?.classList.add('active');
+                    }
+                } else {
+                    openPropDrill(address, tab);
+                }
+            });
+        });
+    });
+
+    // Close dropdown menus when clicking outside
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.prop-action-menu.open').forEach(m => m.classList.remove('open'));
+        document.querySelectorAll('.prop-action-btn.open').forEach(b => b.classList.remove('open'));
+    });
+
+    // --- My Properties: filtering ---
+    const mpWidgets = document.querySelectorAll('.mp-widget');
+    const mpQuickChips = document.querySelectorAll('.mp-quick-chips .mp-chip');
+    const mpSearchInput = document.getElementById('mpSearchInput');
+    const mpActiveFilter = document.getElementById('mpActiveFilter');
+    const mpActiveChip = document.getElementById('mpActiveChip');
+    const mpClearFilter = document.getElementById('mpClearFilter');
+    const propCountDisplay = document.getElementById('propCountDisplay');
+
+    let mpState = { filter: 'all', type: 'all', search: '' };
+
+    const widgetLabels = {
+        'all': 'All properties',
+        'expiring-12': 'Expiring in 12 months',
+        'at-risk': 'At Risk',
+        'expansion': 'Expansion Opportunity',
+        'new-signal': 'New Signals',
+        'stable': 'Stable',
+        'high-value': 'High-value (>$300/sqm)',
+        'stickiness': 'High stickiness (>70%)'
+    };
+
+    function applyPropertyFilter(filter) {
+        mpState.filter = filter || 'all';
+        mpWidgets.forEach(w => w.classList.toggle('active', w.dataset.filter === mpState.filter && mpState.filter !== 'all'));
+        renderPropertyFilter();
+    }
+
+    function renderPropertyFilter() {
+        const rows = document.querySelectorAll('.properties-table tbody tr');
+        let visible = 0;
+        const total = rows.length;
+        rows.forEach(row => {
+            let show = true;
+
+            // Filter by status/category
+            if (mpState.filter !== 'all') {
+                const statusBadge = row.querySelector('.status-badge');
+                const status = statusBadge ? Array.from(statusBadge.classList).find(c => c !== 'status-badge') : '';
+                const stickFill = row.querySelector('.stickiness-fill');
+                const stickPct = stickFill ? parseInt(stickFill.style.width) || 0 : 0;
+                const dollarCell = row.querySelectorAll('td')[4];
+                const dollar = dollarCell ? parseInt((dollarCell.textContent || '').replace(/[^0-9]/g, '')) || 0 : 0;
+                const expiryCell = row.querySelectorAll('td')[5];
+                const expiry = expiryCell ? expiryCell.textContent.trim() : '';
+
+                if (mpState.filter === 'at-risk' && status !== 'at-risk') show = false;
+                else if (mpState.filter === 'expansion' && status !== 'expansion') show = false;
+                else if (mpState.filter === 'new-signal' && status !== 'new-signal') show = false;
+                else if (mpState.filter === 'stable' && status !== 'stable') show = false;
+                else if (mpState.filter === 'high-value' && dollar < 300) show = false;
+                else if (mpState.filter === 'stickiness' && stickPct < 70) show = false;
+                else if (mpState.filter === 'expiring-12') {
+                    // Expiries in the next 12 months: Jan 2026 – Apr 2027
+                    const m12 = ['Jan 2026','Feb 2026','Mar 2026','Apr 2026','May 2026','Jun 2026','Jul 2026','Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027'];
+                    if (!m12.includes(expiry)) show = false;
+                }
+            }
+
+            // Filter by type chip
+            if (mpState.type !== 'all') {
+                const typeBadge = row.querySelector('.type-badge');
+                const type = typeBadge ? Array.from(typeBadge.classList).find(c => c !== 'type-badge') : '';
+                if (type !== mpState.type) show = false;
+            }
+
+            // Filter by search
+            if (mpState.search) {
+                const txt = row.textContent.toLowerCase();
+                if (!txt.includes(mpState.search.toLowerCase())) show = false;
+            }
+
+            row.classList.toggle('filtered-out', !show);
+            if (show) {
+                visible++;
+                row.classList.add('filtered-highlight');
+                setTimeout(() => row.classList.remove('filtered-highlight'), 1300);
+            }
+        });
+
+        propCountDisplay.textContent = `Showing ${visible} of ${total}`;
+
+        // Update active filter pill
+        if (mpState.filter !== 'all' || mpState.type !== 'all' || mpState.search) {
+            mpActiveFilter.style.display = 'inline-flex';
+            const parts = [];
+            if (mpState.filter !== 'all') parts.push(widgetLabels[mpState.filter]);
+            if (mpState.type !== 'all') parts.push(mpState.type.charAt(0).toUpperCase() + mpState.type.slice(1));
+            if (mpState.search) parts.push(`"${mpState.search}"`);
+            mpActiveChip.textContent = parts.join(' · ') || 'Active';
+        } else {
+            mpActiveFilter.style.display = 'none';
+        }
+    }
+
+    mpWidgets.forEach(w => {
+        w.addEventListener('click', () => {
+            const next = w.dataset.filter;
+            // Toggle off if clicking active widget
+            if (mpState.filter === next && next !== 'all') {
+                applyPropertyFilter('all');
+            } else {
+                applyPropertyFilter(next);
+            }
+        });
+    });
+
+    mpQuickChips.forEach(c => {
+        c.addEventListener('click', () => {
+            mpState.type = c.dataset.type;
+            mpQuickChips.forEach(o => o.classList.toggle('active', o === c));
+            renderPropertyFilter();
+        });
+    });
+    // Init "All types" as active
+    const defaultChip = document.querySelector('.mp-quick-chips .mp-chip[data-type="all"]');
+    if (defaultChip) defaultChip.classList.add('active');
+
+    mpSearchInput?.addEventListener('input', () => {
+        mpState.search = mpSearchInput.value.trim();
+        renderPropertyFilter();
+    });
+
+    mpClearFilter?.addEventListener('click', () => {
+        mpState = { filter: 'all', type: 'all', search: '' };
+        mpSearchInput.value = '';
+        mpWidgets.forEach(w => w.classList.remove('active'));
+        mpQuickChips.forEach(c => c.classList.toggle('active', c.dataset.type === 'all'));
+        renderPropertyFilter();
+    });
+
+    // --- Zara × Uber: book parking-rescue ride ---
+    document.getElementById('zuBookBtn')?.addEventListener('click', () => {
+        const card = document.getElementById('zaraUberCard');
+        if (!card) return;
+        const actions = card.querySelector('.zu-actions');
+        actions.innerHTML = '&#10003; Booked &mdash; Uber arrives 10:48 AM &middot; receipt to Xero';
+        card.classList.add('booked');
+    });
+
+    // --- Feedback Modal ---
+    const feedbackModal = document.getElementById('feedbackModal');
+    const feedbackLink = document.getElementById('feedbackLink');
+    const feedbackModalClose = document.getElementById('feedbackModalClose');
+    const fbInput = document.getElementById('fbInput');
+    const fbCharCount = document.getElementById('fbCharCount');
+    const fbSendBtn = document.getElementById('fbSendBtn');
+    const fbStageCompose = document.getElementById('fbStageCompose');
+    const fbStageThinking = document.getElementById('fbStageThinking');
+    const fbStageResponse = document.getElementById('fbStageResponse');
+    const fbAnotherBtn = document.getElementById('fbAnotherBtn');
+    const fbDoneBtn = document.getElementById('fbDoneBtn');
+    let fbCurrentType = 'idea';
+
+    function openFeedback() {
+        resetFeedback();
+        feedbackModal?.classList.add('active');
+        setTimeout(() => fbInput?.focus(), 200);
+    }
+    function closeFeedback() {
+        feedbackModal?.classList.remove('active');
+    }
+    function resetFeedback() {
+        fbStageCompose.classList.add('active');
+        fbStageThinking.classList.remove('active');
+        fbStageResponse.classList.remove('active');
+        if (fbInput) fbInput.value = '';
+        if (fbCharCount) fbCharCount.textContent = '0 chars';
+        document.querySelectorAll('.fb-thinking-step').forEach(s => s.classList.remove('visible'));
+    }
+
+    feedbackLink?.addEventListener('click', (e) => {
+        e.preventDefault();
+        openFeedback();
+        // Close the dropdown if open
+        document.querySelector('.user-dropdown')?.classList.remove('active');
+    });
+    feedbackModalClose?.addEventListener('click', closeFeedback);
+    feedbackModal?.addEventListener('click', (e) => {
+        if (e.target === feedbackModal) closeFeedback();
+    });
+    fbAnotherBtn?.addEventListener('click', () => resetFeedback());
+    fbDoneBtn?.addEventListener('click', closeFeedback);
+
+    document.querySelectorAll('.fb-type').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.fb-type').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            fbCurrentType = btn.dataset.type;
+            const placeholders = {
+                idea: "The more detail the better. Walter loves context.",
+                bug: "What happened? What did you expect? Walter will trace it.",
+                love: "What's working for you? We'll do more of it.",
+                question: "Ask away — Walter will explain or point you to a tip."
+            };
+            if (fbInput) fbInput.placeholder = placeholders[fbCurrentType];
+        });
+    });
+
+    fbInput?.addEventListener('input', () => {
+        const len = fbInput.value.length;
+        fbCharCount.textContent = `${len} chars`;
+    });
+
+    fbSendBtn?.addEventListener('click', () => {
+        const text = fbInput.value.trim();
+        if (!text) {
+            fbInput.focus();
+            fbInput.style.boxShadow = '0 0 0 4px rgba(239,68,68,0.15)';
+            setTimeout(() => fbInput.style.boxShadow = '', 800);
+            return;
+        }
+        runFeedbackFlow(text);
+    });
+
+    function runFeedbackFlow(text) {
+        fbStageCompose.classList.remove('active');
+        fbStageThinking.classList.add('active');
+        const steps = document.querySelectorAll('.fb-thinking-step');
+        steps.forEach((s, i) => {
+            setTimeout(() => s.classList.add('visible'), 350 + i * 500);
+        });
+        setTimeout(() => {
+            fbStageThinking.classList.remove('active');
+            fbStageResponse.classList.add('active');
+            renderFeedbackResponse(text);
+        }, 2200);
+    }
+
+    function renderFeedbackResponse(text) {
+        const t = text.toLowerCase();
+        const titleEl = document.getElementById('fbResponseTitle');
+        const bodyEl = document.getElementById('fbResponseBody');
+        const extrasEl = document.getElementById('fbResponseExtras');
+        extrasEl.innerHTML = '';
+
+        // Pattern matching: detect existing functionality
+        const features = [
+            { keywords: ['dark mode', 'dark theme', 'night mode'], name: 'Dark Mode', tip: 'Already shipped! Click your profile avatar (top-right) → Theme → Dark. Walter remembers your preference across sessions.' },
+            { keywords: ['export', 'pdf', 'download'], name: 'Strategy Card Export', tip: 'You can export any Walter Strategy Card to PDF — open the card, then click the share icon in the top-right of the modal.' },
+            { keywords: ['mobile', 'phone', 'app'], name: 'Mobile Companion', tip: 'The mobile companion app is in beta. Ask your team lead for an invite — it pushes priority actions to your phone.' },
+            { keywords: ['calendar', 'sync', 'outlook'], name: 'Calendar Sync', tip: 'Calendar sync is live via Microsoft 365. Settings → Integrations → Microsoft 365 → toggle "Sync calendar".' },
+            { keywords: ['signature', 'email signature'], name: 'Email Signature Sync', tip: 'Walter pulls your signature automatically from M365. Check it under Settings → Personal Context → Communication.' },
+            { keywords: ['notification', 'alert'], name: 'Alert Preferences', tip: 'Customise alerts under Settings → Alert Preferences. You can mute specific signal types or change the lead time.' },
+            { keywords: ['tag', 'specialty', 'specialism'], name: 'Personal Context Tags', tip: 'Tags live in Settings → Personal Context. They power how Zara routes opportunities to you.' }
+        ];
+        const matched = features.find(f => f.keywords.some(k => t.includes(k)));
+
+        // Bug detection
+        const isBug = fbCurrentType === 'bug' || /\b(broken|bug|error|crash|stuck|frozen|won't|wont|fail)\b/.test(t);
+        const isLove = fbCurrentType === 'love' || /\b(love|amazing|awesome|brilliant|incredible|game.changer)\b/.test(t);
+
+        let title, body;
+        let popularity = null;
+
+        if (matched) {
+            title = "Walter found something for you";
+            body = `Good news — <strong>${matched.name}</strong> already exists in Walter, you might not have come across it yet. Here's how to use it:`;
+            extrasEl.innerHTML = `
+                <div class="fb-tip-card">
+                    <div class="fb-tip-icon">&#9728;</div>
+                    <div class="fb-tip-card-body">
+                        <strong>${matched.name}</strong>
+                        ${matched.tip}
+                    </div>
+                </div>
+                <div class="fb-popularity">
+                    <span>Still want this changed? I'll log your note against the feature.</span>
+                </div>
+            `;
+        } else if (isBug) {
+            title = "On it. Sorry about that.";
+            body = `Logged as <strong>BUG-1248</strong> and routed to the engineering channel. The team checks the bug queue every morning at 8:30am. I've attached your current screen and session details so they can reproduce it without having to chase you.`;
+            extrasEl.innerHTML = `
+                <div class="fb-popularity">
+                    <span>You'll get an email when this is fixed</span>
+                    <div class="fb-popularity-bar"><div class="fb-popularity-fill" style="width:18%"></div></div>
+                    <span style="white-space:nowrap;color:var(--text-primary);font-weight:500;">Triage</span>
+                </div>
+            `;
+        } else if (isLove) {
+            title = "This made my day";
+            body = `Genuinely — thank you. I'll pass this through to the team. Knowing what's working keeps us pointed at the right things. Keep the loving feedback coming, and keep the suggestions coming too.`;
+            extrasEl.innerHTML = `
+                <div class="fb-popularity">
+                    <span>&#10084; Shared with the Walter team Slack channel</span>
+                </div>
+            `;
+        } else {
+            // Generic "your idea" response with popularity match
+            const matchCount = Math.floor(Math.random() * 6) + 2; // 2–7
+            const ranks = ['top of the to-do list', 'roadmap shortlist', 'next sprint shortlist'];
+            const rank = ranks[Math.floor(Math.random() * ranks.length)];
+            title = "Awesome feedback";
+            body = `You're actually the <strong>${matchCount}${ordinalSuffix(matchCount)} person</strong> to mention this concept in the last week. That puts it on the <strong>${rank}</strong>. Thank you for taking the time — this is exactly the kind of input that shapes Walter.<br><br>&mdash; Walter`;
+            const pct = Math.min(20 + matchCount * 12, 92);
+            extrasEl.innerHTML = `
+                <div class="fb-popularity">
+                    <span>Idea momentum</span>
+                    <div class="fb-popularity-bar"><div class="fb-popularity-fill" style="width:0%"></div></div>
+                    <span style="white-space:nowrap;color:var(--text-primary);font-weight:500;">${matchCount} mentions</span>
+                </div>
+                <div class="fb-tip-card">
+                    <div class="fb-tip-icon" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">&#9758;</div>
+                    <div class="fb-tip-card-body">
+                        <strong>What happens next</strong>
+                        Your idea joins 1,247 prior submissions. Top-voted concepts go to the team's monthly roadmap review on the 1st. You'll get a note from me when it ships.
+                    </div>
+                </div>
+            `;
+            // Animate the bar after a beat
+            setTimeout(() => {
+                const fill = extrasEl.querySelector('.fb-popularity-fill');
+                if (fill) fill.style.width = pct + '%';
+            }, 100);
+        }
+
+        titleEl.textContent = title;
+        bodyEl.innerHTML = body;
+    }
+
+    function ordinalSuffix(n) {
+        const s = ['th','st','nd','rd'];
+        const v = n % 100;
+        return s[(v-20)%10] || s[v] || s[0];
+    }
+
     // --- Escape key closes any open modal ---
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -1044,6 +2699,9 @@ document.addEventListener('DOMContentLoaded', () => {
             calendarModal?.classList.remove('active');
             carlisleModal?.classList.remove('active');
             mapPopup?.classList.remove('active');
+            feedbackModal?.classList.remove('active');
+            pipelineModal?.classList.remove('active');
+            propDrillModal?.classList.remove('active');
         }
     });
 });

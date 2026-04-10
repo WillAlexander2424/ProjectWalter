@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Review — 15 Osterley Way, Manukau | Bayleys</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #fafafa; --white: #ffffff; --dark: #0f172a; --dark2: #1e293b;
+            --text: #334155; --text2: #64748b; --text3: #94a3b8;
+            --accent: #1a1a2e; --blue: #3b82f6; --green: #10b981; --orange: #f59e0b;
+            --purple: #8b5cf6; --red: #ef4444; --amber: #f59e0b;
+            --border: #e2e8f0; --border2: #f1f5f9;
+            --radius: 16px; --radius-sm: 10px;
+        }
+        html { font-size: 15px; scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+        /* ===== HERO ===== */
+        .report-hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 50%, #2d5a7b 100%);
+            color: white;
+            padding: 80px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .report-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .report-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+        .hero-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; opacity: 0.7; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+        .hero-brand-icon { width: 28px; height: 28px; background: rgba(255,255,255,0.15); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+        .hero-label { font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+        .hero-title { font-size: 42px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+        .hero-title span { background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: 17px; color: rgba(255,255,255,0.65); font-weight: 400; max-width: 640px; line-height: 1.6; }
+        .hero-meta { display: flex; gap: 36px; margin-top: 36px; flex-wrap: wrap; }
+        .hero-meta-item { display: flex; flex-direction: column; }
+        .hero-meta-item span { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero-meta-item strong { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.9); margin-top: 2px; }
+
+        /* Risk dial in hero */
+        .hero-risk {
+            position: absolute;
+            top: 80px;
+            right: 40px;
+            z-index: 2;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 22px 28px;
+            min-width: 240px;
+        }
+        .hero-risk-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 10px; }
+        .hero-risk-score { font-size: 44px; font-weight: 800; color: white; letter-spacing: -1.5px; line-height: 1; }
+        .hero-risk-score small { font-size: 18px; font-weight: 500; color: rgba(255,255,255,0.5); }
+        .hero-risk-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 14px 0 10px; overflow: hidden; }
+        .hero-risk-fill { width: 72%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%); border-radius: 3px; }
+        .hero-risk-desc { font-size: 11.5px; color: rgba(255,255,255,0.6); line-height: 1.4; }
+
+        /* ===== NAVIGATION ===== */
+        .report-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; gap: 28px; overflow-x: auto; }
+        .nav-link {
+            padding: 16px 0;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .nav-cta {
+            margin-left: auto;
+            padding: 8px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-cta:hover { opacity: 0.9; }
+
+        /* ===== SECTIONS ===== */
+        .section { max-width: 1100px; margin: 0 auto; padding: 70px 40px 20px; }
+        .section-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+        .section-title { font-size: 30px; font-weight: 700; letter-spacing: -0.6px; margin-bottom: 10px; color: var(--dark); }
+        .section-desc { font-size: 15px; color: var(--text2); max-width: 680px; line-height: 1.6; margin-bottom: 40px; }
+
+        /* ===== KEY TERMS CARD ===== */
+        .terms-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 36px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .terms-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 24px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--border2);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .terms-header h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; color: var(--dark); }
+        .terms-header p { font-size: 13px; color: var(--text2); margin-top: 3px; }
+        .terms-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: #ecfdf5;
+            color: #047857;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .terms-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .term-item {
+            padding: 16px 18px;
+            background: var(--border2);
+            border-radius: var(--radius-sm);
+            transition: all 0.15s;
+        }
+        .term-item:hover { background: #eff6ff; }
+        .term-item span {
+            display: block;
+            font-size: 11px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .term-item strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.2px;
+            line-height: 1.3;
+        }
+
+        /* ===== ADVISORY ===== */
+        .advisory-stack { display: flex; flex-direction: column; gap: 14px; }
+        .adv-card {
+            display: flex;
+            gap: 18px;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 22px 26px;
+            border: 1px solid var(--border);
+            border-left: 4px solid;
+            transition: all 0.2s;
+        }
+        .adv-card:hover {
+            transform: translateX(2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+        .adv-card.amber { border-left-color: var(--amber); }
+        .adv-card.red { border-left-color: var(--red); }
+        .adv-card.green { border-left-color: var(--green); }
+        .adv-flag {
+            flex-shrink: 0;
+            width: 66px;
+            text-align: center;
+            padding-top: 2px;
+        }
+        .adv-flag-label {
+            display: inline-block;
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .adv-card.amber .adv-flag-label { background: #fffbeb; color: #b45309; }
+        .adv-card.red .adv-flag-label { background: #fef2f2; color: #b91c1c; }
+        .adv-card.green .adv-flag-label { background: #ecfdf5; color: #047857; }
+        .adv-body { flex: 1; min-width: 0; }
+        .adv-body strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 650;
+            color: var(--dark);
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .adv-body p {
+            font-size: 13.5px;
+            color: var(--text2);
+            line-height: 1.6;
+        }
+        .adv-body strong + p strong { display: inline; color: var(--dark); font-weight: 650; }
+
+        /* ===== BENCHMARK ===== */
+        .bench-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+        .bench-chart {
+            position: relative;
+            padding: 40px 0 30px;
+            margin-bottom: 20px;
+        }
+        .bench-line { position: relative; height: 60px; }
+        .bench-track {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 10px;
+            background: linear-gradient(90deg, #ecfdf5, #eff6ff, #fef2f2);
+            border-radius: 5px;
+            transform: translateY(-50%);
+        }
+        .bench-marker {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 20px;
+            background: var(--text2);
+            border-radius: 2px;
+        }
+        .bench-marker.low { left: 0%; }
+        .bench-marker.avg { left: 44%; }
+        .bench-marker.high { left: 100%; }
+        .bench-marker-this {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            left: 62%;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue);
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.5);
+            z-index: 2;
+        }
+        .bench-marker-label {
+            position: absolute;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text2);
+            white-space: nowrap;
+            transform: translateX(-50%);
+            top: -24px;
+        }
+        .bench-marker-label strong { display: block; font-size: 14px; color: var(--dark); font-weight: 700; margin-top: 2px; }
+        .bench-marker-label.this { color: var(--blue); }
+        .bench-marker-label.this strong { color: var(--blue); font-size: 18px; font-weight: 800; }
+        .bench-scale {
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text3);
+            font-weight: 500;
+        }
+        .bench-summary {
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: var(--radius-sm);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .bench-summary-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .bench-summary strong { font-size: 14px; font-weight: 650; color: var(--dark); display: block; margin-bottom: 4px; }
+        .bench-summary p { font-size: 13px; color: var(--text2); line-height: 1.55; }
+
+        /* ===== OPEX BUDGET ===== */
+        .opex-hero-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .opex-hero-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        .opex-hero-item.primary {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            border-color: #1e3a5f;
+            color: white;
+        }
+        .opex-hero-item span {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text3);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .opex-hero-item.primary span { color: rgba(255,255,255,0.55); }
+        .opex-hero-item strong {
+            display: block;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--dark);
+            line-height: 1;
+        }
+        .opex-hero-item.primary strong {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .opex-hero-item small {
+            display: block;
+            margin-top: 6px;
+            font-size: 11.5px;
+            color: var(--text2);
+            font-weight: 500;
+        }
+        .opex-hero-item.primary small { color: rgba(255,255,255,0.5); }
+
+        .opex-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        .opex-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--dark);
+            letter-spacing: -0.3px;
+        }
+        .opex-card p.sub { font-size: 13px; color: var(--text2); margin-bottom: 22px; }
+        .opex-table-report {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .opex-table-report th {
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text3);
+            background: var(--border2);
+            border-bottom: 2px solid var(--border);
+        }
+        .opex-table-report th.num { text-align: right; }
+        .opex-table-report td {
+            padding: 13px 14px;
+            font-size: 13px;
+            color: var(--dark);
+            border-bottom: 1px solid var(--border2);
+            font-weight: 500;
+        }
+        .opex-table-report td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+        .opex-table-report tr:hover td { background: #fafbfc; }
+        .opex-table-report tr.flagged td { background: #fffbeb; }
+        .opex-table-report tr.flagged:hover td { background: #fef3c7; }
+        .opex-table-report .oi-num { color: var(--text3); font-weight: 600; width: 30px; }
+        .opex-pill-report {
+            display: inline-block;
+            font-size: 10px;
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .opex-pill-report.ok { background: #ecfdf5; color: #047857; }
+        .opex-pill-report.high { background: #fffbeb; color: #b45309; }
+        .opex-pill-report.alert { background: #fef2f2; color: #b91c1c; }
+        .opex-table-report tr.total td {
+            border-top: 2px solid var(--dark);
+            border-bottom: none;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--dark);
+            padding-top: 16px;
+        }
+        .opex-savings {
+            margin-top: 24px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #ecfdf5, #eff6ff);
+            border: 1px solid rgba(16,185,129,0.25);
+            border-radius: var(--radius-sm);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .opex-savings-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #10b981;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .opex-savings strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+        .opex-savings p { font-size: 13px; color: var(--text2); line-height: 1.55; }
+
+        /* ===== 5 YEAR PROJECTION CHART ===== */
+        .proj-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+        .proj-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--dark);
+        }
+        .proj-card p.sub { font-size: 13px; color: var(--text2); margin-bottom: 30px; }
+        .proj-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            height: 240px;
+            padding: 30px 20px 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 14px;
+        }
+        .proj-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .proj-bar {
+            width: 74%;
+            background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.6s ease;
+            cursor: pointer;
+            min-height: 10px;
+        }
+        .proj-bar:hover { filter: brightness(1.1); }
+        .proj-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -26px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+        .proj-bar-label {
+            font-size: 12px;
+            color: var(--text2);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .proj-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding-top: 16px;
+        }
+        .proj-sum-item { text-align: center; }
+        .proj-sum-item span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); font-weight: 600; margin-bottom: 4px; }
+        .proj-sum-item strong { display: block; font-size: 18px; color: var(--dark); font-weight: 800; letter-spacing: -0.3px; }
+
+        /* ===== INTERACTIVE CALCULATOR ===== */
+        .calc-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+        .calc-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--dark); letter-spacing: -0.3px; }
+        .calc-card > p { font-size: 13px; color: var(--text2); margin-bottom: 26px; }
+        .calc-row { margin-bottom: 22px; }
+        .calc-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+        .calc-label strong { color: var(--blue); font-size: 16px; font-weight: 700; }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border2);
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(59,130,246,0.4);
+            border: 3px solid white;
+        }
+        .calc-results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 28px;
+            padding-top: 26px;
+            border-top: 1px solid var(--border2);
+        }
+        .calc-result {
+            text-align: center;
+            padding: 22px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--border2);
+        }
+        .calc-result.best { background: #eff6ff; border: 1px solid #bfdbfe; }
+        .calc-result span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); font-weight: 600; }
+        .calc-result strong { font-size: 26px; font-weight: 800; display: block; margin-top: 6px; color: var(--dark); letter-spacing: -0.5px; }
+        .calc-result.best strong { color: var(--blue); }
+        .calc-result small { font-size: 11px; color: var(--text2); margin-top: 4px; display: block; }
+
+        /* ===== NEXT STEPS ===== */
+        .next-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .step-card {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 30px 26px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .step-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: var(--blue); }
+        .step-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+        .step-icon.blue { background: #eff6ff; color: var(--blue); }
+        .step-icon.green { background: #ecfdf5; color: var(--green); }
+        .step-icon.purple { background: #f5f3ff; color: var(--purple); }
+        .step-card h4 { font-size: 16px; font-weight: 650; margin-bottom: 8px; color: var(--dark); }
+        .step-card p { font-size: 13px; color: var(--text2); line-height: 1.55; }
+
+        /* ===== FOOTER ===== */
+        .report-footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.5);
+            padding: 50px 40px;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 60px;
+        }
+        .footer-inner { max-width: 1100px; margin: 0 auto; }
+        .footer-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; color: rgba(255,255,255,0.8); font-weight: 600; font-size: 15px; }
+        .footer-brand .hero-brand-icon { background: rgba(255,255,255,0.1); }
+        .footer-agent { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-agent strong { color: rgba(255,255,255,0.8); display: block; font-size: 14px; }
+        .footer-agent span { font-size: 12px; }
+
+        .divider { height: 1px; background: var(--border); max-width: 1100px; margin: 20px auto 0; }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .hero-title { font-size: 32px; }
+            .hero-risk { position: static; margin-top: 30px; }
+            .terms-grid { grid-template-columns: repeat(2, 1fr); }
+            .opex-hero-row { grid-template-columns: repeat(2, 1fr); }
+            .next-steps { grid-template-columns: 1fr; }
+            .proj-summary { grid-template-columns: 1fr; }
+            .calc-results { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HERO ========== -->
+    <section class="report-hero">
+        <div class="hero-inner">
+            <div class="hero-brand">
+                <div class="hero-brand-icon">W</div>
+                <span>Walter · Bayleys Intelligence</span>
+            </div>
+            <div class="hero-label">Lease Review Report</div>
+            <h1 class="hero-title">15 Osterley Way,<br>Manukau <span>— Reviewed</span></h1>
+            <p class="hero-subtitle">A comprehensive AI-powered review of your proposed lease: every term extracted, every clause checked, market benchmarks applied, and a full 12-month OPEX budget generated.</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item"><span>Document</span><strong>ADLS 6th Edition 2024</strong></div>
+                <div class="hero-meta-item"><span>Tenant</span><strong>Bluwave Galumoana Ltd</strong></div>
+                <div class="hero-meta-item"><span>Landlord</span><strong>Cuilam Industry Ltd</strong></div>
+                <div class="hero-meta-item"><span>Generated</span><strong>9 April 2026</strong></div>
+            </div>
+        </div>
+        <div class="hero-risk">
+            <div class="hero-risk-label">Overall Health</div>
+            <div class="hero-risk-score">7.2<small>/10</small></div>
+            <div class="hero-risk-bar"><div class="hero-risk-fill"></div></div>
+            <div class="hero-risk-desc">Two amber flags, one red alert on OPEX apportionment. Otherwise market-aligned.</div>
+        </div>
+    </section>
+
+    <!-- ========== NAV ========== -->
+    <nav class="report-nav">
+        <div class="nav-inner">
+            <a href="#terms" class="nav-link active">Key Terms</a>
+            <a href="#advisory" class="nav-link">Walter Advisory</a>
+            <a href="#benchmark" class="nav-link">Market Benchmark</a>
+            <a href="#opex" class="nav-link">OPEX Budget</a>
+            <a href="#projection" class="nav-link">5-Year Projection</a>
+            <a href="#calculator" class="nav-link">Calculator</a>
+            <a href="#next" class="nav-link">Next Steps</a>
+            <a href="#" class="nav-cta">Discuss with Will →</a>
+        </div>
+    </nav>
+
+    <!-- ========== KEY TERMS ========== -->
+    <section class="section" id="terms">
+        <div class="section-label">Section 01 · Key Terms Extracted</div>
+        <h2 class="section-title">Every term, extracted automatically</h2>
+        <p class="section-desc">Walter read the full 47-page lease and extracted every key term into a structured view so you don't have to hunt through the document.</p>
+
+        <div class="terms-card">
+            <div class="terms-header">
+                <div>
+                    <h3>Lease Terms Summary</h3>
+                    <p>From the First Schedule and supporting annexes</p>
+                </div>
+                <span class="terms-pill">Verified by Walter AI</span>
+            </div>
+            <div class="terms-grid">
+                <div class="term-item"><span>Premises</span><strong>Tenancy C, Level 2</strong></div>
+                <div class="term-item"><span>Area</span><strong>278.82 sqm</strong></div>
+                <div class="term-item"><span>Tenant</span><strong>Bluwave Galumoana Ltd</strong></div>
+                <div class="term-item"><span>Landlord</span><strong>Cuilam Industry Ltd</strong></div>
+                <div class="term-item"><span>Initial Term</span><strong>6 years</strong></div>
+                <div class="term-item"><span>Commencement</span><strong>1 Nov 2025</strong></div>
+                <div class="term-item"><span>Final Expiry</span><strong>31 Oct 2035</strong></div>
+                <div class="term-item"><span>Renewals</span><strong>2 × 2 years</strong></div>
+                <div class="term-item"><span>Annual Rent</span><strong>$90,217.80 + GST</strong></div>
+                <div class="term-item"><span>$/sqm</span><strong>$290</strong></div>
+                <div class="term-item"><span>Rent Review</span><strong>3% annually</strong></div>
+                <div class="term-item"><span>Renewal Review</span><strong>Market</strong></div>
+                <div class="term-item"><span>Car Parks</span><strong>4 external @ $45/pw</strong></div>
+                <div class="term-item"><span>Bond</span><strong>$30,477.82 + GST</strong></div>
+                <div class="term-item"><span>Outgoings</span><strong>13 categories</strong></div>
+                <div class="term-item"><span>Use</span><strong>Office / ancillary</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ADVISORY ========== -->
+    <section class="section" id="advisory">
+        <div class="section-label">Section 02 · Walter AI Advisory</div>
+        <h2 class="section-title">6 items for your attention</h2>
+        <p class="section-desc">Walter compared this lease against 847 comparable ADLS leases in the South Auckland market. Here's what stands out — what's market, what needs discussion, and what needs negotiation.</p>
+
+        <div class="advisory-stack">
+            <div class="adv-card amber">
+                <div class="adv-flag"><span class="adv-flag-label">Review</span></div>
+                <div class="adv-body">
+                    <strong>Lease Term Structure — Consider 5+2 instead of 6 years</strong>
+                    <p>The current 6-year initial term with 2×2 renewals (6+2+2) is unusual for this property class. Based on 847 comparable industrial leases in South Auckland, the market standard is <strong>3+3+3</strong> or <strong>5+2</strong>. A 5+2 structure provides a shorter initial commitment and a meaningful renewal option, while giving the landlord more frequent rent review opportunities.</p>
+                </div>
+            </div>
+
+            <div class="adv-card amber">
+                <div class="adv-flag"><span class="adv-flag-label">Review</span></div>
+                <div class="adv-body">
+                    <strong>CPI / Rent Increase — 3% fixed is above forecast</strong>
+                    <p>The fixed 3% annual increase exceeds the RBNZ CPI forecast of 2.1–2.4% for 2026–2028. Comparable leases in Manukau average <strong>2.5% fixed</strong> or <strong>CPI + 0.5%</strong>. Recommend negotiating to CPI-linked reviews capped at 3% to protect the tenant from overexposure in a softening inflation environment.</p>
+                </div>
+            </div>
+
+            <div class="adv-card red">
+                <div class="adv-flag"><span class="adv-flag-label">Alert</span></div>
+                <div class="adv-body">
+                    <strong>OPEX Apportionment — Tenant exposure may be high</strong>
+                    <p>The lease includes 13 OPEX categories apportioned to the tenant including structural repairs to fences, car park maintenance, and body corporate charges. Based on comparable properties, structural repair costs should be <strong>landlord responsibility</strong>. Recommend excluding items 7 (structural fencing) and 10 (repaving/resealing) from tenant OPEX. <strong>Estimated annual saving: $8,040</strong>.</p>
+                </div>
+            </div>
+
+            <div class="adv-card green">
+                <div class="adv-flag"><span class="adv-flag-label">Good</span></div>
+                <div class="adv-body">
+                    <strong>$/sqm Rate — In line with market</strong>
+                    <p>At $290/sqm, this lease is within the <strong>$265–$310</strong> range for Level 2 industrial/office space in the Osterley Way precinct. No adjustment recommended.</p>
+                </div>
+            </div>
+
+            <div class="adv-card amber">
+                <div class="adv-flag"><span class="adv-flag-label">Review</span></div>
+                <div class="adv-body">
+                    <strong>Renewal Notice Period — Not specified</strong>
+                    <p>Field 7 (Renewal Notice Period) is blank in the First Schedule. Under ADLS 6th Edition clause 34.1, this defaults to 3 months. Consider explicitly setting this to <strong>6 months</strong> to give both parties adequate planning time.</p>
+                </div>
+            </div>
+
+            <div class="adv-card green">
+                <div class="adv-flag"><span class="adv-flag-label">Good</span></div>
+                <div class="adv-body">
+                    <strong>Bond Amount — Standard</strong>
+                    <p>Bond of $30,477.82 equals approximately 3 months rent + GST, which is standard practice under ADLS guidelines.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MARKET BENCHMARK ========== -->
+    <section class="section" id="benchmark">
+        <div class="section-label">Section 03 · Market Benchmark</div>
+        <h2 class="section-title">$290/sqm vs the market</h2>
+        <p class="section-desc">Where this lease sits on the Manukau industrial/office range, benchmarked against 847 comparable leases from the last 24 months.</p>
+
+        <div class="bench-card">
+            <div class="bench-chart">
+                <div class="bench-line">
+                    <div class="bench-track"></div>
+                    <div class="bench-marker low"></div>
+                    <div class="bench-marker avg"></div>
+                    <div class="bench-marker high"></div>
+                    <div class="bench-marker-this"></div>
+                    <div class="bench-marker-label" style="left:0%;transform:translateX(0)"><span>Market Low</span><strong>$210</strong></div>
+                    <div class="bench-marker-label" style="left:44%"><span>Market Avg</span><strong>$275</strong></div>
+                    <div class="bench-marker-label this" style="left:62%"><span>This Lease</span><strong>$290</strong></div>
+                    <div class="bench-marker-label" style="left:100%;transform:translateX(-100%)"><span>Market High</span><strong>$340</strong></div>
+                </div>
+                <div class="bench-scale">
+                    <span>$210</span>
+                    <span>$275</span>
+                    <span>$340</span>
+                </div>
+            </div>
+            <div class="bench-summary">
+                <div class="bench-summary-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <strong>$290/sqm is fair market rent</strong>
+                    <p>This lease sits $15 above the market average but well within the normal range for Level 2 Grade-B space with 4 car parks in Osterley Way. No adjustment recommended on rate alone — but there's room to trade on the term structure and OPEX apportionment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== OPEX BUDGET ========== -->
+    <section class="section" id="opex">
+        <div class="section-label">Section 04 · AI-Generated OPEX Budget</div>
+        <h2 class="section-title">Your 12-month operating budget,<br>built from the lease</h2>
+        <p class="section-desc">Walter parsed the Third Schedule (Outgoings) and generated a complete annual budget for the property. Every line is mapped to an accounting code, benchmarked against the portfolio average, and projected forward 5 years.</p>
+
+        <div class="opex-hero-row">
+            <div class="opex-hero-item">
+                <span>Total OPEX (Year 1)</span>
+                <strong>$76,240</strong>
+                <small>13 categories · + GST</small>
+            </div>
+            <div class="opex-hero-item">
+                <span>OPEX per sqm</span>
+                <strong>$273.56</strong>
+                <small>278.82 sqm tenancy</small>
+            </div>
+            <div class="opex-hero-item">
+                <span>Tenant share</span>
+                <strong>100%</strong>
+                <small>Single tenancy</small>
+            </div>
+            <div class="opex-hero-item primary">
+                <span>Total occupancy cost</span>
+                <strong>$166,458</strong>
+                <small>Rent + OPEX per year</small>
+            </div>
+        </div>
+
+        <div class="opex-card">
+            <h3>Detailed Budget Breakdown</h3>
+            <p class="sub">Each line item extracted from the lease's Third Schedule, mapped and benchmarked.</p>
+            <table class="opex-table-report">
+                <thead>
+                    <tr>
+                        <th class="oi-num">#</th>
+                        <th>OPEX Category</th>
+                        <th class="num">Annual</th>
+                        <th class="num">Monthly</th>
+                        <th class="num">$/sqm</th>
+                        <th>Benchmark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="oi-num">1</td><td>Council rates (territorial authority)</td><td class="num">$12,480</td><td class="num">$1,040</td><td class="num">$44.76</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">2</td><td>Insurance — building &amp; public liability</td><td class="num">$8,200</td><td class="num">$683</td><td class="num">$29.41</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">3</td><td>Water &amp; wastewater</td><td class="num">$3,640</td><td class="num">$303</td><td class="num">$13.05</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">4</td><td>Electricity (common areas)</td><td class="num">$2,940</td><td class="num">$245</td><td class="num">$10.54</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">5</td><td>Cleaning &amp; waste</td><td class="num">$6,720</td><td class="num">$560</td><td class="num">$24.10</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">6</td><td>Building maintenance &amp; repairs</td><td class="num">$9,840</td><td class="num">$820</td><td class="num">$35.29</td><td><span class="opex-pill-report high">Above avg</span></td></tr>
+                    <tr class="flagged"><td class="oi-num">7</td><td>Structural fencing repairs ⚠</td><td class="num">$4,200</td><td class="num">$350</td><td class="num">$15.06</td><td><span class="opex-pill-report alert">Landlord liability</span></td></tr>
+                    <tr><td class="oi-num">8</td><td>HVAC servicing &amp; compliance</td><td class="num">$5,160</td><td class="num">$430</td><td class="num">$18.51</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">9</td><td>Fire safety &amp; compliance (BWOF)</td><td class="num">$2,380</td><td class="num">$198</td><td class="num">$8.54</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr class="flagged"><td class="oi-num">10</td><td>Repaving &amp; resealing (car park) ⚠</td><td class="num">$3,840</td><td class="num">$320</td><td class="num">$13.77</td><td><span class="opex-pill-report alert">Landlord liability</span></td></tr>
+                    <tr><td class="oi-num">11</td><td>Pest control</td><td class="num">$1,320</td><td class="num">$110</td><td class="num">$4.74</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">12</td><td>Grounds &amp; landscaping</td><td class="num">$2,640</td><td class="num">$220</td><td class="num">$9.47</td><td><span class="opex-pill-report ok">On market</span></td></tr>
+                    <tr><td class="oi-num">13</td><td>Property management fee (5%)</td><td class="num">$12,880</td><td class="num">$1,073</td><td class="num">$46.20</td><td><span class="opex-pill-report high">Above avg</span></td></tr>
+                    <tr class="total"><td></td><td>Total annual OPEX</td><td class="num">$76,240</td><td class="num">$6,353</td><td class="num">$273.56</td><td></td></tr>
+                </tbody>
+            </table>
+
+            <div class="opex-savings">
+                <div class="opex-savings-icon">$</div>
+                <div>
+                    <strong>Potential annual saving: $8,040</strong>
+                    <p>Items <strong>#7 (structural fencing)</strong> and <strong>#10 (repaving/resealing)</strong> should sit with the landlord under standard ADLS practice. Removing them reduces the tenant's OPEX to <strong>$68,200</strong> ($244.70/sqm) — in line with market average for this class. Worth negotiating.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 5-YEAR PROJECTION ========== -->
+    <section class="section" id="projection">
+        <div class="section-label">Section 05 · 5-Year Projection</div>
+        <h2 class="section-title">How your costs trend over time</h2>
+        <p class="section-desc">Walter projects each line item using CPI plus category-specific inflators — insurance +4% p.a., rates +3% p.a., maintenance +3.5% p.a.</p>
+
+        <div class="proj-card">
+            <h3>OPEX Projection (Year 1 – Year 5)</h3>
+            <p class="sub">Assumes current lease structure with standard CPI + category inflators.</p>
+            <div class="proj-chart">
+                <div class="proj-bar-group"><div class="proj-bar" style="height:60%" data-value="$76,240"></div><div class="proj-bar-label">Year 1</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:63%" data-value="$78,680"></div><div class="proj-bar-label">Year 2</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:68%" data-value="$81,230"></div><div class="proj-bar-label">Year 3</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:75%" data-value="$83,890"></div><div class="proj-bar-label">Year 4</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:82%" data-value="$86,670"></div><div class="proj-bar-label">Year 5</div></div>
+            </div>
+            <div class="proj-summary">
+                <div class="proj-sum-item"><span>5-Year Total OPEX</span><strong>$406,710</strong></div>
+                <div class="proj-sum-item"><span>Year 5 vs Year 1</span><strong>+13.7%</strong></div>
+                <div class="proj-sum-item"><span>Total Occupancy (5y)</span><strong>$893,050</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== INTERACTIVE CALCULATOR ========== -->
+    <section class="section" id="calculator">
+        <div class="section-label">Section 06 · Interactive Calculator</div>
+        <h2 class="section-title">Model your commitment</h2>
+        <p class="section-desc">Adjust the sliders to see how different term lengths and review rates affect your total occupancy cost over the life of the lease.</p>
+
+        <div class="calc-card">
+            <h3>Occupancy cost calculator</h3>
+            <p>Drag the sliders to model different scenarios.</p>
+            <div class="calc-row">
+                <div class="calc-label">Initial term <strong id="termValue">6 years</strong></div>
+                <input type="range" min="3" max="10" value="6" id="termSlider">
+            </div>
+            <div class="calc-row">
+                <div class="calc-label">Annual rent review <strong id="reviewValue">3.0%</strong></div>
+                <input type="range" min="0" max="5" value="3" step="0.25" id="reviewSlider">
+            </div>
+            <div class="calc-row">
+                <div class="calc-label">OPEX negotiated down <strong id="savingValue">$0</strong></div>
+                <input type="range" min="0" max="10000" value="0" step="500" id="savingSlider">
+            </div>
+            <div class="calc-results">
+                <div class="calc-result">
+                    <span>Year 1 occupancy</span>
+                    <strong id="y1Result">$166,458</strong>
+                    <small>Rent + OPEX</small>
+                </div>
+                <div class="calc-result best">
+                    <span>Total over term</span>
+                    <strong id="totalResult">$1,058,740</strong>
+                    <small>All years</small>
+                </div>
+                <div class="calc-result">
+                    <span>Vs current offer</span>
+                    <strong id="diffResult">$0</strong>
+                    <small>Saved / extra</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== NEXT STEPS ========== -->
+    <section class="section" id="next">
+        <div class="section-label">Section 07 · Next Steps</div>
+        <h2 class="section-title">Ready to move forward?</h2>
+        <p class="section-desc">Three ways we can take this further.</p>
+
+        <div class="next-steps">
+            <div class="step-card">
+                <div class="step-icon blue">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                </div>
+                <h4>Discuss this lease</h4>
+                <p>Book a 30-minute call with Will to walk through the advisory points and decide on your negotiation strategy.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon green">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                </div>
+                <h4>Send negotiation position</h4>
+                <p>Walter drafts a negotiation letter covering term structure, CPI review cap, and OPEX apportionment — ready for your sign-off.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon purple">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                </div>
+                <h4>Compare alternatives</h4>
+                <p>Not sure this is the right space? Let Wallace find you 3-5 alternative options in Manukau and we'll build a comparison report.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="report-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="hero-brand-icon">W</div>
+                <span>Walter · Bayleys Intelligence</span>
+            </div>
+            <p>This report was generated by Walter, Bayleys' AI-powered commercial property intelligence platform.<br>All data is for informational purposes only and does not constitute legal or financial advice.</p>
+            <div class="footer-agent">
+                <strong>Will Alexander</strong>
+                <span>Head of Innovation | National Director — Property Management</span><br>
+                <span>will.alexander@bayleys.co.nz · +64 21 66 1234</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Nav active state on scroll
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const top = section.offsetTop - 100;
+                if (window.scrollY >= top) current = section.id;
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+
+        // Interactive calculator
+        const termSlider = document.getElementById('termSlider');
+        const reviewSlider = document.getElementById('reviewSlider');
+        const savingSlider = document.getElementById('savingSlider');
+        const termValue = document.getElementById('termValue');
+        const reviewValue = document.getElementById('reviewValue');
+        const savingValue = document.getElementById('savingValue');
+        const y1Result = document.getElementById('y1Result');
+        const totalResult = document.getElementById('totalResult');
+        const diffResult = document.getElementById('diffResult');
+
+        const BASE_RENT = 90217.80;
+        const BASE_OPEX = 76240;
+        const BASE_TOTAL_6Y = 1058740; // baseline total
+
+        function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+        function recalc() {
+            const term = parseInt(termSlider.value, 10);
+            const review = parseFloat(reviewSlider.value);
+            const saving = parseInt(savingSlider.value, 10);
+
+            termValue.textContent = term + ' year' + (term === 1 ? '' : 's');
+            reviewValue.textContent = review.toFixed(1) + '%';
+            savingValue.textContent = fmt(saving);
+
+            const opex = BASE_OPEX - saving;
+            let rent = BASE_RENT;
+            let y1 = rent + opex;
+            let total = 0;
+            for (let i = 0; i < term; i++) {
+                total += rent + opex;
+                rent *= (1 + review / 100);
+            }
+            y1Result.textContent = fmt(y1);
+            totalResult.textContent = fmt(total);
+            const diff = BASE_TOTAL_6Y - total;
+            if (diff > 0) {
+                diffResult.textContent = '-' + fmt(diff);
+                diffResult.style.color = '#047857';
+            } else if (diff < 0) {
+                diffResult.textContent = '+' + fmt(Math.abs(diff));
+                diffResult.style.color = '#b91c1c';
+            } else {
+                diffResult.textContent = '$0';
+                diffResult.style.color = '';
+            }
+        }
+
+        [termSlider, reviewSlider, savingSlider].forEach(s => s.addEventListener('input', recalc));
+        recalc();
+    </script>
+</body>
+</html>

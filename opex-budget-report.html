@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Budget 2026 — 15 Osterley Way, Manukau | Bayleys</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800;900&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #fafafa; --white: #ffffff; --dark: #0f172a; --dark2: #1e293b;
+            --text: #334155; --text2: #64748b; --text3: #94a3b8;
+            --accent: #1a1a2e; --blue: #3b82f6; --green: #10b981; --orange: #f59e0b;
+            --purple: #8b5cf6; --red: #ef4444; --pink: #ec4899;
+            --border: #e2e8f0; --border2: #f1f5f9;
+            --radius: 16px; --radius-sm: 10px;
+        }
+        html { font-size: 15px; scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+        /* ===== HERO ===== */
+        .report-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #3b2d5c 100%);
+            color: white;
+            padding: 90px 0 70px;
+            position: relative;
+            overflow: hidden;
+        }
+        .report-hero::before {
+            content: '';
+            position: absolute;
+            top: -40%; right: -10%;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(236,72,153,0.18) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .report-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%; left: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+        .hero-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 44px; opacity: 0.7; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+        .hero-brand-icon { width: 30px; height: 30px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+        .hero-label { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 14px; }
+        .hero-title { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 16px; max-width: 760px; }
+        .hero-title span {
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle { font-size: 17px; color: rgba(255,255,255,0.7); font-weight: 400; max-width: 620px; line-height: 1.6; }
+        .hero-stats { display: flex; gap: 48px; margin-top: 42px; flex-wrap: wrap; }
+        .hero-stat { display: flex; flex-direction: column; }
+        .hero-stat span { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; font-weight: 600; }
+        .hero-stat strong {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-stat small { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 6px; font-weight: 500; }
+
+        /* ===== NAV ===== */
+        .report-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; gap: 28px; overflow-x: auto; }
+        .nav-link {
+            padding: 16px 0;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .nav-cta {
+            margin-left: auto;
+            padding: 9px 22px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(139,92,246,0.3); }
+
+        /* ===== SECTIONS ===== */
+        .section { max-width: 1100px; margin: 0 auto; padding: 70px 40px 30px; }
+        .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; }
+        .section-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 10px; color: var(--dark); }
+        .section-desc { font-size: 15px; color: var(--text2); max-width: 680px; line-height: 1.6; margin-bottom: 40px; }
+
+        /* ===== KPI DASHBOARD ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .kpi-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 26px 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+        }
+        .kpi-card.primary {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            border-color: #1e3a5f;
+            color: white;
+        }
+        .kpi-card.primary::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(236,72,153,0.2), transparent 70%);
+            border-radius: 50%;
+        }
+        .kpi-label {
+            display: block;
+            font-size: 11px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .kpi-card.primary .kpi-label { color: rgba(255,255,255,0.55); }
+        .kpi-value {
+            display: block;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--dark);
+            line-height: 1;
+            position: relative;
+        }
+        .kpi-card.primary .kpi-value {
+            background: linear-gradient(135deg, #60a5fa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .kpi-sub {
+            display: block;
+            font-size: 12px;
+            color: var(--text2);
+            margin-top: 8px;
+            font-weight: 500;
+            position: relative;
+        }
+        .kpi-card.primary .kpi-sub { color: rgba(255,255,255,0.55); }
+
+        /* ===== DONUT + LINE ITEMS ===== */
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+        }
+        .donut-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+        }
+        .donut-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--dark);
+            text-align: left;
+        }
+        .donut-wrap {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 20px;
+        }
+        .donut-wrap svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .donut-bg { fill: none; stroke: var(--border2); stroke-width: 24; }
+        .donut-seg { fill: none; stroke-width: 24; transition: stroke-dashoffset 1.2s ease; }
+        .donut-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        .donut-center .c-value { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; color: var(--dark); }
+        .donut-center .c-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+            padding-top: 14px;
+            border-top: 1px solid var(--border2);
+        }
+        .donut-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text2);
+        }
+        .donut-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .donut-legend-item span.val { margin-left: auto; font-weight: 700; color: var(--dark); }
+
+        /* Line items list */
+        .lines-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+        }
+        .lines-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--dark);
+        }
+        .lines-card p.sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+        .line-item {
+            display: grid;
+            grid-template-columns: 28px 1fr 100px;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border2);
+            transition: all 0.15s;
+        }
+        .line-item:hover { background: rgba(59,130,246,0.02); padding-left: 8px; padding-right: 8px; border-radius: 8px; margin: 0 -8px; }
+        .line-item:last-child { border-bottom: none; }
+        .line-num {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text3);
+            font-variant-numeric: tabular-nums;
+        }
+        .line-body { min-width: 0; }
+        .line-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+        .line-meta {
+            font-size: 11px;
+            color: var(--text3);
+            display: flex;
+            gap: 12px;
+        }
+        .line-meta .tag {
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .line-meta .tag.ok { background: rgba(16,185,129,0.1); color: #047857; }
+        .line-meta .tag.high { background: rgba(245,158,11,0.12); color: #b45309; }
+        .line-meta .tag.alert { background: rgba(239,68,68,0.1); color: #b91c1c; }
+        .line-value {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--dark);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.3px;
+        }
+        .line-item.flagged { background: rgba(245,158,11,0.04); }
+
+        /* ===== SAVINGS CALLOUT ===== */
+        .savings-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%);
+            border: 1px solid rgba(16,185,129,0.25);
+            border-radius: var(--radius);
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin-top: 24px;
+        }
+        .savings-icon {
+            width: 60px; height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .savings-body { flex: 1; }
+        .savings-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--green);
+            margin-bottom: 4px;
+        }
+        .savings-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.8px;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        .savings-body p { font-size: 13.5px; color: var(--text2); line-height: 1.6; }
+        .savings-body p strong { color: var(--dark); font-weight: 700; }
+
+        /* ===== MONTHLY CHART ===== */
+        .chart-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+        }
+        .chart-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+        .chart-card p.sub { font-size: 13px; color: var(--text2); margin-bottom: 26px; }
+        .monthly-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 220px;
+            padding: 30px 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .month-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+            gap: 8px;
+            position: relative;
+        }
+        .month-bar {
+            width: 70%;
+            background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+            border-radius: 6px 6px 0 0;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            min-height: 8px;
+        }
+        .month-bar:hover {
+            filter: brightness(1.15);
+            transform: scaleY(1.03);
+            transform-origin: bottom;
+        }
+        .month-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--dark);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .month-bar:hover::after { opacity: 1; }
+        .month-label {
+            font-size: 10px;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        /* ===== 5Y PROJECTION ===== */
+        .proj-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-top: 20px;
+        }
+        .proj-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+        .proj-card p.sub { font-size: 13px; color: var(--text2); margin-bottom: 26px; }
+        .proj-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            height: 240px;
+            padding: 30px 20px 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
+        }
+        .proj-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .proj-bar {
+            width: 72%;
+            background: linear-gradient(180deg, #ec4899, #8b5cf6, #3b82f6);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            cursor: pointer;
+            min-height: 14px;
+            transition: filter 0.2s;
+        }
+        .proj-bar:hover { filter: brightness(1.15); }
+        .proj-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+        .proj-bar-label { font-size: 12px; color: var(--text2); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .proj-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding-top: 16px;
+        }
+        .proj-sum-item { text-align: center; }
+        .proj-sum-item span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); font-weight: 700; margin-bottom: 4px; }
+        .proj-sum-item strong { display: block; font-size: 22px; color: var(--dark); font-weight: 800; letter-spacing: -0.5px; }
+
+        /* ===== SCENARIO CALCULATOR ===== */
+        .scenario-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 34px;
+        }
+        .scenario-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--dark); letter-spacing: -0.3px; }
+        .scenario-card > p.sub { font-size: 13px; color: var(--text2); margin-bottom: 28px; }
+        .scenario-toggles {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 26px;
+        }
+        .toggle-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 18px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .toggle-row:hover { border-color: var(--blue); }
+        .toggle-row.on { background: #eff6ff; border-color: var(--blue); }
+        .toggle-row input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px; height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            margin-top: 1px;
+        }
+        .toggle-row input[type="checkbox"]:checked {
+            background: var(--blue);
+            border-color: var(--blue);
+        }
+        .toggle-row input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px; top: 2px;
+            width: 6px; height: 11px;
+            border: solid white;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg);
+        }
+        .toggle-body { flex: 1; }
+        .toggle-title { font-size: 14px; font-weight: 650; color: var(--dark); margin-bottom: 3px; }
+        .toggle-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+        .toggle-impact {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--green);
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .scenario-result {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border2);
+        }
+        .scenario-result-item {
+            text-align: center;
+            padding: 20px 16px;
+            background: var(--border2);
+            border-radius: var(--radius-sm);
+        }
+        .scenario-result-item.best {
+            background: linear-gradient(135deg, #ecfdf5, #eff6ff);
+            border: 1px solid rgba(16,185,129,0.25);
+        }
+        .scenario-result-item span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); font-weight: 700; }
+        .scenario-result-item strong { font-size: 26px; font-weight: 800; display: block; margin-top: 6px; color: var(--dark); letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
+        .scenario-result-item.best strong { color: var(--green); }
+        .scenario-result-item small { font-size: 11px; color: var(--text2); margin-top: 4px; display: block; font-weight: 500; }
+
+        /* ===== FOOTER ===== */
+        .report-footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.5);
+            padding: 60px 40px;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 80px;
+        }
+        .footer-inner { max-width: 1100px; margin: 0 auto; }
+        .footer-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; color: rgba(255,255,255,0.85); font-weight: 600; font-size: 15px; }
+        .footer-brand .hero-brand-icon { background: rgba(255,255,255,0.1); }
+        .footer-agent { margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-agent strong { color: rgba(255,255,255,0.85); display: block; font-size: 14px; }
+        .footer-agent span { font-size: 12px; }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .hero-title { font-size: 34px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .breakdown-grid { grid-template-columns: 1fr; }
+            .proj-summary { grid-template-columns: 1fr; }
+            .scenario-result { grid-template-columns: 1fr; }
+            .savings-card { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HERO ========== -->
+    <section class="report-hero">
+        <div class="hero-inner">
+            <div class="hero-brand">
+                <div class="hero-brand-icon">W</div>
+                <span>Walter · Bayleys Intelligence</span>
+            </div>
+            <div class="hero-label">Operating Budget 2026</div>
+            <h1 class="hero-title">15 Osterley Way,<br>Manukau <span>— Budget</span></h1>
+            <p class="hero-subtitle">A 12-month operating budget built automatically from your lease's Third Schedule — every line item mapped, benchmarked, and projected out five years.</p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span>Annual OPEX</span>
+                    <strong>$76,240</strong>
+                    <small>13 line items · + GST</small>
+                </div>
+                <div class="hero-stat">
+                    <span>Per sqm</span>
+                    <strong>$273.56</strong>
+                    <small>278.82 sqm</small>
+                </div>
+                <div class="hero-stat">
+                    <span>Potential saving</span>
+                    <strong>$8,040</strong>
+                    <small>Worth negotiating</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== NAV ========== -->
+    <nav class="report-nav">
+        <div class="nav-inner">
+            <a href="#summary" class="nav-link active">Summary</a>
+            <a href="#breakdown" class="nav-link">Breakdown</a>
+            <a href="#monthly" class="nav-link">Monthly view</a>
+            <a href="#projection" class="nav-link">5-year projection</a>
+            <a href="#scenarios" class="nav-link">Scenarios</a>
+            <a href="#" class="nav-cta">Discuss with Will →</a>
+        </div>
+    </nav>
+
+    <!-- ========== SUMMARY / KPI ========== -->
+    <section class="section" id="summary">
+        <div class="section-label">01 · Headline Numbers</div>
+        <h2 class="section-title">At a glance</h2>
+        <p class="section-desc">The four numbers that matter most for the property's operating position this year.</p>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <span class="kpi-label">Annual OPEX</span>
+                <span class="kpi-value">$76,240</span>
+                <span class="kpi-sub">+ GST · 13 categories</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Per sqm</span>
+                <span class="kpi-value">$273.56</span>
+                <span class="kpi-sub">278.82 sqm tenancy</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Tenant share</span>
+                <span class="kpi-value">100%</span>
+                <span class="kpi-sub">Single tenancy</span>
+            </div>
+            <div class="kpi-card primary">
+                <span class="kpi-label">Total occupancy</span>
+                <span class="kpi-value">$166,458</span>
+                <span class="kpi-sub">Rent + OPEX per year</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== BREAKDOWN ========== -->
+    <section class="section" id="breakdown">
+        <div class="section-label">02 · Line Item Breakdown</div>
+        <h2 class="section-title">Where the money goes</h2>
+        <p class="section-desc">Each OPEX line item extracted from the lease's Third Schedule, mapped to a category and benchmarked against the portfolio average.</p>
+
+        <div class="breakdown-grid">
+            <!-- Donut chart -->
+            <div class="donut-card">
+                <h3>By category</h3>
+                <div class="donut-wrap">
+                    <svg viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="75" class="donut-bg"/>
+                        <!-- segments: each stroke-dasharray based on % of 471.24 (2*pi*75) -->
+                        <!-- Property mgmt 16.9% = 79.64 -->
+                        <circle cx="100" cy="100" r="75" class="donut-seg" stroke="#3b82f6"
+                            stroke-dasharray="79.64 471.24" stroke-dashoffset="0"/>
+                        <!-- Rates 16.4% = 77.28 -->
+                        <circle cx="100" cy="100" r="75" class="donut-seg" stroke="#8b5cf6"
+                            stroke-dasharray="77.28 471.24" stroke-dashoffset="-79.64"/>
+                        <!-- Maintenance 12.9% = 60.79 -->
+                        <circle cx="100" cy="100" r="75" class="donut-seg" stroke="#ec4899"
+                            stroke-dasharray="60.79 471.24" stroke-dashoffset="-156.92"/>
+                        <!-- Insurance 10.8% = 50.89 -->
+                        <circle cx="100" cy="100" r="75" class="donut-seg" stroke="#f59e0b"
+                            stroke-dasharray="50.89 471.24" stroke-dashoffset="-217.71"/>
+                        <!-- Cleaning 8.8% = 41.47 -->
+                        <circle cx="100" cy="100" r="75" class="donut-seg" stroke="#10b981"
+                            stroke-dasharray="41.47 471.24" stroke-dashoffset="-268.60"/>
+                        <!-- HVAC 6.8% = 32.04 -->
+                        <circle cx="100" cy="100" r="75" class="donut-seg" stroke="#06b6d4"
+                            stroke-dasharray="32.04 471.24" stroke-dashoffset="-310.07"/>
+                        <!-- Other 27.4% = 129.12 -->
+                        <circle cx="100" cy="100" r="75" class="donut-seg" stroke="#94a3b8"
+                            stroke-dasharray="129.12 471.24" stroke-dashoffset="-342.11"/>
+                    </svg>
+                    <div class="donut-center">
+                        <span class="c-value">$76,240</span>
+                        <span class="c-label">Total</span>
+                    </div>
+                </div>
+                <div class="donut-legend">
+                    <div class="donut-legend-item"><span class="donut-dot" style="background:#3b82f6"></span>Property management<span class="val">16.9%</span></div>
+                    <div class="donut-legend-item"><span class="donut-dot" style="background:#8b5cf6"></span>Council rates<span class="val">16.4%</span></div>
+                    <div class="donut-legend-item"><span class="donut-dot" style="background:#ec4899"></span>Maintenance & repairs<span class="val">12.9%</span></div>
+                    <div class="donut-legend-item"><span class="donut-dot" style="background:#f59e0b"></span>Insurance<span class="val">10.8%</span></div>
+                    <div class="donut-legend-item"><span class="donut-dot" style="background:#10b981"></span>Cleaning & waste<span class="val">8.8%</span></div>
+                    <div class="donut-legend-item"><span class="donut-dot" style="background:#06b6d4"></span>HVAC<span class="val">6.8%</span></div>
+                    <div class="donut-legend-item"><span class="donut-dot" style="background:#94a3b8"></span>Other (7 items)<span class="val">27.4%</span></div>
+                </div>
+            </div>
+
+            <!-- Line items list -->
+            <div class="lines-card">
+                <h3>All 13 line items</h3>
+                <p class="sub">Ordered by annual cost. Hover any line to see the benchmark.</p>
+
+                <div class="line-item"><div class="line-num">13</div><div class="line-body"><div class="line-name">Property management fee (5%)</div><div class="line-meta">$/sqm $46.20 · <span class="tag high">Above avg</span></div></div><div class="line-value">$12,880</div></div>
+                <div class="line-item"><div class="line-num">01</div><div class="line-body"><div class="line-name">Council rates</div><div class="line-meta">$/sqm $44.76 · <span class="tag ok">On market</span></div></div><div class="line-value">$12,480</div></div>
+                <div class="line-item"><div class="line-num">06</div><div class="line-body"><div class="line-name">Building maintenance & repairs</div><div class="line-meta">$/sqm $35.29 · <span class="tag high">Above avg</span></div></div><div class="line-value">$9,840</div></div>
+                <div class="line-item"><div class="line-num">02</div><div class="line-body"><div class="line-name">Insurance — building & public liability</div><div class="line-meta">$/sqm $29.41 · <span class="tag ok">On market</span></div></div><div class="line-value">$8,200</div></div>
+                <div class="line-item"><div class="line-num">05</div><div class="line-body"><div class="line-name">Cleaning & waste</div><div class="line-meta">$/sqm $24.10 · <span class="tag ok">On market</span></div></div><div class="line-value">$6,720</div></div>
+                <div class="line-item"><div class="line-num">08</div><div class="line-body"><div class="line-name">HVAC servicing & compliance</div><div class="line-meta">$/sqm $18.51 · <span class="tag ok">On market</span></div></div><div class="line-value">$5,160</div></div>
+                <div class="line-item flagged"><div class="line-num">07</div><div class="line-body"><div class="line-name">Structural fencing repairs ⚠</div><div class="line-meta">$/sqm $15.06 · <span class="tag alert">Landlord liability</span></div></div><div class="line-value">$4,200</div></div>
+                <div class="line-item flagged"><div class="line-num">10</div><div class="line-body"><div class="line-name">Repaving & resealing (car park) ⚠</div><div class="line-meta">$/sqm $13.77 · <span class="tag alert">Landlord liability</span></div></div><div class="line-value">$3,840</div></div>
+                <div class="line-item"><div class="line-num">03</div><div class="line-body"><div class="line-name">Water & wastewater</div><div class="line-meta">$/sqm $13.05 · <span class="tag ok">On market</span></div></div><div class="line-value">$3,640</div></div>
+                <div class="line-item"><div class="line-num">04</div><div class="line-body"><div class="line-name">Electricity (common areas)</div><div class="line-meta">$/sqm $10.54 · <span class="tag ok">On market</span></div></div><div class="line-value">$2,940</div></div>
+                <div class="line-item"><div class="line-num">12</div><div class="line-body"><div class="line-name">Grounds & landscaping</div><div class="line-meta">$/sqm $9.47 · <span class="tag ok">On market</span></div></div><div class="line-value">$2,640</div></div>
+                <div class="line-item"><div class="line-num">09</div><div class="line-body"><div class="line-name">Fire safety & compliance (BWOF)</div><div class="line-meta">$/sqm $8.54 · <span class="tag ok">On market</span></div></div><div class="line-value">$2,380</div></div>
+                <div class="line-item"><div class="line-num">11</div><div class="line-body"><div class="line-name">Pest control</div><div class="line-meta">$/sqm $4.74 · <span class="tag ok">On market</span></div></div><div class="line-value">$1,320</div></div>
+            </div>
+        </div>
+
+        <!-- Savings callout -->
+        <div class="savings-card">
+            <div class="savings-icon">$</div>
+            <div class="savings-body">
+                <div class="savings-label">Potential annual saving</div>
+                <div class="savings-amount">$8,040</div>
+                <p>Items <strong>#7 (structural fencing)</strong> and <strong>#10 (repaving/resealing)</strong> should sit with the landlord under standard ADLS practice. Removing them reduces the tenant's OPEX to <strong>$68,200</strong> ($244.70/sqm) — in line with the market average for this class. Worth raising.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MONTHLY VIEW ========== -->
+    <section class="section" id="monthly">
+        <div class="section-label">03 · Monthly Cash Flow</div>
+        <h2 class="section-title">How it falls across the year</h2>
+        <p class="section-desc">Not every OPEX line is billed evenly. Rates and insurance land quarterly, compliance spends in peaks. Here's the real monthly picture.</p>
+
+        <div class="chart-card">
+            <h3>Monthly OPEX — Year 1</h3>
+            <p class="sub">Hover any bar to see the exact figure. Average $6,353 per month.</p>
+            <div class="monthly-chart">
+                <div class="month-bar-group"><div class="month-bar" style="height:78%" data-value="$7,320"></div><div class="month-label">Jan</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:65%" data-value="$5,480"></div><div class="month-label">Feb</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:60%" data-value="$5,120"></div><div class="month-label">Mar</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:82%" data-value="$7,840"></div><div class="month-label">Apr</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:68%" data-value="$5,620"></div><div class="month-label">May</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:62%" data-value="$5,240"></div><div class="month-label">Jun</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:88%" data-value="$8,240"></div><div class="month-label">Jul</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:64%" data-value="$5,380"></div><div class="month-label">Aug</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:60%" data-value="$5,120"></div><div class="month-label">Sep</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:84%" data-value="$7,960"></div><div class="month-label">Oct</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:66%" data-value="$5,540"></div><div class="month-label">Nov</div></div>
+                <div class="month-bar-group"><div class="month-bar" style="height:80%" data-value="$7,380"></div><div class="month-label">Dec</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 5-YEAR PROJECTION ========== -->
+    <section class="section" id="projection">
+        <div class="section-label">04 · 5-Year Projection</div>
+        <h2 class="section-title">The 5-year picture</h2>
+        <p class="section-desc">Walter projects each line item using CPI + category-specific inflators — insurance +4% p.a., rates +3% p.a., maintenance +3.5% p.a., everything else CPI at 2.5%.</p>
+
+        <div class="proj-card">
+            <h3>OPEX Projection 2026–2030</h3>
+            <p class="sub">Assumes current lease structure with standard inflators.</p>
+            <div class="proj-chart">
+                <div class="proj-bar-group"><div class="proj-bar" style="height:58%" data-value="$76,240"></div><div class="proj-bar-label">2026</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:63%" data-value="$78,680"></div><div class="proj-bar-label">2027</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:70%" data-value="$81,230"></div><div class="proj-bar-label">2028</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:78%" data-value="$83,890"></div><div class="proj-bar-label">2029</div></div>
+                <div class="proj-bar-group"><div class="proj-bar" style="height:86%" data-value="$86,670"></div><div class="proj-bar-label">2030</div></div>
+            </div>
+            <div class="proj-summary">
+                <div class="proj-sum-item"><span>5-year total OPEX</span><strong>$406,710</strong></div>
+                <div class="proj-sum-item"><span>2030 vs 2026</span><strong>+13.7%</strong></div>
+                <div class="proj-sum-item"><span>Total occupancy (5y)</span><strong>$893,050</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SCENARIO CALCULATOR ========== -->
+    <section class="section" id="scenarios">
+        <div class="section-label">05 · Scenario Modelling</div>
+        <h2 class="section-title">What if you negotiated?</h2>
+        <p class="section-desc">Tick the items you'd like to challenge in the lease. Walter recalculates the annual OPEX in real-time.</p>
+
+        <div class="scenario-card">
+            <h3>Negotiation scenarios</h3>
+            <p class="sub">Toggle each option and see the impact.</p>
+
+            <div class="scenario-toggles">
+                <label class="toggle-row" data-impact="4200">
+                    <input type="checkbox" class="scenario-cb">
+                    <div class="toggle-body">
+                        <div class="toggle-title">Remove item #7 — Structural fencing repairs</div>
+                        <div class="toggle-desc">Standard ADLS practice places structural repairs with the landlord. This should be excluded from the tenant's OPEX.</div>
+                    </div>
+                    <div class="toggle-impact">-$4,200</div>
+                </label>
+                <label class="toggle-row" data-impact="3840">
+                    <input type="checkbox" class="scenario-cb">
+                    <div class="toggle-body">
+                        <div class="toggle-title">Remove item #10 — Repaving & resealing</div>
+                        <div class="toggle-desc">Major capital works on car park surfaces typically sit with the landlord, not the tenant.</div>
+                    </div>
+                    <div class="toggle-impact">-$3,840</div>
+                </label>
+                <label class="toggle-row" data-impact="2580">
+                    <input type="checkbox" class="scenario-cb">
+                    <div class="toggle-body">
+                        <div class="toggle-title">Negotiate property management fee down from 5% to 4%</div>
+                        <div class="toggle-desc">5% is above the Auckland market average of 3.5–4% for industrial/office single-tenancy.</div>
+                    </div>
+                    <div class="toggle-impact">-$2,580</div>
+                </label>
+                <label class="toggle-row" data-impact="1500">
+                    <input type="checkbox" class="scenario-cb">
+                    <div class="toggle-body">
+                        <div class="toggle-title">Cap maintenance & repairs at $8,340</div>
+                        <div class="toggle-desc">The current maintenance budget is running 18% above the portfolio average for comparable buildings.</div>
+                    </div>
+                    <div class="toggle-impact">-$1,500</div>
+                </label>
+            </div>
+
+            <div class="scenario-result">
+                <div class="scenario-result-item">
+                    <span>Baseline OPEX</span>
+                    <strong>$76,240</strong>
+                    <small>As per lease</small>
+                </div>
+                <div class="scenario-result-item best">
+                    <span>New OPEX</span>
+                    <strong id="newOpex">$76,240</strong>
+                    <small id="newPerSqm">$273.56/sqm</small>
+                </div>
+                <div class="scenario-result-item">
+                    <span>Annual saving</span>
+                    <strong id="savingResult">$0</strong>
+                    <small id="savingOverTerm">$0 over 6-year term</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="report-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="hero-brand-icon">W</div>
+                <span>Walter · Bayleys Intelligence</span>
+            </div>
+            <p>This operating budget was generated by Walter, Bayleys' AI-powered commercial property intelligence platform.<br>All figures are projections based on the lease's Third Schedule and current market benchmarks. Not legal or financial advice.</p>
+            <div class="footer-agent">
+                <strong>Will Alexander</strong>
+                <span>Head of Innovation | National Director — Property Management</span><br>
+                <span>will.alexander@bayleys.co.nz · +64 21 66 1234</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Nav active state on scroll
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const top = section.offsetTop - 120;
+                if (window.scrollY >= top) current = section.id;
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+
+        // Scenario calculator
+        const BASE_OPEX = 76240;
+        const AREA = 278.82;
+        const TERM_YEARS = 6;
+        const newOpexEl = document.getElementById('newOpex');
+        const newPerSqmEl = document.getElementById('newPerSqm');
+        const savingEl = document.getElementById('savingResult');
+        const savingOverTermEl = document.getElementById('savingOverTerm');
+
+        function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+        function recalc() {
+            let saving = 0;
+            document.querySelectorAll('.toggle-row').forEach(row => {
+                const cb = row.querySelector('input[type="checkbox"]');
+                row.classList.toggle('on', cb.checked);
+                if (cb.checked) saving += parseInt(row.dataset.impact, 10);
+            });
+            const newOpex = BASE_OPEX - saving;
+            newOpexEl.textContent = fmt(newOpex);
+            newPerSqmEl.textContent = fmt(newOpex / AREA).replace('$','$') + '/sqm';
+            savingEl.textContent = fmt(saving);
+            savingOverTermEl.textContent = fmt(saving * TERM_YEARS) + ' over ' + TERM_YEARS + '-year term';
+        }
+
+        document.querySelectorAll('.scenario-cb').forEach(cb => {
+            cb.addEventListener('change', recalc);
+        });
+        recalc();
+    </script>
+</body>
+</html>
