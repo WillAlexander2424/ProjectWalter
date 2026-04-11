@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Walter — Commercial Intelligence</title>
     <!-- Google Fonts Inter loaded async for production -->
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <link rel="stylesheet" href="styles.css?v=55">
 </head>
 <body>
     <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar collapsed" id="sidebar">
         <div class="sidebar-header">
             <button class="hamburger-btn" id="hamburgerBtn" title="Expand menu">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -285,6 +287,13 @@
                         </span>
                     </div>
                     <div class="activity-feed">
+                        <div class="activity-item wallace-highlight">
+                            <span class="agent-pip wallace">W</span>
+                            <div>
+                                <span class="activity-text">Auto-drafted intro: <strong>Harbour Capital &rarr; 170-174 Carlisle Rd</strong> (96% match)</span>
+                                <span class="activity-time">Just now &middot; <a href="#" class="activity-action" data-listing="carlisle">Review &amp; send</a></span>
+                            </div>
+                        </div>
                         <div class="activity-item">
                             <span class="agent-pip wallace">W</span>
                             <div>
@@ -404,6 +413,59 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Deal Pipeline Widget -->
+                <div class="dash-card deal-pipeline-card">
+                    <div class="dash-card-header">
+                        <h3>Deal Pipeline</h3>
+                        <div class="live-badge" style="padding:3px 8px;font-size:9px;">
+                            <span class="live-badge-dot" style="width:5px;height:5px;"></span>
+                            Live
+                        </div>
+                    </div>
+                    <div class="deal-pipeline-items">
+                        <div class="deal-item" data-deal-action="hot" data-deal-property="33 Crummer Road, Grey Lynn">
+                            <div class="deal-item-left">
+                                <div class="deal-icon hot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                                <div class="deal-info"><div class="deal-title">33 Crummer Road</div><div class="deal-type">Heads of Terms</div></div>
+                            </div>
+                            <div class="deal-item-right">
+                                <div class="deal-status-pills"><span class="deal-pill done">Tenant &#10003;</span><span class="deal-pill pending">Owner&hellip;</span></div>
+                                <svg class="deal-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </div>
+                        <div class="deal-item" data-deal-action="lease" data-deal-property="24-28 Beaumont Street">
+                            <div class="deal-item-left">
+                                <div class="deal-icon lease"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+                                <div class="deal-info"><div class="deal-title">24-28 Beaumont Street</div><div class="deal-type">Lease Agreement</div></div>
+                            </div>
+                            <div class="deal-item-right">
+                                <div class="deal-status-pills"><span class="deal-pill pending">2 of 3 signed</span></div>
+                                <svg class="deal-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </div>
+                        <div class="deal-item" data-deal-action="hot" data-deal-property="15 Osterley Way">
+                            <div class="deal-item-left">
+                                <div class="deal-icon complete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                <div class="deal-info"><div class="deal-title">15 Osterley Way</div><div class="deal-type">Heads of Terms &mdash; Complete</div></div>
+                            </div>
+                            <div class="deal-item-right">
+                                <div class="deal-status-pills"><span class="deal-pill complete">All agreed</span></div>
+                                <svg class="deal-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </div>
+                        <div class="deal-item" data-deal-action="lease" data-deal-property="135 Parnell Road">
+                            <div class="deal-item-left">
+                                <div class="deal-icon draft"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                                <div class="deal-info"><div class="deal-title">135 Parnell Road</div><div class="deal-type">Lease Agreement &mdash; Draft</div></div>
+                            </div>
+                            <div class="deal-item-right">
+                                <div class="deal-status-pills"><span class="deal-pill draft-pill">In progress</span></div>
+                                <svg class="deal-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -453,9 +515,10 @@
                         </button>
                     </div>
                     <div class="chat-toolbar">
-                        <button class="chat-attach" title="Upload document">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <button class="chat-attach" id="chatAttachBtn" title="Upload a document for Walter to analyse">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
                         </button>
+                        <input type="file" id="chatFileInput" accept=".pdf,.docx,.doc,.xlsx" style="display:none">
                     </div>
                     <span class="chat-disclaimer">Walter uses Bayleys IP, public data, and AI predictions. Always verify critical details.</span>
                 </div>
@@ -520,80 +583,7 @@
                 <!-- Map Area -->
                 <div class="market-map-area">
                     <div class="map-container">
-                        <img src="map-auckland.png" alt="Auckland commercial property map" class="map-bg-img">
-
-                        <!-- Interactive Property Pins — strategic selection -->
-                        <!-- CBD cluster -->
-                        <div class="map-pin pin-office" style="top:32%;left:36%" data-pin="shortland" title="88 Shortland St">
-                            <div class="pin-dot"></div>
-                            <span class="pin-count">3</span>
-                        </div>
-                        <div class="map-pin pin-retail" style="top:34%;left:34%" data-pin="queen" title="45 Queen St">
-                            <div class="pin-dot"></div>
-                        </div>
-                        <div class="map-pin pin-signal" style="top:30%;left:33%" data-pin="nelson" title="12 Nelson St">
-                            <div class="pin-dot"></div>
-                        </div>
-                        <!-- Ponsonby / Freemans Bay -->
-                        <div class="map-pin pin-retail" style="top:30%;left:26%" data-pin="ponsonby" title="Ponsonby Retail">
-                            <div class="pin-dot"></div>
-                            <span class="pin-count">5</span>
-                        </div>
-                        <div class="map-pin pin-office" style="top:28%;left:28%" data-pin="freemans" title="Freemans Bay">
-                            <div class="pin-dot"></div>
-                            <span class="pin-count">2</span>
-                        </div>
-                        <!-- Grey Lynn -->
-                        <div class="map-pin pin-office" style="top:32%;left:22%" data-pin="greylynn" title="33 Crummer Rd">
-                            <div class="pin-dot"></div>
-                        </div>
-                        <!-- Newmarket / Parnell -->
-                        <div class="map-pin pin-office" style="top:34%;left:42%" data-pin="newmarket" title="Newmarket">
-                            <div class="pin-dot"></div>
-                            <span class="pin-count">9+</span>
-                        </div>
-                        <div class="map-pin pin-retail" style="top:28%;left:40%" data-pin="parnell" title="Parnell">
-                            <div class="pin-dot"></div>
-                            <span class="pin-count">3</span>
-                        </div>
-                        <!-- Mt Eden -->
-                        <div class="map-pin pin-office" style="top:40%;left:32%" data-pin="mteden" title="Mt Eden">
-                            <div class="pin-dot"></div>
-                        </div>
-                        <!-- Penrose -->
-                        <div class="map-pin pin-industrial" style="top:44%;left:40%" data-pin="penrose" title="Penrose Industrial">
-                            <div class="pin-dot"></div>
-                        </div>
-                        <!-- East Tamaki -->
-                        <div class="map-pin pin-industrial" style="top:54%;left:58%" data-pin="tamaki" title="East Tamaki">
-                            <div class="pin-dot"></div>
-                            <span class="pin-count">7</span>
-                        </div>
-                        <!-- South Auckland / Wiri -->
-                        <div class="map-pin pin-industrial" style="top:62%;left:42%" data-pin="dalgety" title="47 Dalgety Dr, Wiri">
-                            <div class="pin-dot"></div>
-                        </div>
-
-                        <!-- Property Popup (shown on pin click) -->
-                        <!-- Dynamic Property Popup -->
-                        <div class="map-popup" id="mapPopup" style="top:18%;left:40%">
-                            <button class="popup-close" id="popupClose">&times;</button>
-                            <div class="popup-image">
-                                <img src="" alt="" id="popupImg">
-                                <button class="popup-fav" title="Save property">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                                </button>
-                            </div>
-                            <div class="popup-body" id="popupBody">
-                                <!-- Populated by JS -->
-                            </div>
-                        </div>
-
-                        <!-- Map Controls -->
-                        <div class="map-controls">
-                            <button class="map-ctrl" title="Zoom in">+</button>
-                            <button class="map-ctrl" title="Zoom out">-</button>
-                        </div>
+                        <div id="leafletMap"></div>
 
                         <!-- Map Legend -->
                         <div class="map-legend">
@@ -609,7 +599,7 @@
                 <div class="market-intel-panel" id="marketIntelPanel">
                     <div class="intel-tabs">
                         <button class="intel-tab active" data-tab="overview">Overview</button>
-                        <button class="intel-tab" data-tab="listings">Listings</button>
+                        <button class="intel-tab" data-tab="signals">Signals</button>
                         <button class="intel-tab" data-tab="insights">Insights</button>
                     </div>
 
@@ -681,7 +671,7 @@
                     </div>
 
                     <!-- Listings Tab -->
-                    <div class="intel-content" data-content="listings">
+                    <div class="intel-content" data-content="signals">
                         <div class="listings-feed">
                             <div class="feed-item" data-pin="shortland">
                                 <img src="sv-88-shortland.png" alt="" class="feed-thumb">
@@ -1489,6 +1479,7 @@
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
                                 Bayleys · 4 days
                             </span>
+                            <span class="wallace-pip-count"><span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px;border-radius:5px;">W</span>5</span>
                             <a href="#" class="view-link">View &rarr;</a>
                         </div>
                     </div>
@@ -1524,6 +1515,7 @@
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
                                 Bayleys · 7 days
                             </span>
+                            <span class="wallace-pip-count"><span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px;border-radius:5px;">W</span>6</span>
                             <a href="#" class="view-link">View &rarr;</a>
                         </div>
                     </div>
@@ -1559,6 +1551,7 @@
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
                                 Bayleys · 2 days
                             </span>
+                            <span class="wallace-pip-count"><span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px;border-radius:5px;">W</span>4</span>
                             <a href="#" class="view-link">View &rarr;</a>
                         </div>
                     </div>
@@ -1594,6 +1587,7 @@
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
                                 Bayleys · 12 days
                             </span>
+                            <span class="wallace-pip-count"><span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px;border-radius:5px;">W</span>3</span>
                             <a href="#" class="view-link">View &rarr;</a>
                         </div>
                     </div>
@@ -1629,6 +1623,7 @@
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
                                 Bayleys · 12 days
                             </span>
+                            <span class="wallace-pip-count"><span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px;border-radius:5px;">W</span>5</span>
                             <a href="#" class="view-link">View &rarr;</a>
                         </div>
                     </div>
@@ -1664,6 +1659,7 @@
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
                                 Bayleys · 5 days
                             </span>
+                            <span class="wallace-pip-count"><span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px;border-radius:5px;">W</span>7</span>
                             <a href="#" class="view-link">View &rarr;</a>
                         </div>
                     </div>
@@ -3329,10 +3325,38 @@
                                 <span class="agent-cap">Buyer/tenant alerts</span>
                                 <span class="agent-cap">Listing suggestions</span>
                                 <span class="agent-cap">Pipeline tracking</span>
+                                <span class="agent-cap">Vision inferencing</span>
+                                <span class="agent-cap">Auto-drafted intros</span>
                             </div>
+
+                            <!-- Wallace auto-match settings -->
+                            <div class="wallace-auto-settings">
+                                <div class="wallace-auto-row">
+                                    <div class="wallace-auto-info">
+                                        <strong>Auto-match new listings</strong>
+                                        <span>Wallace continuously scans every new listing against your contact database and surfaces matches above 85%</span>
+                                    </div>
+                                    <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </div>
+                                <div class="wallace-auto-row">
+                                    <div class="wallace-auto-info">
+                                        <strong>Auto-draft intros (&gt;95% match)</strong>
+                                        <span>For high-confidence matches, Wallace pre-drafts the introduction email and queues it for your review</span>
+                                    </div>
+                                    <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </div>
+                                <div class="wallace-auto-row">
+                                    <div class="wallace-auto-info">
+                                        <strong>Notify via Zara</strong>
+                                        <span>Push match alerts to your preferred channel (WhatsApp, email, or in-app) via Zara</span>
+                                    </div>
+                                    <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </div>
+                            </div>
+
                             <div class="agent-status-bar">
                                 <span class="agent-status-indicator active"></span>
-                                <span class="agent-status-text">Active — 6 new matches today · 2 high-compatibility leads</span>
+                                <span class="agent-status-text">Active — scanning 214 listings · 6 new matches today · 2 auto-drafted intros queued</span>
                             </div>
                         </div>
 
@@ -4564,10 +4588,22 @@
 
                 <!-- ACTION BAR -->
                 <div class="cl-actions">
-                    <button class="btn-primary">Generate Strategy Card</button>
-                    <button class="popup-btn">Share with client</button>
-                    <button class="popup-btn">Book viewing</button>
-                    <button class="popup-btn">Export PDF</button>
+                    <button class="btn-primary" id="clStrategyBtn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Generate Strategy Card
+                    </button>
+                    <button class="popup-btn" id="clShareBtn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        Share with client
+                    </button>
+                    <button class="popup-btn" id="clBookBtn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Book viewing
+                    </button>
+                    <button class="popup-btn" id="clExportBtn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export PDF
+                    </button>
                 </div>
             </div>
         </div>
@@ -4575,34 +4611,52 @@
         <!-- ============ PROPERTY DRILL-DOWN MODAL (History/Reports/Insights/Data) ============ -->
         <div class="modal-overlay" id="propDrillModal">
             <div class="modal-content prop-drill-modal">
-                <button class="modal-close" id="propDrillClose">&times;</button>
+                <button class="modal-close" id="propDrillClose" style="z-index:10;color:white;mix-blend-mode:difference;">&times;</button>
 
-                <!-- Header with address + tabs -->
-                <div class="pd-head">
-                    <div class="pd-head-top">
-                        <div>
-                            <span class="pd-breadcrumb">My Properties</span>
+                <!-- Hero banner with property image -->
+                <div class="pd-hero-banner" id="pdHeroBanner">
+                    <img src="sv-88-shortland.png" alt="" class="pd-hero-img" id="pdHeroImg">
+                    <div class="pd-hero-gradient"></div>
+                    <div class="pd-hero-content">
+                        <div class="pd-hero-left">
+                            <span class="pd-hero-breadcrumb">My Properties</span>
                             <h2 id="pdAddress">33 Crummer Road, Grey Lynn</h2>
-                            <div class="pd-meta">
+                            <div class="pd-meta" id="pdMeta">
                                 <span class="pd-meta-chip"><strong>Office</strong> · 306 sqm</span>
                                 <span class="pd-meta-chip">Tenant: Glenn Cotterill Company Trust</span>
                                 <span class="pd-meta-chip">Stickiness: 48%</span>
                                 <span class="pd-meta-chip">Lease expiry: Aug 2029</span>
                             </div>
                         </div>
-                        <div class="pd-head-actions">
-                            <button class="pd-head-btn">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                                Edit property
+                        <div class="pd-hero-actions">
+                            <button class="pd-hero-btn" onclick="document.getElementById('propDrillModal').classList.remove('active'); document.getElementById('strategyModal').classList.add('active');">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                Strategy Card
                             </button>
-                            <button class="pd-head-btn primary">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                New Strategy Card
+                            <button class="pd-hero-btn">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                                Share
                             </button>
                         </div>
                     </div>
+                </div>
+
+                <!-- Compact metrics strip (below hero) -->
+                <div class="pd-head">
+                    <div class="pd-metrics-row" id="pdMetricsRow">
+                        <div class="pd-metric-item"><span class="pd-mi-label">Area</span><span class="pd-mi-value" id="pdMetricArea">306 sqm</span></div>
+                        <div class="pd-metric-item"><span class="pd-mi-label">$/sqm</span><span class="pd-mi-value" id="pdMetricRate">$302</span></div>
+                        <div class="pd-metric-item"><span class="pd-mi-label">Annual Rent</span><span class="pd-mi-value" id="pdMetricRent">$92.4k</span></div>
+                        <div class="pd-metric-item"><span class="pd-mi-label">Lease Term</span><span class="pd-mi-value" id="pdMetricTerm">5+3 yrs</span></div>
+                        <div class="pd-metric-item"><span class="pd-mi-label">Stickiness</span><span class="pd-mi-value" id="pdMetricStick">48%</span></div>
+                        <div class="pd-metric-item"><span class="pd-mi-label">Status</span><span class="pd-mi-value" id="pdMetricStatus">Stable</span></div>
+                    </div>
                     <div class="pd-tabs">
-                        <button class="pd-tab active" data-pd-tab="history">
+                        <button class="pd-tab active" data-pd-tab="overview">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            Overview
+                        </button>
+                        <button class="pd-tab" data-pd-tab="history">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                             History
                         </button>
@@ -4624,8 +4678,89 @@
 
                 <div class="pd-body">
 
+                    <!-- ============ OVERVIEW TAB ============ -->
+                    <div class="pd-panel active" id="pdPanelOverview">
+                        <!-- Three-column overview -->
+                        <div class="pd-ov-3col">
+                            <!-- Column 1: Property -->
+                            <div class="pd-ov-col">
+                                <h4 class="pd-ov-title">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                    Property
+                                </h4>
+                                <div class="pd-ov-list">
+                                    <div class="pd-ov-row"><span>Title</span><strong>NA45C/112</strong></div>
+                                    <div class="pd-ov-row"><span>Legal Description</span><strong>Lot 4 DP 56789</strong></div>
+                                    <div class="pd-ov-row"><span>Zoning</span><strong>Mixed Use &mdash; Grey Lynn</strong></div>
+                                    <div class="pd-ov-row"><span>Building</span><strong>Heritage brick, c.1920</strong></div>
+                                    <div class="pd-ov-row"><span>NBS Rating</span><strong>67%</strong></div>
+                                    <div class="pd-ov-row"><span>Condition</span><strong>0.58 &mdash; Fair</strong></div>
+                                    <div class="pd-ov-row"><span>Parking</span><strong>4 on-site</strong></div>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: Owner -->
+                            <div class="pd-ov-col">
+                                <h4 class="pd-ov-title">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    Owner
+                                </h4>
+                                <div class="pd-ov-person-card">
+                                    <div class="pd-ov-person-avatar">DR</div>
+                                    <div>
+                                        <strong>Des Radonich</strong>
+                                        <span>Director &middot; Des Radonich Limited</span>
+                                    </div>
+                                </div>
+                                <div class="pd-ov-list">
+                                    <div class="pd-ov-row"><span>Phone</span><strong>021 XXX XXXX</strong></div>
+                                    <div class="pd-ov-row"><span>Email</span><strong>des@radonich.co.nz</strong></div>
+                                    <div class="pd-ov-row"><span>Purchase</span><strong>$1.85M (2016)</strong></div>
+                                    <div class="pd-ov-row"><span>Current CV</span><strong>$2.10M (2021)</strong></div>
+                                </div>
+                            </div>
+
+                            <!-- Column 3: Tenant -->
+                            <div class="pd-ov-col">
+                                <h4 class="pd-ov-title">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                                    Tenant
+                                </h4>
+                                <div class="pd-ov-person-card">
+                                    <div class="pd-ov-person-avatar" style="background:#475569;">GC</div>
+                                    <div>
+                                        <strong>Glenn Cotterill Company Trust</strong>
+                                        <span>Professional Services</span>
+                                    </div>
+                                </div>
+                                <div class="pd-ov-list">
+                                    <div class="pd-ov-row"><span>NZBN</span><strong>9429041200XXX</strong></div>
+                                    <div class="pd-ov-row"><span>ICP Status</span><strong>Active since Sep 2024</strong></div>
+                                    <div class="pd-ov-row"><span>Industry</span><strong>Professional Services</strong></div>
+                                    <div class="pd-ov-row"><span>Hiring</span><strong>Stable &mdash; no active roles</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lease Summary strip -->
+                        <div class="pd-ov-lease-strip">
+                            <h4 class="pd-ov-title" style="margin-bottom:14px;">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                Lease Summary
+                            </h4>
+                            <div class="pd-ov-lease-row">
+                                <div class="pd-ov-lease-item"><span>Term</span><strong>5+3 years</strong></div>
+                                <div class="pd-ov-lease-item"><span>Commencement</span><strong>Sep 2024</strong></div>
+                                <div class="pd-ov-lease-item"><span>Expiry</span><strong>Aug 2029</strong></div>
+                                <div class="pd-ov-lease-item"><span>Review</span><strong>CPI annual</strong></div>
+                                <div class="pd-ov-lease-item"><span>Rent</span><strong>$92,412 + GST</strong></div>
+                                <div class="pd-ov-lease-item"><span>Rate</span><strong>$302/sqm</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- ============ HISTORY TAB ============ -->
-                    <div class="pd-panel active" id="pdPanelHistory">
+                    <div class="pd-panel" id="pdPanelHistory">
                         <div class="pd-hist-filters">
                             <button class="pd-hist-chip active" data-hist="all">All</button>
                             <button class="pd-hist-chip" data-hist="sale">Sale</button>
@@ -5656,17 +5791,23 @@
             </div>
         </div>
 
-        <!-- ============ LEASE AGREEMENT GENERATOR MODAL ============ -->
-        <div class="modal-overlay" id="leaseModal">
-            <div class="modal-content lease-modal">
-                <button class="modal-close" id="leaseClose">&times;</button>
+        <!-- ============ LEASE AGREEMENT — FULL PAGE VIEW ============ -->
+        <section class="view" id="view-lease">
 
-                <!-- Top bar -->
-                <div class="la-topbar">
+            <!-- Top bar -->
+            <div class="la-topbar">
+                    <button class="la-back-btn" id="laBackBtn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        My Properties
+                    </button>
+                    <button class="la-hot-btn" id="laHotBtn" title="View Heads of Terms">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        View HoT
+                    </button>
                     <div class="la-topbar-left">
                         <div class="la-topbar-badge">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            ADLS Deed of Lease &middot; 7th Edition 2024
+                            TLANZ Agreement to Lease &middot; 6th Edition 2024
                         </div>
                         <h2 id="laTitle">33 Crummer Road, Grey Lynn</h2>
                     </div>
@@ -5684,37 +5825,64 @@
 
                 <!-- Section navigation -->
                 <div class="la-sections-nav">
-                    <button class="la-sec-btn active" data-la-sec="parties">Parties</button>
-                    <button class="la-sec-btn" data-la-sec="premises">Premises</button>
-                    <button class="la-sec-btn" data-la-sec="term">Term &amp; Renewal</button>
-                    <button class="la-sec-btn" data-la-sec="rent">Rent</button>
-                    <button class="la-sec-btn" data-la-sec="reviews">Rent Reviews</button>
-                    <button class="la-sec-btn" data-la-sec="outgoings">Outgoings</button>
-                    <button class="la-sec-btn" data-la-sec="insurance">Insurance</button>
-                    <button class="la-sec-btn" data-la-sec="security">Security</button>
-                    <button class="la-sec-btn" data-la-sec="further">Further Terms</button>
-                    <button class="la-sec-btn" data-la-sec="send">Send &amp; Sign</button>
+                    <button class="la-sec-btn active" data-la-sec="frontpage">
+                        <span class="la-sec-num">1</span>
+                        Front Page
+                    </button>
+                    <button class="la-sec-btn" data-la-sec="schedule1">
+                        <span class="la-sec-num">2</span>
+                        First Schedule
+                    </button>
+                    <button class="la-sec-btn" data-la-sec="schedule2">
+                        <span class="la-sec-num">3</span>
+                        Second Schedule
+                    </button>
+                    <button class="la-sec-btn" data-la-sec="schedule3">
+                        <span class="la-sec-num">4</span>
+                        Third Schedule <span class="la-sec-badge">AI</span>
+                    </button>
+                    <button class="la-sec-btn" data-la-sec="schedule4">
+                        <span class="la-sec-num">5</span>
+                        Fourth Schedule
+                    </button>
+                    <button class="la-sec-btn" data-la-sec="backpage">
+                        <span class="la-sec-num">6</span>
+                        Back Page
+                    </button>
+                    <button class="la-sec-btn" data-la-sec="review">
+                        <span class="la-sec-num">7</span>
+                        Review &amp; Approve
+                    </button>
+                    <button class="la-sec-btn" data-la-sec="send">
+                        <span class="la-sec-num">8</span>
+                        Send &amp; Sign
+                    </button>
                 </div>
 
                 <!-- Split pane: left = form, right = preview -->
                 <div class="la-split">
                     <!-- LEFT: Editable form -->
                     <div class="la-form-pane">
-                        <!-- Zara recommendation banner (contextual) -->
+                        <!-- Zara recommendation banner -->
                         <div class="la-zara-banner" id="laZaraBanner">
                             <span class="agent-pip zara" style="width:24px;height:24px;font-size:10px;border-radius:6px;">Z</span>
                             <div class="la-zara-body">
                                 <strong>Zara's clause recommendations for this property</strong>
-                                <span id="laZaraText">Office lease, Grey Lynn &mdash; Zara recommends including CPI-capped reviews, a 9-month no-access period, and a $5,000 insurance excess (7th Ed. default). 3 clauses auto-applied.</span>
+                                <span id="laZaraText">Office lease, Grey Lynn &mdash; Zara recommends CPI-capped reviews, a 9-month no-access period, and $5,000 insurance excess (6th Ed. default). 3 clauses auto-applied.</span>
                             </div>
                         </div>
 
-                        <!-- PARTIES SECTION -->
-                        <div class="la-section active" data-la-panel="parties">
+                        <!-- ============ TAB 1: FRONT PAGE ============ -->
+                        <div class="la-section active" data-la-panel="frontpage">
                             <div class="la-sec-head">
-                                <h3>Parties &amp; Property</h3>
-                                <span class="la-sec-sub">Items 1-2 of the First Schedule</span>
+                                <h3>Front Page</h3>
+                                <span class="la-sec-sub">Parties, Guarantor, general address and date &mdash; Page 1 of the Agreement</span>
                             </div>
+                            <div class="la-form-grid">
+                                <div class="la-field wide"><label>General address of premises</label><input type="text" class="la-input" value="33 Crummer Road, Grey Lynn, Auckland" data-la="generalAddress"></div>
+                                <div class="la-field"><label>Date</label><input type="text" class="la-input" value="11 April 2026" data-la="agreementDate"></div>
+                            </div>
+                            <div class="la-sec-divider">Parties</div>
                             <div class="la-form-grid">
                                 <div class="la-field"><label>Landlord name</label><input type="text" class="la-input" value="Des Radonich Limited" data-la="landlord"></div>
                                 <div class="la-field"><label>Landlord address</label><input type="text" class="la-input" value="PO Box 99-123, Auckland 1149" data-la="landlordAddr"></div>
@@ -5730,7 +5898,7 @@
                         </div>
 
                         <!-- PREMISES SECTION -->
-                        <div class="la-section" data-la-panel="premises">
+                        <div class="la-section" data-la-panel="schedule1" data-la-group="premises">
                             <div class="la-sec-head">
                                 <h3>Premises</h3>
                                 <span class="la-sec-sub">First Schedule Item 1</span>
@@ -5745,7 +5913,7 @@
                         </div>
 
                         <!-- TERM SECTION -->
-                        <div class="la-section" data-la-panel="term">
+                        <div class="la-section" data-la-panel="schedule1" data-la-group="term">
                             <div class="la-sec-head">
                                 <h3>Term &amp; Renewal</h3>
                                 <span class="la-sec-sub">First Schedule Items 3-8</span>
@@ -5765,7 +5933,7 @@
                         </div>
 
                         <!-- RENT SECTION -->
-                        <div class="la-section" data-la-panel="rent">
+                        <div class="la-section" data-la-panel="schedule1" data-la-group="rent">
                             <div class="la-sec-head">
                                 <h3>Rent</h3>
                                 <span class="la-sec-sub">First Schedule Items 9-11</span>
@@ -5781,7 +5949,7 @@
                         </div>
 
                         <!-- RENT REVIEWS SECTION -->
-                        <div class="la-section" data-la-panel="reviews">
+                        <div class="la-section" data-la-panel="schedule1" data-la-group="reviews">
                             <div class="la-sec-head">
                                 <h3>Rent Reviews</h3>
                                 <span class="la-sec-sub">First Schedule Items 12-15</span>
@@ -5800,33 +5968,69 @@
                         </div>
 
                         <!-- OUTGOINGS SECTION -->
-                        <div class="la-section" data-la-panel="outgoings">
+                        <div class="la-section" data-la-panel="schedule1" data-la-group="outgoings">
                             <div class="la-sec-head">
                                 <h3>Outgoings</h3>
                                 <span class="la-sec-sub">First Schedule Items 16-17</span>
                             </div>
                             <div class="la-form-grid">
                                 <div class="la-field"><label>Item 16: Proportion</label><input type="text" class="la-input" value="100% (single tenancy)" data-la="outgoingsProportion"></div>
-                                <div class="la-field wide"><label>Item 17: Outgoings categories</label>
-                                    <textarea class="la-input la-textarea" data-la="outgoingsCategories" rows="5">1. Rates (territorial authority)
-2. Water and wastewater charges
-3. Insurance — building and public liability
-4. Fire protection systems maintenance
-5. Building warrant of fitness costs
-6. Common area cleaning and maintenance
-7. Lift maintenance and servicing
-8. HVAC servicing and compliance
-9. Grounds and landscaping
-10. Refuse collection
-11. Building management fee (4%)
-12. Body corporate levies (if applicable)
-13. Exterior repainting (7th Ed. addition)</textarea>
+                                <div class="la-field wide">
+                                    <label>Item 17: Outgoings categories &mdash; toggle to include/exclude</label>
+                                    <div class="la-outgoings-grid" id="laOutgoingsGrid">
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="rates"><span class="la-og-check"></span><span>Rates (territorial authority)</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="water"><span class="la-og-check"></span><span>Water &amp; wastewater charges</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="insurance"><span class="la-og-check"></span><span>Insurance &mdash; building &amp; public liability</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="fire"><span class="la-og-check"></span><span>Fire protection systems maintenance</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="bwof"><span class="la-og-check"></span><span>Building warrant of fitness costs</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="cleaning"><span class="la-og-check"></span><span>Common area cleaning &amp; maintenance</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="lift"><span class="la-og-check"></span><span>Lift maintenance &amp; servicing</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="hvac"><span class="la-og-check"></span><span>HVAC servicing &amp; compliance</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="grounds"><span class="la-og-check"></span><span>Grounds &amp; landscaping</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="refuse"><span class="la-og-check"></span><span>Refuse collection</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="management"><span class="la-og-check"></span><span>Building management fee (4%)</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" data-og="bodycorp"><span class="la-og-check"></span><span>Body corporate levies</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" checked data-og="repainting"><span class="la-og-check"></span><span>Exterior repainting (6th Ed.)</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" data-og="accessway"><span class="la-og-check"></span><span>Accessway maintenance (6th Ed.)</span></label>
+                                        <label class="la-outgoing-item"><input type="checkbox" data-og="sinking"><span class="la-og-check"></span><span>Sinking fund contribution</span></label>
+                                    </div>
+                                    <div class="la-og-summary" id="laOgSummary">12 of 15 categories included</div>
+                                </div>
+
+                                <!-- Estimated annual outgoings -->
+                                <div class="la-field wide" style="margin-top:16px;">
+                                    <label>Estimated Annual Outgoings</label>
+                                    <div class="la-opex-estimate">
+                                        <div class="la-opex-est-row">
+                                            <div class="la-opex-est-item">
+                                                <span class="la-opex-est-label">Proportion</span>
+                                                <span class="la-opex-est-value" id="laEstProportion">5.6%</span>
+                                            </div>
+                                            <div class="la-opex-est-item">
+                                                <span class="la-opex-est-label">Est. Annual Outgoings</span>
+                                                <span class="la-opex-est-value highlight">$31,693.47 <small>+ GST</small></span>
+                                            </div>
+                                            <div class="la-opex-est-item">
+                                                <span class="la-opex-est-label">Monthly Outgoings</span>
+                                                <span class="la-opex-est-value">$2,641.12 <small>+ GST</small></span>
+                                            </div>
+                                            <div class="la-opex-est-item primary">
+                                                <span class="la-opex-est-label">Total Occupancy Cost</span>
+                                                <span class="la-opex-est-value">$121,911.27 <small>+ GST p.a.</small></span>
+                                                <span class="la-opex-est-sub">Rent $90,217.80 + OPEX $31,693.47</span>
+                                            </div>
+                                        </div>
+                                        <div class="la-opex-est-note">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                            These are indicative estimates based on the landlord's current outgoings schedule. Actual outgoings will be reconciled annually. Pulled from Heads of Terms &middot; HOT-2026-0411-CRM
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- INSURANCE SECTION -->
-                        <div class="la-section" data-la-panel="insurance">
+                        <div class="la-section" data-la-panel="schedule1" data-la-group="insurance">
                             <div class="la-sec-head">
                                 <h3>Insurance &amp; Seismic</h3>
                                 <span class="la-sec-sub">First Schedule Items 20-23, 28</span>
@@ -5834,19 +6038,19 @@
                             <div class="la-form-grid">
                                 <div class="la-field"><label>Item 20: Landlord insurance type</label><input type="text" class="la-input" value="Full replacement (cl 24.1)" data-la="insuranceType"></div>
                                 <div class="la-field"><label>Consequential loss period</label><input type="text" class="la-input" value="24 months" data-la="consequentialLoss"></div>
-                                <div class="la-field"><label>Item 21: Insurance excess</label><input type="text" class="la-input" value="$5,000 (7th Ed. default)" data-la="excess"></div>
+                                <div class="la-field"><label>Item 21: Insurance excess</label><input type="text" class="la-input" value="$5,000 (6th Ed. default)" data-la="excess"></div>
                                 <div class="la-field"><label>Item 22: Fair proportion of rent</label><input type="text" class="la-input" value="50% (cl 29.2 default)" data-la="fairProportion"></div>
                                 <div class="la-field"><label>Item 23: No-access period</label><input type="text" class="la-input" value="9 months (cl 29.6)" data-la="noAccess"></div>
                                 <div class="la-field"><label>Item 28: Seismic rating</label><input type="text" class="la-input" value="85% NBS (IL2)" data-la="seismic"></div>
                             </div>
                             <div class="la-zara-clause">
                                 <span class="agent-pip zara" style="width:20px;height:20px;font-size:9px;border-radius:5px;">Z</span>
-                                <span>Zara: $5,000 excess and 9-month no-access period are the 7th Edition defaults. 85% NBS is above the 67% minimum — premium positioning for this building.</span>
+                                <span>Zara: $5,000 excess and 9-month no-access period are the 6th Edition defaults. 85% NBS is above the 67% minimum — premium positioning for this building.</span>
                             </div>
                         </div>
 
                         <!-- SECURITY SECTION -->
-                        <div class="la-section" data-la-panel="security">
+                        <div class="la-section" data-la-panel="schedule1" data-la-group="security">
                             <div class="la-sec-head">
                                 <h3>Security</h3>
                                 <span class="la-sec-sub">First Schedule Items 24-27</span>
@@ -5860,7 +6064,7 @@
                         </div>
 
                         <!-- FURTHER TERMS SECTION -->
-                        <div class="la-section" data-la-panel="further">
+                        <div class="la-section" data-la-panel="schedule3">
                             <div class="la-sec-head">
                                 <h3>Further Terms (Third Schedule)</h3>
                                 <span class="la-sec-sub">Bespoke clauses for this lease</span>
@@ -5879,21 +6083,711 @@
                                 <span class="agent-pip zara" style="width:20px;height:20px;font-size:9px;border-radius:5px;">Z</span>
                                 <span>Zara: Based on 847 comparable Grey Lynn office leases, 92% include a make-good clause and 88% specify assignment with landlord consent. These terms are market-standard.</span>
                             </div>
+
+                            <!-- Additional Clauses (AI-powered, inline) -->
+                            <div class="la-sec-divider">Additional Clauses &mdash; Walter AI</div>
+
+                            <!-- Walter clause chat -->
+                            <div class="la-clause-chat">
+                                <div class="la-clause-chat-head">
+                                    <div class="la-clause-walter-mark">W</div>
+                                    <div>
+                                        <strong>Ask Walter for a clause</strong>
+                                        <span>Describe what you need &mdash; e.g. "I need a make-good clause" or "Add a no-compete radius of 2km" &mdash; and Walter will draft it from our legal precedent library.</span>
+                                    </div>
+                                </div>
+
+                                <div class="la-clause-messages" id="laClauseMessages">
+                                    <div class="la-clause-msg walter">
+                                        <div class="la-clause-msg-avatar">W</div>
+                                        <div class="la-clause-msg-body">
+                                            <p>I have access to <strong>14,200+ NZ commercial lease agreements</strong> and can draft clauses tailored to this property type (Office), location (Grey Lynn), and lease structure (5+3 years, CPI review).</p>
+                                            <p>Try asking me for:</p>
+                                            <div class="la-clause-suggestions">
+                                                <button class="la-clause-suggest" data-clause="make-good">Make-good clause</button>
+                                                <button class="la-clause-suggest" data-clause="signage">Signage rights</button>
+                                                <button class="la-clause-suggest" data-clause="nocompete">No-compete radius</button>
+                                                <button class="la-clause-suggest" data-clause="access">24/7 access rights</button>
+                                                <button class="la-clause-suggest" data-clause="damage">Damage &amp; abatement</button>
+                                                <button class="la-clause-suggest" data-clause="hns">Health &amp; safety</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form class="la-clause-input-wrap" id="laClauseForm">
+                                    <input type="text" class="la-clause-input" id="laClauseInput" placeholder="Describe the clause you need&hellip;" autocomplete="off">
+                                    <button type="submit" class="la-clause-send">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Added clauses list -->
+                            <div class="la-added-clauses" id="laAddedClauses">
+                                <div class="la-added-head">
+                                    <h4>Clauses added to this agreement</h4>
+                                    <span class="la-added-count" id="laClauseCount">0 clauses</span>
+                                </div>
+                                <div class="la-added-list" id="laAddedList">
+                                    <div class="la-added-empty">No additional clauses yet. Use Walter above to draft and add clauses.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CHATTELS SECTION (Fourth Schedule) -->
+                        <div class="la-section" data-la-panel="schedule4">
+                            <div class="la-sec-head">
+                                <h3>Landlord's Fixtures, Fittings &amp; Chattels</h3>
+                                <span class="la-sec-sub">Fourth Schedule &mdash; as per clause 4.2 of the Agreement</span>
+                            </div>
+
+                            <p class="la-chattels-desc">Select the fixtures, fittings and chattels included in the premises. These will form the Fourth Schedule of the Agreement to Lease. Add any additional items below.</p>
+
+                            <div class="la-chattels-grid" id="laChattelsGrid">
+                                <label class="la-chattel-item"><input type="checkbox" checked data-chattel="floor"><span class="la-og-check"></span><span>Floor and floor coverings</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" checked data-chattel="lights"><span class="la-og-check"></span><span>Lights and light fittings</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" checked data-chattel="kitchen"><span class="la-og-check"></span><span>Kitchenette / kitchen facilities</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" checked data-chattel="hvac"><span class="la-og-check"></span><span>HVAC system (heating, ventilation, air conditioning)</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" checked data-chattel="blinds"><span class="la-og-check"></span><span>Blinds and window coverings</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="ceilings"><span class="la-og-check"></span><span>Suspended ceilings and ceiling tiles</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="partitions"><span class="la-og-check"></span><span>Internal partitions and walls</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="plumbing"><span class="la-og-check"></span><span>Plumbing fixtures and fittings</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="electrical"><span class="la-og-check"></span><span>Electrical switchboards and wiring</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="fire"><span class="la-og-check"></span><span>Fire detection and safety equipment</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="security"><span class="la-og-check"></span><span>Security system and access control</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="signage"><span class="la-og-check"></span><span>External signage and directory board</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="shelving"><span class="la-og-check"></span><span>Built-in shelving and cabinetry</span></label>
+                                <label class="la-chattel-item"><input type="checkbox" data-chattel="hotwater"><span class="la-og-check"></span><span>Hot water system</span></label>
+                            </div>
+
+                            <div class="la-og-summary" id="laChattelsCount">5 of 14 items included</div>
+
+                            <!-- Add custom chattels -->
+                            <div class="la-chattel-add">
+                                <div class="la-chattel-add-head">
+                                    <h4>Add additional items</h4>
+                                </div>
+                                <div class="la-chattel-add-row">
+                                    <input type="text" class="la-input" placeholder="e.g. Roller door and motor, Server room cooling unit&hellip;" id="laChattelCustomInput">
+                                    <button class="la-chattel-add-btn" id="laChattelAddBtn">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        Add
+                                    </button>
+                                </div>
+                                <div class="la-chattel-custom-list" id="laChattelCustomList"></div>
+                            </div>
+
+                            <div class="la-auto-tag" style="margin-top:16px;">
+                                <span class="la-auto-pip" style="background:linear-gradient(135deg,#6366f1,#3b82f6);">4th</span>
+                                Items selected here form the Fourth Schedule of the Agreement to Lease
+                            </div>
+                        </div>
+
+                        <!-- ============ TAB 3: SECOND SCHEDULE ============ -->
+                        <div class="la-section" data-la-panel="schedule2">
+                            <div class="la-sec-head">
+                                <h3>Second Schedule</h3>
+                                <span class="la-sec-sub">Standard clauses &mdash; toggle to retain or strike out</span>
+                            </div>
+                            <p class="la-chattels-desc">These are the mandatory standard clauses. All are retained by default. Strike out any that do not apply.</p>
+                            <div class="la-s2-clauses" id="laS2Clauses">
+                                <div class="la-s2-group"><div class="la-s2-group-title">Definitions, Notices &amp; Interpretation</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>1.1</strong> Definitions</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>1.2</strong> Notices &mdash; personal delivery, mail, email</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>1.3</strong> Interpretation &mdash; headings, non-merger</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>1.4</strong> Joint and several liability</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>1.5</strong> Nominee provisions</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>1.6</strong> Counterparts</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>1.7</strong> Electronic execution (s.228 CCLA 2017)</div></label>
+                                </div>
+                                <div class="la-s2-group"><div class="la-s2-group-title">Deposit</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>2.1</strong> Advance rental payment, stakeholder</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>2.2</strong> Cancellation for non-payment (3 working days)</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>2.3</strong> Default interest on unpaid deposit</div></label>
+                                </div>
+                                <div class="la-s2-group"><div class="la-s2-group-title">Lease Payments</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>3.1</strong> Monthly rent in advance</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>3.2</strong> GST on rent and other payments</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>3.3</strong> Outgoings per Items 16-17</div></label>
+                                </div>
+                                <div class="la-s2-group"><div class="la-s2-group-title">Lease</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>4.1</strong> Use current TLANZ Deed of Lease form</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>4.2</strong> Fixtures &amp; chattels in good repair (Fourth Schedule)</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>4.3</strong> Parties bound before formal execution</div></label>
+                                </div>
+                                <div class="la-s2-group"><div class="la-s2-group-title">Dispute Resolution</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>5.1</strong> Good faith 5 days, then mediation 10 days</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>5.2</strong> No proceedings except injunctive relief</div></label>
+                                </div>
+                                <div class="la-s2-group"><div class="la-s2-group-title">No Assignment</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>6.1</strong> No assignment of Agreement or caveat</div></label>
+                                </div>
+                                <div class="la-s2-group"><div class="la-s2-group-title">Agent</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>7.1</strong> Landlord pays agent charges incl GST</div></label>
+                                </div>
+                                <div class="la-s2-group"><div class="la-s2-group-title">Limitation of Liability</div>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>8.1</strong> Trustee warranties and liability limits</div></label>
+                                    <label class="la-s2-clause"><input type="checkbox" checked><span class="la-og-check"></span><div><strong>8.2</strong> Limited liability trustee (Item 30)</div></label>
+                                </div>
+                            </div>
+                            <div class="la-og-summary" id="laS2Count">22 of 22 clauses retained</div>
+                        </div>
+
+                        <!-- ============ TAB 6: BACK PAGE ============ -->
+                        <div class="la-section" data-la-panel="backpage">
+                            <div class="la-sec-head">
+                                <h3>Back Page</h3>
+                                <span class="la-sec-sub">Lawyer details, deposit, agent &mdash; Page 11</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Landlord&rsquo;s lawyer</label><input type="text" class="la-input" value="Morrison Kent, Auckland" data-la="landlordLawyer"></div>
+                                <div class="la-field"><label>Tenant&rsquo;s lawyer</label><input type="text" class="la-input" value="Simpson Grierson, Auckland" data-la="tenantLawyer"></div>
+                            </div>
+                            <div class="la-sec-divider">Deposit</div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Deposit paid to</label><input type="text" class="la-input" value="Bayleys Real Estate Limited Trust Account" data-la="depositPaidTo"></div>
+                                <div class="la-field"><label>Amount</label><input type="text" class="la-input" value="$7,701.00 + GST" data-la="depositAmount"></div>
+                                <div class="la-field"><label>Date paid</label><input type="text" class="la-input" value="" data-la="depositDatePaid"></div>
+                            </div>
+                            <div class="la-sec-divider">Lease Negotiated By</div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Agent</label><input type="text" class="la-input" value="Bayleys Real Estate Limited" data-la="agentFirm"></div>
+                                <div class="la-field"><label>Office</label><input type="text" class="la-input" value="a Member of the Bayleys Realty Group" data-la="agentOffice"></div>
+                                <div class="la-field wide"><label>Address</label><input type="text" class="la-input" value="Bayleys House, 30 Gaunt Street, Auckland Central 1010" data-la="agentAddress"></div>
+                                <div class="la-field"><label>Telephone</label><input type="text" class="la-input" value="09 309 6020" data-la="agentPhone"></div>
+                                <div class="la-field"><label>Manager</label><input type="text" class="la-input" value="Michael Bayley" data-la="agentManager"></div>
+                                <div class="la-field"><label>Salesperson</label><input type="text" class="la-input" value="Will Alexander (021 661 234)" data-la="agentSalesperson"></div>
+                            </div>
+                            <div class="la-auto-tag" style="margin-top:16px;">
+                                <span class="la-auto-pip">Auto</span>
+                                Agent details from Personal Context &middot; Lawyers from Vault RE
+                            </div>
+                        </div>
+
+                        <!-- ============ TAB 7: REVIEW & APPROVE ============ -->
+                        <div class="la-section" data-la-panel="review">
+                            <div class="la-sec-head">
+                                <h3>Peer Review</h3>
+                                <span class="la-sec-sub">Send the draft lease to a senior agent or manager for review and comment before finalising</span>
+                            </div>
+
+                            <div class="la-peer-layout">
+                                <!-- Send for review card -->
+                                <div class="la-peer-send-card">
+                                    <div class="la-peer-send-head">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                                        <h4>Request a peer review</h4>
+                                    </div>
+                                    <p class="la-peer-desc">The reviewer will receive a web link to view the full draft lease and can leave comments on specific sections. You'll be notified of each comment in real time.</p>
+
+                                    <div class="la-peer-form">
+                                        <div class="la-peer-field">
+                                            <label>Reviewer</label>
+                                            <select class="la-input" id="laPeerReviewer">
+                                                <option value="">Select a reviewer&hellip;</option>
+                                                <option value="sarah">Sarah Cincotta — Senior Director, Commercial</option>
+                                                <option value="damien">Damien Bullick — Director, Ponsonby C&amp;I</option>
+                                                <option value="mike">Mike Bayley — CEO, Bayleys Group</option>
+                                                <option value="alix">Alix Roberts — Legal Counsel</option>
+                                                <option value="custom">Other (enter email)&hellip;</option>
+                                            </select>
+                                        </div>
+                                        <div class="la-peer-field" id="laPeerEmailField" style="display:none">
+                                            <label>Email</label>
+                                            <input type="email" class="la-input" placeholder="reviewer@bayleys.co.nz" id="laPeerEmail">
+                                        </div>
+                                        <div class="la-peer-field">
+                                            <label>Note to reviewer (optional)</label>
+                                            <textarea class="la-input la-textarea" rows="2" placeholder="Any specific areas you'd like them to focus on&hellip;" id="laPeerNote"></textarea>
+                                        </div>
+                                        <button class="la-generate-btn" id="laPeerSendBtn">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                            Send for review
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Review status + comments -->
+                                <div class="la-peer-status" id="laPeerStatus">
+                                    <div class="la-peer-status-head">
+                                        <h4>Review Status</h4>
+                                        <span class="la-peer-status-badge" id="laPeerBadge">Not sent</span>
+                                    </div>
+
+                                    <!-- Simulated review timeline -->
+                                    <div class="la-peer-timeline" id="laPeerTimeline" style="display:none">
+                                        <div class="la-peer-event done">
+                                            <span class="la-peer-tick"></span>
+                                            <div><strong>Sent for review</strong><span>To Sarah Cincotta &middot; Just now</span></div>
+                                        </div>
+                                        <div class="la-peer-event done">
+                                            <span class="la-peer-tick"></span>
+                                            <div><strong>Opened</strong><span>Sarah opened the review link &middot; 2 min ago</span></div>
+                                        </div>
+                                        <div class="la-peer-event active">
+                                            <span class="la-peer-tick pulse"></span>
+                                            <div><strong>Reviewing</strong><span>Sarah is currently viewing the document</span></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Comments panel -->
+                                    <div class="la-peer-comments" id="laPeerComments" style="display:none">
+                                        <div class="la-peer-comments-head">
+                                            <h4>Comments</h4>
+                                            <div class="la-peer-comment-tabs">
+                                                <button class="la-peer-ctab active">All</button>
+                                                <button class="la-peer-ctab">Unresolved</button>
+                                            </div>
+                                        </div>
+                                        <div class="la-peer-comment-list">
+                                            <div class="la-peer-comment">
+                                                <div class="la-peer-comment-avatar">SC</div>
+                                                <div class="la-peer-comment-body">
+                                                    <div class="la-peer-comment-meta">
+                                                        <strong>Sarah Cincotta</strong>
+                                                        <span>2 min ago &middot; Rent Reviews</span>
+                                                    </div>
+                                                    <p>The CPI cap at 3% is fine but consider adding a ratchet floor clause for the market review on renewal. Grey Lynn office is trending up &mdash; we should protect the landlord's position here.</p>
+                                                    <div class="la-peer-comment-actions">
+                                                        <button class="la-peer-resolve-btn">Resolve</button>
+                                                        <button class="la-peer-reply-btn">Reply</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="la-peer-comment">
+                                                <div class="la-peer-comment-avatar">SC</div>
+                                                <div class="la-peer-comment-body">
+                                                    <div class="la-peer-comment-meta">
+                                                        <strong>Sarah Cincotta</strong>
+                                                        <span>1 min ago &middot; Security</span>
+                                                    </div>
+                                                    <p>Bank guarantee amount looks right. Make sure the guarantor details match Companies Office records &mdash; I've seen issues with trust names before.</p>
+                                                    <div class="la-peer-comment-actions">
+                                                        <button class="la-peer-resolve-btn">Resolve</button>
+                                                        <button class="la-peer-reply-btn">Reply</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="la-peer-comment">
+                                                <div class="la-peer-comment-avatar">SC</div>
+                                                <div class="la-peer-comment-body">
+                                                    <div class="la-peer-comment-meta">
+                                                        <strong>Sarah Cincotta</strong>
+                                                        <span>Just now &middot; Further Terms</span>
+                                                    </div>
+                                                    <p>Add a clause for the tenant's obligation to maintain the fit-out to a reasonable standard during the term. Standard in Grey Lynn office leases.</p>
+                                                    <div class="la-peer-comment-actions">
+                                                        <button class="la-peer-resolve-btn">Resolve</button>
+                                                        <button class="la-peer-reply-btn">Reply</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <form class="la-peer-comment-input-wrap" id="laPeerCommentForm">
+                                            <input type="text" class="la-peer-comment-input" placeholder="Write a reply&hellip;">
+                                            <button type="submit" class="la-peer-comment-send">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Document review section (below peer review) -->
+                            <div class="la-sec-divider" style="margin-top:28px;">Full Document Preview</div>
+
+                            <div class="la-review-toolbar">
+                                <div class="la-review-toolbar-left">
+                                    <span class="la-review-page-count" id="laReviewPageCount">Showing all sections</span>
+                                </div>
+                                <div class="la-review-toolbar-right">
+                                    <button class="la-preview-btn" title="Download PDF">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Download PDF
+                                    </button>
+                                    <button class="la-preview-btn" title="Print">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                        Print
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Full ADLS Document -->
+                            <div class="la-review-doc" id="laReviewDoc">
+                                <!-- Page 1: Front Page (exact ADLS layout) -->
+                                <div class="la-adls-page la-front-page">
+                                    <div class="la-adls-header">
+                                        <div class="la-adls-edition">Agreement to Lease</div>
+                                        <div class="la-adls-ed-sub">Sixth Edition 2024</div>
+                                        <div class="la-adls-approved">This form is approved by The Law Association of New Zealand Incorporated<br>and the Real Estate Institute of New Zealand Incorporated</div>
+                                    </div>
+
+                                    <div class="la-front-field">
+                                        <span class="la-front-label">GENERAL address of the premises:</span>
+                                        <span class="la-front-value" id="laFrontAddress">33 Crummer Road, Grey Lynn, Auckland</span>
+                                    </div>
+
+                                    <div class="la-front-row">
+                                        <div class="la-front-field">
+                                            <span class="la-front-label">DATE:</span>
+                                            <span class="la-front-value">11 April 2026</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="la-front-parties">
+                                        <div class="la-front-field">
+                                            <span class="la-front-label">LANDLORD:</span>
+                                            <span class="la-front-value" id="laDocLandlord">Des Radonich Limited</span>
+                                        </div>
+                                        <div class="la-front-field">
+                                            <span class="la-front-label">TENANT:</span>
+                                            <span class="la-front-value" id="laDocTenant">Glenn Cotterill Company Trust</span>
+                                        </div>
+                                        <div class="la-front-field">
+                                            <span class="la-front-label">GUARANTOR:</span>
+                                            <span class="la-front-value" id="laDocGuarantor">Glenn Cotterill (personal guarantee)</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="la-front-agreement-text">
+                                        <p><strong>THE LANDLORD</strong> agrees to grant and the Tenant agrees to take a lease of the premises and the carparks (if any) described in the First Schedule together with the right to use the common areas of the property for the term from the commencement date and at the annual rent (subject to review and adjustment if applicable) as set out in the First Schedule.</p>
+                                        <p><strong>THE LANDLORD AND TENANT</strong> agree<br>(1) as set out in the First, Second and Third Schedules<br>(2) that the Landlord's fixtures, fittings and chattels contained in the premises are those described in the Fourth Schedule.</p>
+                                        <p><strong>THE GUARANTOR</strong> (and if more than one jointly and severally), in consideration of the Landlord entering into this Agreement at the Guarantor's request, agrees with the Landlord to guarantee to the Landlord the obligations of the Tenant and to sign the Lease as a guarantor.</p>
+                                    </div>
+
+                                    <!-- Signing blocks -->
+                                    <div class="la-front-signatures">
+                                        <div class="la-front-sig">
+                                            <span class="la-front-sig-label">SIGNED by the Landlord:</span>
+                                            <div class="la-sig-placeholder">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                                Sign via LuminPDF
+                                            </div>
+                                            <span class="la-front-sig-note">Director / Trustee / Authorised Signatory / Attorney*</span>
+                                        </div>
+                                        <div class="la-front-sig">
+                                            <span class="la-front-sig-label">SIGNED by the Tenant:</span>
+                                            <div class="la-sig-placeholder">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                                Sign via LuminPDF
+                                            </div>
+                                            <span class="la-front-sig-note">Director / Trustee / Authorised Signatory / Attorney*</span>
+                                        </div>
+                                        <div class="la-front-sig">
+                                            <span class="la-front-sig-label">SIGNED by the Guarantor:</span>
+                                            <div class="la-sig-placeholder">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                                Sign via LuminPDF
+                                            </div>
+                                            <span class="la-front-sig-note">Director / Trustee / Authorised Signatory / Attorney*</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="la-front-warnings">
+                                        <div class="la-front-warnings-title">WARNINGS <span>(These warnings do not form part of this contract)</span></div>
+                                        <ol>
+                                            <li>This contract is binding on all parties upon signing. All parties should seek legal advice before signing.</li>
+                                            <li>Before signing this contract, the Tenant should make sure that the status of the property under the Resource Management Act 1991 is satisfactory for the Tenant's intended use of it.</li>
+                                            <li>The parties should agree upon and record the Landlord's fixtures, fittings and chattels and their condition in the Fourth Schedule.</li>
+                                            <li>The parties are advised to insert a clause requiring inclusion of a report of the condition of the premises as at the commencement of the Lease.</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="la-adls-draft-mark">DRAFT</div>
+                                </div>
+
+                                <!-- Page 2: First Schedule -->
+                                <div class="la-adls-page">
+                                    <h4 class="la-adls-schedule-title">FIRST SCHEDULE</h4>
+                                    <table class="la-adls-table" id="laReviewTable">
+                                        <!-- Populated by JS -->
+                                    </table>
+                                    <div class="la-adls-draft-mark">DRAFT</div>
+                                </div>
+
+                                <!-- Pages 3-4: Second Schedule — full clauses -->
+                                <div class="la-adls-page">
+                                    <h4 class="la-adls-schedule-title">SECOND SCHEDULE</h4>
+                                    <h5 class="la-adls-sub-title">DEFINITIONS, NOTICES AND INTERPRETATION</h5>
+
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">1.1</div>
+                                        <div class="la-adls-cf-body"><strong>Definitions</strong><br>Unless the context requires a different interpretation, words and phrases not otherwise defined have the same meaning as in section 4 of the Property Law Act 2007 and the Lease. &ldquo;Working day&rdquo; excludes Saturdays, Sundays, public holidays, and 24 December &ndash; 5 January inclusive.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">1.2</div>
+                                        <div class="la-adls-cf-body"><strong>Notices</strong><br>All notices must be in writing and served by personal delivery, registered or ordinary mail, or email to the addresses specified in Item 31. Deemed service on second working day after posting; email deemed served when sent to the specified address.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">1.3</div>
+                                        <div class="la-adls-cf-body"><strong>Interpretation</strong><br>Headings are for information only. Terms and conditions will not merge insofar as they have not been fulfilled at execution of the Lease or are not reflected in the Lease.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">1.4</div>
+                                        <div class="la-adls-cf-body"><strong>Joint and several liability</strong><br>If there is more than one Landlord or Tenant, the liability is joint and several.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">1.5</div>
+                                        <div class="la-adls-cf-body"><strong>Nominee provisions</strong><br>Where the Tenant executes with provision for a nominee, the Tenant remains liable until the Lease is signed.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">1.6</div>
+                                        <div class="la-adls-cf-body"><strong>Counterparts</strong><br>This Agreement may be executed in any number of counterparts. Communication of execution may be made by email.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">1.7</div>
+                                        <div class="la-adls-cf-body"><strong>Electronic execution</strong><br>This Agreement may be executed by electronic method complying with section 228 of the Contract and Commercial Law Act 2017.</div>
+                                    </div>
+
+                                    <h5 class="la-adls-sub-title" style="margin-top:20px;">DEPOSIT</h5>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">2.1</div>
+                                        <div class="la-adls-cf-body">The Tenant must pay as a deposit an advance rental payment as specified in Item 32. The deposit is held as stakeholder until this Agreement is unconditional or avoided.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">2.2</div>
+                                        <div class="la-adls-cf-body">The Landlord is not entitled to cancel for non-payment unless three working days&rsquo; written notice has been given and the Tenant has failed to remedy the default.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">2.3</div>
+                                        <div class="la-adls-cf-body">Default interest applies on unpaid deposit at the rate specified in Item 18 plus 5% per annum if not otherwise stated.</div>
+                                    </div>
+
+                                    <h5 class="la-adls-sub-title" style="margin-top:20px;">LEASE PAYMENTS</h5>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">3.1</div>
+                                        <div class="la-adls-cf-body">The Tenant must pay the annual rent by equal monthly payments in advance from the commencement date.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">3.2</div>
+                                        <div class="la-adls-cf-body">The Tenant must pay GST on rent and other payments payable under the Lease.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">3.3</div>
+                                        <div class="la-adls-cf-body">The Tenant must pay outgoings as specified in the First Schedule. Where not separately assessed, a fair proportion applies.</div>
+                                    </div>
+
+                                    <h5 class="la-adls-sub-title" style="margin-top:20px;">LEASE</h5>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">4.1</div>
+                                        <div class="la-adls-cf-body">The Tenant must enter into a formal lease using the current TLANZ Deed of Lease form. Each party pays their own costs.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">4.2</div>
+                                        <div class="la-adls-cf-body">The Landlord&rsquo;s fixtures, fittings and chattels in the premises (Fourth Schedule) are agreed to be in good repair unless otherwise stated in the Third Schedule.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">4.3</div>
+                                        <div class="la-adls-cf-body">Notwithstanding that the Lease may not have been executed, the parties are bound by the terms of this Agreement as if the Lease had been executed.</div>
+                                    </div>
+
+                                    <h5 class="la-adls-sub-title" style="margin-top:20px;">DISPUTE RESOLUTION</h5>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">5.1</div>
+                                        <div class="la-adls-cf-body">Disputes must be notified in writing. Parties must endeavour in good faith to resolve within 5 working days, failing which mediation must be appointed within a further 10 working days.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">5.2</div>
+                                        <div class="la-adls-cf-body">Neither party will commence legal proceedings except for injunctive relief before following clause 5.1.</div>
+                                    </div>
+
+                                    <h5 class="la-adls-sub-title" style="margin-top:20px;">NO ASSIGNMENT</h5>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">6.1</div>
+                                        <div class="la-adls-cf-body">The Tenant must not assign this Agreement or register any caveat. The right of assignment in the Lease cannot be exercised until the Lease has been signed.</div>
+                                    </div>
+
+                                    <h5 class="la-adls-sub-title" style="margin-top:20px;">AGENT</h5>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">7.1</div>
+                                        <div class="la-adls-cf-body">The lease has been negotiated through the agent named on this Agreement. The Landlord must pay the agent&rsquo;s charges including GST.</div>
+                                    </div>
+
+                                    <h5 class="la-adls-sub-title" style="margin-top:20px;">LIMITATION OF LIABILITY</h5>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">8.1</div>
+                                        <div class="la-adls-cf-body">If a party enters as trustee, that party warrants power to enter, proper execution, right of indemnity, and all trustees&rsquo; approval. Liability is limited to the assets of the trust.</div>
+                                    </div>
+                                    <div class="la-adls-clause-full">
+                                        <div class="la-adls-cf-num">8.2</div>
+                                        <div class="la-adls-cf-body">A party named as a limited liability trustee in Item 30 has liability limited in accordance with clause 8.1(2).</div>
+                                    </div>
+
+                                    <div class="la-adls-copyright">&copy; TLANZ. All Rights Reserved.</div>
+                                    <div class="la-adls-draft-mark">DRAFT</div>
+                                </div>
+
+                                <!-- Page 5: Third Schedule — Further Terms -->
+                                <div class="la-adls-page">
+                                    <h4 class="la-adls-schedule-title">THIRD SCHEDULE</h4>
+                                    <h5 class="la-adls-sub-title">FURTHER TERMS (if any)</h5>
+                                    <div class="la-adls-further" id="laReviewFurther">
+                                        <!-- Populated by JS from Further Terms + AI clauses -->
+                                    </div>
+                                    <div class="la-adls-copyright">&copy; TLANZ. All Rights Reserved.</div>
+                                    <div class="la-adls-draft-mark">DRAFT</div>
+                                </div>
+
+                                <!-- Page 6: Fourth Schedule — Chattels -->
+                                <div class="la-adls-page">
+                                    <h4 class="la-adls-schedule-title">FOURTH SCHEDULE</h4>
+                                    <h5 class="la-adls-sub-title">LANDLORD&rsquo;S FIXTURES, FITTINGS AND CHATTELS (if any)</h5>
+                                    <p style="font-size:11px;color:#888;margin-bottom:14px;">(Clause 4.2)</p>
+                                    <div class="la-adls-chattels-list" id="laReviewChattels">
+                                        <!-- Populated by JS from chattels selections -->
+                                    </div>
+                                    <div class="la-adls-copyright">&copy; TLANZ. All Rights Reserved.</div>
+                                    <div class="la-adls-draft-mark">DRAFT</div>
+                                </div>
+
+                                <!-- Page 7: Back Page — Party details + Agent -->
+                                <div class="la-adls-page">
+                                    <div class="la-adls-back-page">
+                                        <div class="la-back-field-row">
+                                            <span class="la-back-label">DATED:</span>
+                                            <span class="la-back-value">11 April 2026</span>
+                                        </div>
+
+                                        <h5 class="la-adls-sub-title">BETWEEN</h5>
+                                        <div class="la-back-party">
+                                            <span class="la-back-label">Landlord:</span>
+                                            <span class="la-back-value" id="laBackLandlord">Des Radonich Limited</span>
+                                        </div>
+                                        <div class="la-back-field-row">
+                                            <span class="la-back-label">Ph:</span>
+                                            <span class="la-back-value">021 555 0142</span>
+                                        </div>
+                                        <div class="la-back-field-row">
+                                            <span class="la-back-label">Email:</span>
+                                            <span class="la-back-value" id="laBackLandlordEmail">des@radonich.co.nz</span>
+                                        </div>
+
+                                        <div style="margin:12px 0;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.6px;">AND</div>
+
+                                        <div class="la-back-party">
+                                            <span class="la-back-label">Tenant:</span>
+                                            <span class="la-back-value" id="laBackTenant">Glenn Cotterill Company Trust</span>
+                                        </div>
+                                        <div class="la-back-field-row">
+                                            <span class="la-back-label">Ph:</span>
+                                            <span class="la-back-value">021 445 8900</span>
+                                        </div>
+                                        <div class="la-back-field-row">
+                                            <span class="la-back-label">Email:</span>
+                                            <span class="la-back-value" id="laBackTenantEmail">glenn@cotterill.co.nz</span>
+                                        </div>
+
+                                        <div style="margin:20px 0 0;padding-top:16px;border-top:1px solid #ccc;">
+                                            <div class="la-back-field-row">
+                                                <span class="la-back-label">Landlord&rsquo;s lawyer:</span>
+                                                <span class="la-back-value">Morrison Kent, Auckland</span>
+                                            </div>
+                                            <div class="la-back-field-row">
+                                                <span class="la-back-label">Tenant&rsquo;s lawyer:</span>
+                                                <span class="la-back-value">Simpson Grierson, Auckland</span>
+                                            </div>
+                                        </div>
+
+                                        <div style="margin:16px 0 0;padding-top:16px;border-top:1px solid #ccc;">
+                                            <div class="la-back-field-row">
+                                                <span class="la-back-label">Deposit paid to:</span>
+                                                <span class="la-back-value">Bayleys Real Estate Limited Trust Account</span>
+                                            </div>
+                                            <div class="la-back-field-row">
+                                                <span class="la-back-label">Amount:</span>
+                                                <span class="la-back-value">$7,701.00 + GST</span>
+                                            </div>
+                                            <div class="la-back-field-row">
+                                                <span class="la-back-label">Date paid:</span>
+                                                <span class="la-back-value">&mdash;</span>
+                                            </div>
+                                        </div>
+
+                                        <div style="margin:20px 0 0;padding-top:16px;border-top:2px solid #333;">
+                                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#555;margin-bottom:12px;">LEASE NEGOTIATED BY:</div>
+                                            <div style="font-size:13px;font-weight:600;color:#1a1a1a;">Bayleys Real Estate Limited</div>
+                                            <div style="font-size:11px;color:#555;margin-top:6px;line-height:1.5;">
+                                                Licensed Real Estate Agent<br>
+                                                Office: a Member of the Bayleys Realty Group<br>
+                                                Address: Bayleys House, 30 Gaunt Street, Auckland Central 1010<br>
+                                                Telephone: 09 309 6020<br>
+                                                Manager: Michael Bayley<br>
+                                                Salesperson: Will Alexander (021 661 234)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="la-adls-copyright">&copy; TLANZ. All Rights Reserved.</div>
+                                    <div class="la-adls-draft-mark">DRAFT</div>
+                                </div>
+
+                                <!-- Page 8: Execution -->
+                                <div class="la-adls-page">
+                                    <h4 class="la-adls-schedule-title">EXECUTION</h4>
+                                    <div class="la-adls-execution">
+                                        <div class="la-adls-sig-block">
+                                            <div class="la-adls-sig-role">SIGNED by the <strong>LANDLORD</strong></div>
+                                            <div class="la-adls-sig-line">
+                                                <div class="la-sig-field"><span>Signature</span><div class="la-sig-placeholder">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                                    Sign via LuminPDF
+                                                </div></div>
+                                                <div class="la-sig-field"><span>Name</span><div class="la-sig-value" id="laExecLandlord">Des Radonich Limited</div></div>
+                                                <div class="la-sig-field"><span>Date</span><div class="la-sig-value">&mdash;</div></div>
+                                            </div>
+                                        </div>
+                                        <div class="la-adls-sig-block">
+                                            <div class="la-adls-sig-role">SIGNED by the <strong>TENANT</strong></div>
+                                            <div class="la-adls-sig-line">
+                                                <div class="la-sig-field"><span>Signature</span><div class="la-sig-placeholder">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                                    Sign via LuminPDF
+                                                </div></div>
+                                                <div class="la-sig-field"><span>Name</span><div class="la-sig-value" id="laExecTenant">Glenn Cotterill Company Trust</div></div>
+                                                <div class="la-sig-field"><span>Date</span><div class="la-sig-value">&mdash;</div></div>
+                                            </div>
+                                        </div>
+                                        <div class="la-adls-sig-block">
+                                            <div class="la-adls-sig-role">SIGNED by the <strong>GUARANTOR</strong></div>
+                                            <div class="la-adls-sig-line">
+                                                <div class="la-sig-field"><span>Signature</span><div class="la-sig-placeholder">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                                    Sign via LuminPDF
+                                                </div></div>
+                                                <div class="la-sig-field"><span>Name</span><div class="la-sig-value" id="laExecGuarantor">Glenn Cotterill</div></div>
+                                                <div class="la-sig-field"><span>Date</span><div class="la-sig-value">&mdash;</div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="la-adls-footer-mark">
+                                        <img src="bayleys-logo.png" alt="Bayleys" style="height:16px;opacity:0.4;">
+                                        <span>Prepared by Walter Intelligence &middot; Bayleys Real Estate</span>
+                                    </div>
+                                    <div class="la-adls-draft-mark">DRAFT</div>
+                                </div>
+                            </div>
+
+                            <div class="la-review-approve">
+                                <button class="la-generate-btn" id="laApproveBtn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Approve &amp; proceed to Send
+                                </button>
+                            </div>
                         </div>
 
                         <!-- SEND & SIGN SECTION -->
                         <div class="la-section" data-la-panel="send">
                             <div class="la-sec-head">
                                 <h3>Send &amp; Sign</h3>
-                                <span class="la-sec-sub">Generate the ADLS lease, send for digital execution</span>
+                                <span class="la-sec-sub">Send the approved ADLS lease for digital execution via LuminPDF</span>
                             </div>
 
                             <div class="la-send-flow">
                                 <div class="la-send-step-card">
                                     <div class="la-send-step-num">1</div>
                                     <div class="la-send-step-body">
-                                        <strong>Generate the ADLS Deed of Lease</strong>
-                                        <span>Walter populates the 7th Edition template with all 32 First Schedule items from this form. The Third Schedule further terms are appended automatically.</span>
+                                        <strong>Generate the TLANZ Agreement to Lease</strong>
+                                        <span>Walter populates the 6th Edition template with all 32 First Schedule items from this form. The Third Schedule further terms are appended automatically.</span>
                                     </div>
                                     <button class="la-generate-btn" id="laGenerateBtn">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -5932,8 +6826,8 @@
                                             <span class="hot-sc-name">Des Radonich Limited</span>
                                         </div>
                                         <div class="hot-sc-timeline">
-                                            <div class="hot-sc-event done"><span class="hot-sc-tick">&#10003;</span><div><strong>Document sent</strong><span>Via LuminPDF</span></div></div>
-                                            <div class="hot-sc-event active"><span class="hot-sc-tick pulse">&#9679;</span><div><strong>Awaiting signature</strong><span>4 signature fields</span></div></div>
+                                            <div class="hot-sc-event done"><span class="hot-sc-tick"></span><div><strong>Document sent</strong><span>Via LuminPDF</span></div></div>
+                                            <div class="hot-sc-event active"><span class="hot-sc-tick pulse"></span><div><strong>Awaiting signature</strong><span>4 signature fields</span></div></div>
                                         </div>
                                     </div>
                                     <div class="hot-status-card">
@@ -5942,8 +6836,8 @@
                                             <span class="hot-sc-name">Glenn Cotterill Company Trust</span>
                                         </div>
                                         <div class="hot-sc-timeline">
-                                            <div class="hot-sc-event done"><span class="hot-sc-tick">&#10003;</span><div><strong>Document sent</strong><span>Via LuminPDF</span></div></div>
-                                            <div class="hot-sc-event active"><span class="hot-sc-tick pulse">&#9679;</span><div><strong>Awaiting signature</strong><span>4 signature fields</span></div></div>
+                                            <div class="hot-sc-event done"><span class="hot-sc-tick"></span><div><strong>Document sent</strong><span>Via LuminPDF</span></div></div>
+                                            <div class="hot-sc-event active"><span class="hot-sc-tick pulse"></span><div><strong>Awaiting signature</strong><span>4 signature fields</span></div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -5951,36 +6845,9 @@
                         </div>
                     </div>
 
-                    <!-- RIGHT: Live ADLS document preview -->
-                    <div class="la-preview-pane">
-                        <div class="la-preview-header">
-                            <span class="la-preview-label">Live preview &mdash; ADLS 7th Edition</span>
-                            <div class="la-preview-actions">
-                                <button class="la-preview-btn" title="Download PDF">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                </button>
-                                <button class="la-preview-btn" title="Print">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="la-preview-doc" id="laPreviewDoc">
-                            <div class="la-doc-page">
-                                <div class="la-doc-adls-header">
-                                    <div class="la-doc-edition">Deed of Lease &middot; Seventh Edition 2024</div>
-                                    <div class="la-doc-approved">Approved by Auckland District Law Society Inc.</div>
-                                </div>
-                                <h3 class="la-doc-h3">FIRST SCHEDULE</h3>
-                                <table class="la-doc-table" id="laDocTable">
-                                    <!-- Populated by JS -->
-                                </table>
-                                <div class="la-doc-watermark">DRAFT &mdash; Subject to execution</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- ============ HEADS OF TERMS GENERATOR MODAL ============ -->
         <div class="modal-overlay" id="hotModal">
@@ -6143,6 +7010,14 @@
                                 <div class="hot-field wide">
                                     <label>Outgoings</label>
                                     <textarea class="hot-input hot-textarea" data-hot="outgoings" rows="3">Tenant pays a proportionate share of building outgoings including rates, insurance, building maintenance, cleaning of common areas, fire safety compliance, and body corporate levies. Structural repairs remain the landlord's responsibility.</textarea>
+                                </div>
+                                <div class="hot-field">
+                                    <label>Estimated Annual Outgoings</label>
+                                    <input type="text" class="hot-input" value="$31,693.47 + GST (5.6% of building)" data-hot="estOutgoings">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Estimated Total Occupancy Cost</label>
+                                    <input type="text" class="hot-input" value="$121,911.27 + GST p.a. (Rent + OPEX)" data-hot="estOccupancy">
                                 </div>
                                 <div class="hot-field">
                                     <label>Tenant Insurance</label>
@@ -6339,21 +7214,21 @@
                                     </div>
                                     <div class="hot-sc-timeline">
                                         <div class="hot-sc-event done">
-                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <span class="hot-sc-tick"></span>
                                             <div>
                                                 <strong>Email sent</strong>
                                                 <span>11 Apr 2026, 2:34 PM</span>
                                             </div>
                                         </div>
                                         <div class="hot-sc-event done">
-                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <span class="hot-sc-tick"></span>
                                             <div>
                                                 <strong>Opened</strong>
                                                 <span>11 Apr 2026, 3:12 PM &middot; Read 4m 22s</span>
                                             </div>
                                         </div>
                                         <div class="hot-sc-event active">
-                                            <span class="hot-sc-tick pulse">&#9679;</span>
+                                            <span class="hot-sc-tick pulse"></span>
                                             <div>
                                                 <strong>Awaiting acknowledgement</strong>
                                                 <span>Reminder sent 12 Apr 2026, 9:00 AM</span>
@@ -6370,21 +7245,21 @@
                                     </div>
                                     <div class="hot-sc-timeline">
                                         <div class="hot-sc-event done">
-                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <span class="hot-sc-tick"></span>
                                             <div>
                                                 <strong>Email sent</strong>
                                                 <span>11 Apr 2026, 2:34 PM</span>
                                             </div>
                                         </div>
                                         <div class="hot-sc-event done">
-                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <span class="hot-sc-tick"></span>
                                             <div>
                                                 <strong>Opened</strong>
                                                 <span>11 Apr 2026, 2:48 PM &middot; Read 8m 14s</span>
                                             </div>
                                         </div>
                                         <div class="hot-sc-event done">
-                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <span class="hot-sc-tick"></span>
                                             <div>
                                                 <strong>Acknowledged &mdash; "I agree"</strong>
                                                 <span>11 Apr 2026, 3:02 PM &middot; via LuminPDF</span>
@@ -6593,6 +7468,33 @@
     </main>
 
     <!-- Floating Walter chat launcher -->
+    <!-- Add Property Modal -->
+    <div class="modal-overlay" id="addPropertyModal">
+        <div class="modal-content add-prop-modal">
+            <button class="modal-close" id="addPropClose">&times;</button>
+            <div class="add-prop-header">
+                <h2>Add Property</h2>
+                <p>Search Walter's database of 113,000+ commercial properties across New Zealand</p>
+            </div>
+            <div class="add-prop-search-bar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="addPropSearch" placeholder="Search address, owner name, or business name...">
+                <button class="add-prop-search-btn" id="addPropSearchBtn">Search</button>
+            </div>
+            <div class="add-prop-sources">
+                <span>Sources:</span>
+                <span class="add-prop-source">LINZ</span>
+                <span class="add-prop-source">Companies Office</span>
+                <span class="add-prop-source">Council Records</span>
+                <span class="add-prop-source">Bayleys Data</span>
+                <span class="add-prop-source">ICP Signals</span>
+            </div>
+            <div class="add-prop-results" id="addPropResults">
+                <div class="add-prop-empty">Search by address, owner name, or business name</div>
+            </div>
+        </div>
+    </div>
+
     <button class="walter-fab" id="walterFab" title="Ask Walter" aria-label="Open Walter Chat">
         <span class="walter-fab-ring"></span>
         <span class="walter-fab-ring delay"></span>
@@ -6666,6 +7568,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=32"></script>
+    <script src="app.js?v=55"></script>
 </body>
 </html>

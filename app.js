@@ -15,6 +15,59 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // Toggle body class so the floating Walter FAB hides while on the chat view
         document.body.classList.toggle('on-chat-view', viewId === 'chat');
+        // Scroll main content to top on view switch
+        document.querySelector('.main-content')?.scrollTo?.(0, 0);
+        // Close any open modals when switching views (clean slate for demo)
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+        // Reset Walter Chat when navigating away so the demo experience resets
+        if (viewId !== 'chat') {
+            resetChat();
+        }
+    }
+
+    function resetChat() {
+        const chatMessages = document.getElementById('chatMessages');
+        if (!chatMessages) return;
+        chatMessages.innerHTML = `
+            <div class="chat-welcome">
+                <div class="chat-logo"><div class="logo-icon large">W</div></div>
+                <h2>Walter Intelligence</h2>
+                <p>Ask me about any commercial property in New Zealand. I can analyse leases, predict expiries, identify opportunities, draft clauses, and reference legal precedents.</p>
+                <div class="chat-suggestions">
+                    <button class="chat-suggestion" data-prompt="Analyse the lease situation for 24-28 Beaumont Street, Freemans Bay">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        Analyse 24 Beaumont St
+                    </button>
+                    <button class="chat-suggestion" data-prompt="Show me all industrial properties in South Auckland with leases expiring in the next 18 months">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Industrial expiries — South Auckland
+                    </button>
+                    <button class="chat-suggestion" data-prompt="Compare $/sqm rates for retail in Ponsonby vs Newmarket over the last 3 years">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        Ponsonby vs Newmarket retail
+                    </button>
+                    <button class="chat-suggestion" data-prompt="Get Costello to prepare a market report for Des Radonich Limited, the owner of 33 Crummer Road, Grey Lynn. Include Grey Lynn office sector performance, lease trends, and value-add opportunities.">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                        Market report for 33 Crummer Rd owner
+                    </button>
+                    <button class="chat-suggestion" data-prompt="Get Wallace to find tenant and investor matches for 33 Crummer Road, Grey Lynn. Show compatibility scores and conjunctional opportunities.">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                        Wallace: Match tenants for 33 Crummer Rd
+                    </button>
+                    <button class="chat-suggestion" data-prompt="A tenant is disputing the OPEX charges claiming the landlord has included capital expenditure items. What are the legal grounds under the ADLS lease and what tribunal precedents support the tenant or landlord position?">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        OPEX dispute — tribunal precedents
+                    </button>
+                </div>
+            </div>
+        `;
+        // Re-wire suggestion chips
+        chatMessages.querySelectorAll('.chat-suggestion').forEach(btn => {
+            btn.addEventListener('click', () => simulateChat(btn.dataset.prompt));
+        });
+        // Reset input
+        const chatInput = document.getElementById('chatInput');
+        if (chatInput) { chatInput.value = ''; chatInput.style.height = 'auto'; }
     }
 
     // ============ Floating Walter — Quick-ask popout ============
@@ -1379,6 +1432,223 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
+    // --- Chat: Document upload workflow ---
+    const chatAttachBtn = document.getElementById('chatAttachBtn');
+    const chatFileInput = document.getElementById('chatFileInput');
+
+    chatAttachBtn?.addEventListener('click', () => chatFileInput?.click());
+
+    chatFileInput?.addEventListener('change', () => {
+        const file = chatFileInput.files[0];
+        if (!file) return;
+
+        // Remove welcome screen
+        const welcome = chatMessages?.querySelector('.chat-welcome');
+        if (welcome) welcome.remove();
+
+        // Show user's file upload message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message message-user';
+        userMsg.innerHTML = `
+            <div class="message-bubble">
+                <div class="chat-file-card">
+                    <div class="chat-file-icon">PDF</div>
+                    <div class="chat-file-info">
+                        <div class="chat-file-name">${escapeHtml(file.name)}</div>
+                        <div class="chat-file-meta">${(file.size / 1024).toFixed(0)} KB · Uploaded just now</div>
+                    </div>
+                    <div class="chat-file-check">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+                Analyse this document
+            </div>
+        `;
+        chatMessages?.appendChild(userMsg);
+        scrollChat();
+
+        // Show thinking
+        const thinking = document.createElement('div');
+        thinking.className = 'message message-assistant';
+        thinking.innerHTML = `
+            <div class="message-avatar">W</div>
+            <div class="message-bubble">
+                <div class="thinking-indicator"><span></span><span></span><span></span></div>
+            </div>
+        `;
+        chatMessages?.appendChild(thinking);
+        scrollChat();
+
+        // After "processing", show Walter's response with action chips
+        setTimeout(() => {
+            thinking.remove();
+
+            const resp = document.createElement('div');
+            resp.className = 'message message-assistant';
+            resp.innerHTML = `
+                <div class="message-avatar">W</div>
+                <div class="message-bubble">
+                    <div class="processing-steps">
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Read ${file.name.includes('.pdf') ? 'PDF' : 'document'} — ${Math.floor(Math.random() * 30 + 15)} pages</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Extracted key terms and parties</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Identified document type: Lease Agreement</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Matched to property record in Vault RE</div>
+                    </div>
+                    <strong>I've read the document. What would you like me to do?</strong><br><br>
+                    <div class="chat-action-chips">
+                        <button class="chat-action-chip" data-chat-action="hot">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            Extract terms for a new Heads of Terms
+                        </button>
+                        <button class="chat-action-chip" data-chat-action="review">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                            Review for risks &amp; advisory
+                        </button>
+                        <button class="chat-action-chip" data-chat-action="file">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0018 0V5"/></svg>
+                            File to property record via Brittany
+                        </button>
+                        <button class="chat-action-chip" data-chat-action="compare">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                            Compare to existing lease on file
+                        </button>
+                    </div>
+                </div>
+            `;
+            chatMessages?.appendChild(resp);
+            scrollChat();
+
+            // Wire action chip clicks
+            resp.querySelectorAll('.chat-action-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const action = chip.dataset.chatAction;
+                    handleDocAction(action, file.name);
+                });
+            });
+        }, 2400);
+
+        // Reset input
+        chatFileInput.value = '';
+    });
+
+    function handleDocAction(action, fileName) {
+        // Show user's selection
+        const labels = {
+            hot: 'Extract terms for a new Heads of Terms',
+            review: 'Review for risks & advisory',
+            file: 'File to property record via Brittany',
+            compare: 'Compare to existing lease on file'
+        };
+
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message message-user';
+        userMsg.innerHTML = `<div class="message-bubble">${labels[action] || action}</div>`;
+        chatMessages?.appendChild(userMsg);
+        scrollChat();
+
+        // Show thinking
+        const thinking = document.createElement('div');
+        thinking.className = 'message message-assistant';
+        thinking.innerHTML = `
+            <div class="message-avatar">W</div>
+            <div class="message-bubble">
+                <div class="thinking-indicator"><span></span><span></span><span></span></div>
+            </div>
+        `;
+        chatMessages?.appendChild(thinking);
+        scrollChat();
+
+        setTimeout(() => {
+            thinking.remove();
+
+            let responseHtml = '';
+
+            if (action === 'hot') {
+                responseHtml = `
+                    <div class="processing-steps">
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Extracted 14 key lease terms</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Identified landlord, tenant, and guarantor</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Mapped rent, reviews, outgoings, and term structure</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Pre-populated a draft Heads of Terms</div>
+                    </div>
+                    <strong>Done — I've drafted a Heads of Terms from this lease.</strong><br><br>
+                    Here's what I extracted:<br><br>
+                    <strong>Landlord:</strong> Cuilam Industry Limited<br>
+                    <strong>Tenant:</strong> Bluwave Galumoana Ltd<br>
+                    <strong>Premises:</strong> Tenancy C, Level 2 — 278.82 sqm<br>
+                    <strong>Term:</strong> 6 years with 2×2 year renewals<br>
+                    <strong>Rent:</strong> $90,217.80 + GST ($290/sqm)<br>
+                    <strong>Review:</strong> 3% fixed annually, market on renewal<br>
+                    <strong>Outgoings:</strong> 5.6% proportionate share ($31,693.47)<br><br>
+                    All fields have been pre-populated in a new Heads of Terms. You can review and edit before sending to both parties.<br><br>
+                    <a class="chat-link-card" onclick="document.querySelector('.nav-item[data-view=\\'properties\\']')?.click(); setTimeout(() => { const btns = document.querySelectorAll('.prop-action-btn'); btns[0]?.click(); setTimeout(() => document.querySelectorAll('.prop-action-menu')[0]?.querySelector('button[data-pd=\\'hot\\']')?.click(), 200); }, 200);">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Open Heads of Terms →
+                    </a>
+                `;
+            } else if (action === 'review') {
+                responseHtml = `
+                    <div class="processing-steps">
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Analysed against 14,200+ NZ lease precedents</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Identified 3 review items and 1 alert</div>
+                    </div>
+                    <strong>Walter Advisory — 4 items flagged</strong><br><br>
+                    <strong style="color:var(--orange);">⬤ Review:</strong> CPI at 3% fixed exceeds RBNZ forecast of 2.1-2.4%<br>
+                    <strong style="color:var(--orange);">⬤ Review:</strong> 6-year initial term is unusual — consider 5+2 structure<br>
+                    <strong style="color:var(--red);">⬤ Alert:</strong> OPEX includes structural fencing (#7) and repaving (#10) — landlord liability under standard practice<br>
+                    <strong style="color:var(--green);">⬤ Good:</strong> $290/sqm is within market range ($265-$310)<br><br>
+                    For the full clause-by-clause review with a shareable client report:<br><br>
+                    <a class="chat-link-card" onclick="switchView('documents'); setTimeout(() => document.querySelector('[data-result=\\'docResultReview\\']')?.click(), 200);">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                        Open full Advisory review →
+                    </a>
+                `;
+            } else if (action === 'file') {
+                responseHtml = `
+                    <div class="processing-steps">
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Matched to: 15 Osterley Way, Manukau</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Tagged as: Lease Agreement (ADLS 6th Ed.)</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Filed to Vault RE property record</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Added to property timeline</div>
+                    </div>
+                    <strong>Filed by Brittany</strong> — the document has been automatically:<br><br>
+                    ✓ Stored against the property record for <strong>15 Osterley Way</strong><br>
+                    ✓ Tagged as "Lease Agreement" in Vault RE<br>
+                    ✓ Added to the property's activity timeline<br>
+                    ✓ Available for future reference by all AI agents<br><br>
+                    <span style="font-size:12px;color:var(--text-tertiary);">Zero manual data entry required.</span>
+                `;
+            } else if (action === 'compare') {
+                responseHtml = `
+                    <div class="processing-steps">
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Found existing lease on file: 15 Osterley Way (2022)</div>
+                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Compared 12 key terms side-by-side</div>
+                    </div>
+                    <strong>Comparison: New terms vs. Existing lease</strong><br><br>
+                    <strong>Rent:</strong> $90,217 → <span style="color:#047857;">same</span><br>
+                    <strong>Term:</strong> 3+3 → <span style="color:var(--blue);">6 years (longer)</span><br>
+                    <strong>Review:</strong> CPI → <span style="color:var(--orange);">3% fixed (higher)</span><br>
+                    <strong>Outgoings:</strong> $28,400 → <span style="color:var(--orange);">$31,693 (+11.6%)</span><br>
+                    <strong>Bond:</strong> 2 months → <span style="color:var(--blue);">3 months (increased)</span><br><br>
+                    For a full comparison report you can share with the client:<br><br>
+                    <a class="chat-link-card" onclick="switchView('documents'); setTimeout(() => document.querySelector('[data-result=\\'docResultCompare\\']')?.click(), 200);">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/></svg>
+                        Open full comparison →
+                    </a>
+                `;
+            }
+
+            const resp = document.createElement('div');
+            resp.className = 'message message-assistant';
+            resp.innerHTML = `
+                <div class="message-avatar">W</div>
+                <div class="message-bubble">${responseHtml}</div>
+            `;
+            chatMessages?.appendChild(resp);
+            scrollChat();
+        }, 2200);
+    }
+
     // --- Strategy Card Modal ---
     const strategyModal = document.getElementById('strategyModal');
     const modalClose = document.getElementById('modalClose');
@@ -1411,7 +1681,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.popup-btn:not(.primary)').forEach(btn => {
         if (btn.textContent.trim() === 'Full details') {
             btn.addEventListener('click', () => {
-                propertyModal.classList.add('active');
+                openPropDrill(addr || 'Property', 'history');
                 mapPopup?.classList.remove('active');
             });
         }
@@ -1579,153 +1849,251 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Property Data for Map Popups ---
+    // --- Leaflet Map + Property Data ---
     const propertyData = {
         shortland: {
             img: 'sv-88-shortland.png', title: '88 Shortland Street, CBD', status: 'Office to Lease', statusColor: 'blue',
             details: [{l:'Area',v:'1,200 sqm'},{l:'$/sqm',v:'$435'},{l:'Listed',v:'14 days'},{l:'Grade',v:'A'}],
             tenant: { label: 'Predicted tenant:', text: 'TechFlow Ltd — ICP active Nov 2025' },
-            modal: 'property'
+            lat: -36.8468, lng: 174.7692, type: 'office', count: '3'
         },
         queen: {
             img: 'sv-45-queen.png', title: '45 Queen Street, CBD', status: 'Retail to Lease', statusColor: 'purple',
             details: [{l:'Area',v:'420 sqm'},{l:'$/sqm',v:'$490'},{l:'Listed',v:'45 days'},{l:'Grade',v:'B+'}],
             tenant: { label: 'Current tenant:', text: 'Pacific Traders Ltd — Annual return overdue' },
-            modal: 'property'
+            lat: -36.8485, lng: 174.7643, type: 'retail'
         },
         freemans: {
             img: 'sv-24-beaumont.png', title: '24-28 Beaumont Street, Freemans Bay', status: 'Expansion Opportunity', statusColor: 'blue',
             details: [{l:'Area',v:'480 sqm'},{l:'$/sqm',v:'$395'},{l:'Expiry',v:'Nov 2026'},{l:'Stickiness',v:'92%'}],
             tenant: { label: 'Tenant expanding:', text: 'Lumiere Design Group — 6 active Seek listings, $450k fit-out' },
-            modal: 'strategy'
+            lat: -36.8440, lng: 174.7545, type: 'office', count: '2'
         },
         nelson: {
             img: 'sv-12-nelson.png', title: '12 Nelson Street, CBD', status: 'New Signal Detected', statusColor: 'orange',
             details: [{l:'Area',v:'180 sqm'},{l:'$/sqm',v:'—'},{l:'ICP',v:'Active'},{l:'Since',v:'Mar 2026'}],
             tenant: { label: 'Signal intelligence:', text: 'New ICP activation detected. NZBN lookup: TASK Group Ltd — IT services' },
-            modal: 'property'
+            lat: -36.8445, lng: 174.7620, type: 'signal'
         },
         dalgety: {
             img: 'sv-47-dalgety.png', title: '47 Dalgety Drive, Wiri', status: 'Industrial to Lease', statusColor: 'green',
             details: [{l:'Area',v:'3,600 sqm'},{l:'$/sqm',v:'$182'},{l:'Listed',v:'8 days'},{l:'Yard',v:'Yes'}],
             tenant: { label: 'Current tenant:', text: 'Shaw NZ Limited — Lease expires Nov 2027' },
-            modal: 'property'
+            lat: -36.9860, lng: 174.8560, type: 'industrial'
         },
         ponsonby: {
             img: 'sv-24-beaumont.png', title: 'Ponsonby Road, Ponsonby', status: 'Retail Cluster', statusColor: 'purple',
             details: [{l:'Properties',v:'5'},{l:'Avg $/sqm',v:'$480'},{l:'Expiring',v:'3'},{l:'Vacancy',v:'6%'}],
             tenant: { label: 'Cluster insight:', text: '3 leases expiring within 12 months. Mixed retail — cafes, boutiques, services.' },
-            modal: 'property'
+            lat: -36.8405, lng: 174.7465, type: 'retail', count: '5'
         },
         newmarket: {
             img: 'sv-88-shortland.png', title: 'Newmarket Commercial', status: 'Office & Retail Hub', statusColor: 'blue',
             details: [{l:'Properties',v:'9+'},{l:'Avg $/sqm',v:'$410'},{l:'Expiring',v:'4'},{l:'Vacancy',v:'5%'}],
             tenant: { label: 'Area insight:', text: 'Strong demand. 4 renewal opportunities in next 18 months.' },
-            modal: 'property'
+            lat: -36.8690, lng: 174.7780, type: 'office', count: '9+'
+        },
+        parnell: {
+            img: 'parnell-01.jpg', title: 'Parnell Commercial', status: 'Retail & Office', statusColor: 'purple',
+            details: [{l:'Properties',v:'3'},{l:'Avg $/sqm',v:'$450'},{l:'Expiring',v:'2'},{l:'Vacancy',v:'4%'}],
+            tenant: { label: 'Area insight:', text: 'Premium retail strip with low vacancy and strong tenant demand.' },
+            lat: -36.8530, lng: 174.7820, type: 'retail', count: '3'
+        },
+        mteden: {
+            img: 'sv-88-shortland.png', title: 'Mt Eden Commercial', status: 'Office', statusColor: 'blue',
+            details: [{l:'Area',v:'350 sqm'},{l:'$/sqm',v:'$340'},{l:'Grade',v:'B'},{l:'Vacancy',v:'8%'}],
+            tenant: { label: 'Area insight:', text: 'Suburban office hub with improving transport links.' },
+            lat: -36.8730, lng: 174.7570, type: 'office'
+        },
+        penrose: {
+            img: 'sv-47-dalgety.png', title: 'Penrose Industrial', status: 'Industrial Hub', statusColor: 'green',
+            details: [{l:'Properties',v:'12'},{l:'Avg $/sqm',v:'$175'},{l:'Vacancy',v:'3%'},{l:'Yield',v:'5.8%'}],
+            tenant: { label: 'Area insight:', text: 'Tightly held industrial zone. Strong demand for sub-1000sqm units.' },
+            lat: -36.9050, lng: 174.8100, type: 'industrial'
+        },
+        tamaki: {
+            img: 'sv-47-dalgety.png', title: 'East Tamaki Industrial', status: 'Industrial Zone', statusColor: 'green',
+            details: [{l:'Properties',v:'7'},{l:'Avg $/sqm',v:'$155'},{l:'Vacancy',v:'5%'},{l:'Yield',v:'6.2%'}],
+            tenant: { label: 'Area insight:', text: 'Largest industrial precinct. 7 active listings, 2 new signals.' },
+            lat: -36.9320, lng: 174.8780, type: 'industrial', count: '7'
+        },
+        greylynn: {
+            img: 'sv-24-beaumont.png', title: '33 Crummer Road, Grey Lynn', status: 'Office', statusColor: 'blue',
+            details: [{l:'Area',v:'280 sqm'},{l:'$/sqm',v:'$380'},{l:'Expiry',v:'Mar 2027'},{l:'Stickiness',v:'75%'}],
+            tenant: { label: 'Tenant:', text: 'Creative agency — stable, approaching renewal.' },
+            lat: -36.8580, lng: 174.7370, type: 'office'
+        },
+        // Additional scattered pins for density
+        epsom: {
+            img: 'sv-88-shortland.png', title: '15 Manukau Road, Epsom', status: 'Office', statusColor: 'blue',
+            details: [{l:'Area',v:'220 sqm'},{l:'$/sqm',v:'$310'},{l:'Grade',v:'B'},{l:'Vacancy',v:'—'}],
+            tenant: { label: 'Tenant:', text: 'Accountancy firm — long-term stable.' },
+            lat: -36.8850, lng: 174.7710, type: 'office'
+        },
+        grafton: {
+            img: 'sv-88-shortland.png', title: '8 Park Road, Grafton', status: 'Medical Office', statusColor: 'blue',
+            details: [{l:'Area',v:'380 sqm'},{l:'$/sqm',v:'$420'},{l:'Grade',v:'A-'},{l:'Vacancy',v:'0%'}],
+            tenant: { label: 'Tenant:', text: 'Specialist medical group — 12yr lease.' },
+            lat: -36.8600, lng: 174.7700, type: 'office'
+        },
+        kingsland: {
+            img: 'sv-24-beaumont.png', title: '461 New North Road, Kingsland', status: 'Retail', statusColor: 'purple',
+            details: [{l:'Area',v:'140 sqm'},{l:'$/sqm',v:'$380'},{l:'Listed',v:'22 days'},{l:'Grade',v:'B'}],
+            tenant: { label: 'Signal:', text: 'New café fitout underway — potential ICP.' },
+            lat: -36.8680, lng: 174.7450, type: 'signal'
+        },
+        onehunga: {
+            img: 'sv-47-dalgety.png', title: '81 Mays Road, Onehunga', status: 'Industrial', statusColor: 'green',
+            details: [{l:'Area',v:'476 sqm'},{l:'$/sqm',v:'$177'},{l:'Lease',v:'5+3 yrs'},{l:'Stickiness',v:'95%'}],
+            tenant: { label: 'Tenant:', text: 'DB International Trading Ltd — stable, expansion likely.' },
+            lat: -36.9170, lng: 174.7850, type: 'industrial'
+        },
+        ellerslie: {
+            img: 'sv-88-shortland.png', title: '195 Main Highway, Ellerslie', status: 'Office', statusColor: 'blue',
+            details: [{l:'Area',v:'310 sqm'},{l:'$/sqm',v:'$295'},{l:'Grade',v:'B+'},{l:'Vacancy',v:'—'}],
+            tenant: { label: 'Tenant:', text: 'Latitude Homes Ltd — approaching renewal.' },
+            lat: -36.8960, lng: 174.8030, type: 'office'
+        },
+        ptchev: {
+            img: 'sv-24-beaumont.png', title: '1179 Great North Road, Pt Chevalier', status: 'Retail', statusColor: 'purple',
+            details: [{l:'Area',v:'94 sqm'},{l:'$/sqm',v:'$480'},{l:'Listed',v:'30 days'},{l:'Grade',v:'B'}],
+            tenant: { label: 'Tenant:', text: 'Good Dog Holdings Ltd — new lease.' },
+            lat: -36.8680, lng: 174.7270, type: 'retail'
+        },
+        howick: {
+            img: 'sv-24-beaumont.png', title: '180 Moore Street, Howick', status: 'Retail', statusColor: 'purple',
+            details: [{l:'Area',v:'568 sqm'},{l:'$/sqm',v:'$465'},{l:'Expiry',v:'Oct 2027'},{l:'Status',v:'Stable'}],
+            tenant: { label: 'Tenant:', text: 'Pandher Enterprises Ltd — suburban retail.' },
+            lat: -36.8990, lng: 174.9280, type: 'retail'
+        },
+        albany: {
+            img: 'sv-88-shortland.png', title: '22 Corinthian Drive, Albany', status: 'Office', statusColor: 'blue',
+            details: [{l:'Area',v:'740 sqm'},{l:'$/sqm',v:'$320'},{l:'Grade',v:'A'},{l:'Vacancy',v:'12%'}],
+            tenant: { label: 'Signal:', text: 'New coworking operator scouting North Shore.' },
+            lat: -36.7270, lng: 174.7060, type: 'signal'
+        },
+        milford: {
+            img: 'sv-88-shortland.png', title: '145 Kitchener Road, Milford', status: 'Office', statusColor: 'blue',
+            details: [{l:'Area',v:'170 sqm'},{l:'$/sqm',v:'$361'},{l:'Expiry',v:'Oct 2027'},{l:'Status',v:'Stable'}],
+            tenant: { label: 'Tenant:', text: 'Enhance Physiotherapy Ltd — long-term.' },
+            lat: -36.7680, lng: 174.7680, type: 'office'
+        },
+        flatbush: {
+            img: 'sv-24-beaumont.png', title: 'K117 Ormiston Town Centre, Flat Bush', status: 'Retail', statusColor: 'purple',
+            details: [{l:'Area',v:'100 sqm'},{l:'$/sqm',v:'$457'},{l:'Expiry',v:'Jan 2026'},{l:'Status',v:'Expiring'}],
+            tenant: { label: 'Tenant:', text: 'Asaving Limited — renewal under review.' },
+            lat: -36.9590, lng: 174.9080, type: 'retail'
         }
     };
 
-    // Default popup for unknown pins
-    const defaultPopup = {
-        img: 'sv-88-shortland.png', title: 'Commercial Property', status: 'Property', statusColor: 'blue',
-        details: [{l:'Type',v:'Commercial'},{l:'Status',v:'Active'},{l:'Region',v:'Auckland'},{l:'Source',v:'CRM'}],
-        tenant: { label: 'Data source:', text: 'Bayleys CRM — Click for full details' },
-        modal: 'property'
-    };
-
     let activePropertyData = null;
+    let walterMap = null;
+    let walterMarkers = {};
 
-    function renderPopup(data) {
-        activePropertyData = data;
-        const statusColors = { blue: 'var(--blue)', purple: 'var(--purple)', green: 'var(--green)', orange: 'var(--orange)' };
-        document.getElementById('popupImg').src = data.img;
-        document.getElementById('popupBody').innerHTML = `
-            <h4>${data.title}</h4>
-            <span class="popup-status" style="color:${statusColors[data.statusColor] || 'var(--blue)'}">${data.status}</span>
-            <div class="popup-details">
-                ${data.details.map(d => `<div class="popup-detail"><span>${d.l}</span><strong>${d.v}</strong></div>`).join('')}
-            </div>
-            <div class="popup-tenant">
-                <span class="popup-tenant-label">${data.tenant.label}</span>
-                <span>${data.tenant.text}</span>
-            </div>
-            <div class="popup-actions">
-                <button class="popup-btn primary" onclick="document.getElementById('strategyModal').classList.add('active'); document.getElementById('mapPopup').classList.remove('active');">Strategy Card</button>
-                <button class="popup-btn" onclick="openPropertyDetail(); document.getElementById('mapPopup').classList.remove('active');">Full details</button>
-            </div>
-        `;
+    function initLeafletMap() {
+        const mapEl = document.getElementById('leafletMap');
+        if (!mapEl || walterMap) return;
+
+        walterMap = L.map('leafletMap', {
+            center: [-36.865, 174.775],
+            zoom: 12,
+            zoomControl: false,
+            attributionControl: false
+        });
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(walterMap);
+
+        // Add zoom control to top-right
+        L.control.zoom({ position: 'topright' }).addTo(walterMap);
+
+        // Add attribution to bottom-left
+        L.control.attribution({ position: 'bottomleft', prefix: '' })
+            .addAttribution('&copy; <a href="https://carto.com/">CARTO</a>')
+            .addTo(walterMap);
+
+        // Add markers
+        const pinColors = { office: '#3b82f6', retail: '#8b5cf6', industrial: '#10b981', signal: '#f59e0b' };
+
+        Object.entries(propertyData).forEach(([key, data]) => {
+            if (!data.lat || !data.lng) return;
+            const color = pinColors[data.type] || '#3b82f6';
+            const countHtml = data.count ? `<span class="walter-pin-count">${data.count}</span>` : '';
+            const icon = L.divIcon({
+                className: 'walter-marker',
+                html: `<div class="walter-pin pin-${data.type}">${countHtml}</div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                popupAnchor: [0, -14]
+            });
+
+            const marker = L.marker([data.lat, data.lng], { icon }).addTo(walterMap);
+
+            const statusBg = { blue: '#dbeafe', purple: '#ede9fe', green: '#d1fae5', orange: '#fef3c7' };
+            const statusFg = { blue: '#1d4ed8', purple: '#6d28d9', green: '#047857', orange: '#b45309' };
+
+            const popupContent = `
+                <img class="walter-popup-img" src="${data.img}" alt="" onerror="this.style.display='none'">
+                <div class="walter-popup-body">
+                    <div class="walter-popup-title">${data.title}</div>
+                    <span class="walter-popup-status" style="background:${statusBg[data.statusColor]||'#dbeafe'};color:${statusFg[data.statusColor]||'#1d4ed8'}">${data.status}</span>
+                    <div class="walter-popup-details">
+                        ${data.details.map(d => `<strong>${d.l}:</strong> ${d.v}&nbsp;&nbsp;`).join('')}
+                    </div>
+                    <div class="walter-popup-tenant">${data.tenant.label} ${data.tenant.text}</div>
+                    <div class="walter-popup-actions">
+                        <button class="walter-popup-btn primary" onclick="document.getElementById('strategyModal')?.classList.add('active')">Strategy Card</button>
+                        <button class="walter-popup-btn" onclick="openPropertyDetail()">Full details</button>
+                    </div>
+                </div>
+            `;
+
+            marker.bindPopup(popupContent, { maxWidth: 320, minWidth: 300, closeButton: true, className: 'walter-leaflet-popup' });
+
+            marker.on('click', () => { activePropertyData = data; });
+
+            walterMarkers[key] = marker;
+        });
     }
 
     // Update property modal dynamically based on active property
     window.openPropertyDetail = function() {
         const data = activePropertyData;
-        if (!data) { document.getElementById('propertyModal').classList.add('active'); return; }
-
-        // Update hero image and title
+        if (!data) return;
         const modal = document.getElementById('propertyModal');
+        if (!modal) return;
         const heroImg = modal.querySelector('.pd-hero-img');
         const heroH2 = modal.querySelector('.pd-hero-info h2');
-        const heroSpan = modal.querySelector('.pd-hero-info span');
-        const heroType = modal.querySelector('.pd-hero .listing-type');
-
         if (heroImg) heroImg.src = data.img;
         if (heroH2) heroH2.textContent = data.title;
-        if (heroSpan) heroSpan.textContent = data.status;
-        if (heroType) heroType.textContent = data.status;
-
         modal.classList.add('active');
     };
 
-    // --- Map Popup (pin click) ---
-    const mapPopup = document.getElementById('mapPopup');
-    const popupClose = document.getElementById('popupClose');
-
-    document.querySelectorAll('.map-pin').forEach(pin => {
-        pin.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('selected'));
-            pin.classList.add('selected');
-
-            // Get property data for this pin
-            const pinId = pin.dataset.pin;
-            const data = propertyData[pinId] || defaultPopup;
-            renderPopup(data);
-
-            // Position popup near the pin
-            const pinTop = parseFloat(pin.style.top);
-            const pinLeft = parseFloat(pin.style.left);
-            mapPopup.style.top = Math.max(2, pinTop - 8) + '%';
-            mapPopup.style.left = Math.min(55, pinLeft + 3) + '%';
-            mapPopup.classList.add('active');
-        });
-    });
-
-    popupClose?.addEventListener('click', () => {
-        mapPopup.classList.remove('active');
-    });
-
-    // Close popup when clicking map background
-    document.querySelector('.map-container')?.addEventListener('click', (e) => {
-        if (!e.target.closest('.map-pin') && !e.target.closest('.map-popup')) {
-            mapPopup?.classList.remove('active');
+    // Initialize map when Market page becomes visible
+    const marketObserver = new MutationObserver(() => {
+        const marketView = document.getElementById('view-market');
+        if (marketView?.classList.contains('active')) {
+            setTimeout(() => {
+                initLeafletMap();
+                if (walterMap) walterMap.invalidateSize();
+            }, 100);
         }
     });
+    const marketView = document.getElementById('view-market');
+    if (marketView) marketObserver.observe(marketView, { attributes: true, attributeFilter: ['class'] });
 
-    // Listings feed items highlight corresponding pin
+    // Signals feed items trigger marker popup
     document.querySelectorAll('.feed-item[data-pin]').forEach(item => {
         item.addEventListener('click', () => {
             const pinId = item.dataset.pin;
-            const pin = document.querySelector(`.map-pin[data-pin="${pinId}"]`);
-            if (pin) {
-                pin.click();
-            } else {
-                // No pin on map — show popup with feed data
-                const popupId = item.dataset.popup;
-                const data = propertyData[popupId] || propertyData[pinId] || defaultPopup;
-                renderPopup(data);
-                mapPopup.style.top = '20%';
-                mapPopup.style.left = '35%';
-                mapPopup.classList.add('active');
+            const marker = walterMarkers[pinId];
+            if (marker && walterMap) {
+                walterMap.setView(marker.getLatLng(), 14, { animate: true });
+                marker.openPopup();
+                activePropertyData = propertyData[pinId];
             }
         });
     });
@@ -1947,7 +2315,7 @@ document.addEventListener('DOMContentLoaded', () => {
             priceLabel: 'Lease type',
             priceValue: 'By Negotiation',
             priceSub: 'Available immediately · Vacant possession',
-            images: ['listing-parnell.jpg'],
+            images: ['listing-parnell.jpg', 'parnell-01.jpg', 'parnell-02.jpg'],
             heroFallback: 'listing-parnell.jpg',
             metrics: [
                 ['Floor Area', '208', 'sqm'],
@@ -2033,7 +2401,7 @@ document.addEventListener('DOMContentLoaded', () => {
             priceLabel: 'Method of sale',
             priceValue: 'By Negotiation',
             priceSub: '6.0% net yield · Two freehold titles',
-            images: ['listing-wainui.jpg'],
+            images: ['listing-wainui.jpg', 'wainui-01.jpg', 'wainui-02.jpg', 'wainui-03.jpg', 'wainui-04.jpg', 'wainui-05.jpg'],
             heroFallback: 'listing-wainui.jpg',
             metrics: [
                 ['Combined Floor', '1,337', 'sqm'],
@@ -2618,8 +2986,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Populate Carlisle by default so the modal is in a valid state on first open
+    // Populate Carlisle by default
     populateListingModal('carlisle');
+
+    // --- Listing action buttons ---
+    // Strategy Card → close listing modal, open strategy card modal
+    document.getElementById('clStrategyBtn')?.addEventListener('click', () => {
+        carlisleModal?.classList.remove('active');
+        document.getElementById('strategyModal')?.classList.add('active');
+    });
+
+    // Share with client → switch to a share confirmation in the modal
+    document.getElementById('clShareBtn')?.addEventListener('click', () => {
+        const title = document.getElementById('clTitle')?.textContent || 'Property';
+        const btn = document.getElementById('clShareBtn');
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Email sent to client`;
+        btn.style.background = '#10b981';
+        btn.style.color = 'white';
+        btn.style.borderColor = '#10b981';
+        setTimeout(() => {
+            btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share with client`;
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.borderColor = '';
+        }, 2500);
+    });
+
+    // Book viewing → show a confirmation with Zara scheduling
+    document.getElementById('clBookBtn')?.addEventListener('click', () => {
+        const btn = document.getElementById('clBookBtn');
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Zara scheduling viewing`;
+        btn.style.background = '#8b5cf6';
+        btn.style.color = 'white';
+        btn.style.borderColor = '#8b5cf6';
+        setTimeout(() => {
+            btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Viewing booked · Thu 2:30 PM`;
+            btn.style.background = '#10b981';
+            btn.style.borderColor = '#10b981';
+        }, 1800);
+    });
+
+    // Export PDF → show download confirmation
+    document.getElementById('clExportBtn')?.addEventListener('click', () => {
+        const btn = document.getElementById('clExportBtn');
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> PDF downloaded`;
+        btn.style.background = '#10b981';
+        btn.style.color = 'white';
+        btn.style.borderColor = '#10b981';
+        setTimeout(() => {
+            btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export PDF`;
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.borderColor = '';
+        }, 2500);
+    });
 
     // --- Crummer Rd Property Detail Modal ---
     const crummerModal = document.getElementById('crummerModal');
@@ -2633,13 +3053,89 @@ document.addEventListener('DOMContentLoaded', () => {
     // Open from properties table — match "Crummer" in any row
     document.querySelectorAll('.clickable-row').forEach(row => {
         row.addEventListener('click', () => {
-            const addr = row.querySelector('.cell-primary')?.textContent || '';
-            if (addr.includes('Crummer')) {
-                crummerModal.classList.add('active');
-            } else {
-                // Default: open property modal for other rows
-                propertyModal?.classList.add('active');
+            const addrEl = row.querySelector('.cell-primary');
+            const addr = addrEl?.childNodes[0]?.textContent?.trim() || addrEl?.textContent?.trim() || '';
+            // Extract row data for the overview
+            const cells = row.querySelectorAll('td');
+            const type = cells[1]?.textContent?.trim() || '';
+            const tenant = cells[2]?.textContent?.trim() || '';
+            const area = cells[3]?.textContent?.trim() || '';
+            const rate = cells[4]?.textContent?.trim() || '';
+            const expiry = cells[5]?.textContent?.trim() || '';
+            const stickPct = row.querySelector('.stickiness-fill')?.style.width || '';
+            const status = row.querySelector('.status-badge')?.textContent?.trim() || '';
+
+            // Update meta chips
+            const metaEl = document.getElementById('pdMeta');
+            if (metaEl) {
+                metaEl.innerHTML = `
+                    <span class="pd-meta-chip"><strong>${type}</strong> · ${area} sqm</span>
+                    <span class="pd-meta-chip">Tenant: ${tenant}</span>
+                    <span class="pd-meta-chip">Stickiness: ${stickPct}</span>
+                    <span class="pd-meta-chip">Lease expiry: ${expiry}</span>
+                `;
             }
+
+            // Update metrics row
+            const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            setText('pdMetricArea', area + ' sqm');
+            setText('pdMetricRate', rate);
+            setText('pdMetricStick', stickPct);
+            setText('pdMetricStatus', status);
+
+            openPropDrill(addr || 'Property', 'overview');
+        });
+    });
+
+    // --- Deal Pipeline widget clicks ---
+    document.querySelectorAll('.deal-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const action = item.dataset.dealAction;
+            const property = item.dataset.dealProperty;
+            if (action === 'hot') {
+                openHeadsOfTerms(property);
+            } else if (action === 'lease') {
+                openLeaseAgreement(property);
+            }
+        });
+    });
+
+    // --- My Properties: add deal status indicators to matching rows ---
+    const dealStatuses = [
+        { address: 'Crummer', type: 'hot', status: 'hot-active', tooltip: 'HoT pending' },
+        { address: 'Beaumont', type: 'lease', status: 'lease-active', tooltip: 'Lease signing' },
+        { address: 'Osterley', type: 'hot', status: 'deal-complete', tooltip: 'HoT complete' },
+        { address: 'Parnell', type: 'lease', status: 'deal-draft', tooltip: 'Lease draft' }
+    ];
+
+    document.querySelectorAll('#view-properties .properties-table tbody tr').forEach(row => {
+        const addrCell = row.querySelector('.cell-primary');
+        if (!addrCell) return;
+        const addr = addrCell.textContent;
+        const match = dealStatuses.find(d => addr.includes(d.address));
+        if (match) {
+            const dot = document.createElement('span');
+            dot.className = 'prop-deal-dot';
+            dot.innerHTML = `<span class="prop-deal-indicator ${match.status}"></span><span class="prop-deal-tooltip">${match.tooltip}</span>`;
+            addrCell.appendChild(dot);
+        }
+    });
+
+    // --- Wallace: activity action links ---
+    document.querySelectorAll('.activity-action[data-listing]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const id = link.dataset.listing;
+            switchView('listings');
+            setTimeout(() => {
+                const card = document.querySelector(`.listing-card[data-listing="${id}"]`);
+                card?.click();
+                // Switch to Wallace tab inside the modal
+                setTimeout(() => {
+                    const wallaceTab = document.querySelector('.cl-tab[data-cl-tab="wallace"]');
+                    wallaceTab?.click();
+                }, 400);
+            }, 200);
         });
     });
 
@@ -2973,82 +3469,59 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => applyPropertyFilter(filterMap[pmCurrentTab]), 150);
     });
 
-    // --- Lease Agreement Generator Modal ---
-    const leaseModal = document.getElementById('leaseModal');
-    const leaseClose = document.getElementById('leaseClose');
+    // --- Lease Agreement — Full Page View ---
 
     function openLeaseAgreement(address) {
         const titleEl = document.getElementById('laTitle');
         if (titleEl) titleEl.textContent = address || 'Property';
-        // Reset to first section
-        document.querySelectorAll('.la-sec-btn').forEach(b => b.classList.toggle('active', b.dataset.laSec === 'parties'));
-        document.querySelectorAll('.la-section').forEach(s => s.classList.toggle('active', s.dataset.laPanel === 'parties'));
+        // Reset to first section (Front Page)
+        document.querySelectorAll('.la-sec-btn').forEach(b => b.classList.toggle('active', b.dataset.laSec === 'frontpage'));
+        document.querySelectorAll('.la-section').forEach(s => s.classList.remove('active'));
+        document.querySelector('.la-section[data-la-panel="frontpage"]')?.classList.add('active');
+        // Switch to the lease view
+        switchView('lease');
         generateLeasePreview();
-        leaseModal?.classList.add('active');
     }
 
-    leaseClose?.addEventListener('click', () => leaseModal?.classList.remove('active'));
-    leaseModal?.addEventListener('click', (e) => {
-        if (e.target === leaseModal) leaseModal?.classList.remove('active');
+    // Back button returns to My Properties
+    document.getElementById('laBackBtn')?.addEventListener('click', () => {
+        switchView('properties');
     });
 
-    // Section nav
+    // View HoT button — opens Heads of Terms modal from lease builder
+    document.getElementById('laHotBtn')?.addEventListener('click', () => {
+        const addr = document.getElementById('laTitle')?.textContent || '33 Crummer Road, Grey Lynn';
+        openHeadsOfTerms(addr);
+    });
+
+    // Section nav — show ALL panels matching the key (schedule1 has multiple sub-panels)
     document.querySelectorAll('.la-sec-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.la-sec-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.la-section').forEach(s => s.classList.remove('active'));
             btn.classList.add('active');
-            const panel = document.querySelector(`.la-section[data-la-panel="${btn.dataset.laSec}"]`);
-            panel?.classList.add('active');
+            const key = btn.dataset.laSec;
+            document.querySelectorAll(`.la-section[data-la-panel="${key}"]`).forEach(p => p.classList.add('active'));
+            // Scroll to top of new section
+            const formPane = document.querySelector('.la-form-pane');
+            if (formPane) formPane.scrollTop = 0;
             generateLeasePreview();
         });
     });
 
-    // Live preview: ADLS First Schedule table
-    function generateLeasePreview() {
-        const tableEl = document.getElementById('laDocTable');
-        if (!tableEl) return;
-        const getVal = (key) => {
-            const inp = document.querySelector(`.la-input[data-la="${key}"]`);
-            return inp ? (inp.value || inp.textContent || '') : '';
-        };
-        const items = [
-            ['1', 'Premises', getVal('premisesDesc') || '33 Crummer Road, Grey Lynn'],
-            ['', 'Record of Title', getVal('title')],
-            ['', 'Legal Description', getVal('legalDesc')],
-            ['', 'Lettable Area', getVal('area')],
-            ['2', 'Car Parks', getVal('carparks')],
-            ['3', 'Term', getVal('term')],
-            ['4', 'Commencement', getVal('commDate')],
-            ['5', 'Rights of Renewal', getVal('renewals')],
-            ['6', 'Renewal Date(s)', getVal('renewalDates')],
-            ['7', 'Renewal Notice', getVal('renewalNotice')],
-            ['8', 'Final Expiry', getVal('finalExpiry')],
-            ['9', 'Annual Rent', getVal('annualRentTotal')],
-            ['10', 'Monthly Rent', getVal('monthlyRent')],
-            ['11', 'Payment Dates', getVal('paymentDates')],
-            ['12', 'Review Dates', getVal('reviewDates')],
-            ['13', 'Lower Limit', getVal('lowerLimit')],
-            ['', 'Upper Limit', getVal('upperLimit')],
-            ['14', 'Interim Rent', getVal('interimRent')],
-            ['16', 'Outgoings Proportion', getVal('outgoingsProportion')],
-            ['18', 'Default Interest', getVal('defaultInterest')],
-            ['19', 'Business Use', getVal('businessUse')],
-            ['20', 'Insurance Type', getVal('insuranceType')],
-            ['21', 'Insurance Excess', getVal('excess')],
-            ['22', 'Fair Proportion', getVal('fairProportion')],
-            ['23', 'No-Access Period', getVal('noAccess')],
-            ['24', 'Bank Guarantee', getVal('bankGuarantee')],
-            ['25', 'Guarantee Amount', getVal('bankGuaranteeAmt')],
-            ['28', 'Seismic Rating', getVal('seismic')],
-            ['29', 'Mortgagee Consent', getVal('mortgageeConsent')],
-            ['32', 'Deposit', getVal('deposit')]
-        ];
-        tableEl.innerHTML = items.map(([num, label, val]) =>
-            `<tr><td>${num}</td><td>${label}</td><td>${val || '—'}</td></tr>`
-        ).join('');
+    // Second Schedule clause counter
+    function updateS2Count() {
+        const checks = document.querySelectorAll('#laS2Clauses input[type="checkbox"]');
+        const checked = Array.from(checks).filter(c => c.checked).length;
+        const el = document.getElementById('laS2Count');
+        if (el) el.textContent = `${checked} of ${checks.length} clauses retained`;
+    }
+    document.querySelectorAll('#laS2Clauses input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateS2Count);
+    });
 
-        // Update progress
+    // Progress tracker (no live preview pane — removed)
+    function generateLeasePreview() {
         const allInputs = document.querySelectorAll('.la-input[data-la]');
         let filled = 0;
         allInputs.forEach(inp => { if ((inp.value || '').trim()) filled++; });
@@ -3065,12 +3538,210 @@ document.addEventListener('DOMContentLoaded', () => {
         inp.addEventListener('input', generateLeasePreview);
     });
 
-    // Generate button
+    // Chattels toggle counter
+    function updateChattelsCount() {
+        const checks = document.querySelectorAll('#laChattelsGrid input[type="checkbox"]');
+        const checked = Array.from(checks).filter(c => c.checked).length;
+        const custom = document.querySelectorAll('.la-chattel-custom-item').length;
+        const total = checks.length + custom;
+        const included = checked + custom;
+        const el = document.getElementById('laChattelsCount');
+        if (el) el.textContent = `${included} of ${total} items included`;
+    }
+    document.querySelectorAll('#laChattelsGrid input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateChattelsCount);
+    });
+    // Custom chattel add
+    document.getElementById('laChattelAddBtn')?.addEventListener('click', () => {
+        const input = document.getElementById('laChattelCustomInput');
+        const text = input?.value.trim();
+        if (!text) return;
+        input.value = '';
+        const list = document.getElementById('laChattelCustomList');
+        const item = document.createElement('div');
+        item.className = 'la-chattel-custom-item';
+        item.innerHTML = `<span>${text}</span><button class="la-chattel-custom-remove" title="Remove">&times;</button>`;
+        list?.appendChild(item);
+        item.querySelector('.la-chattel-custom-remove')?.addEventListener('click', () => {
+            item.remove();
+            updateChattelsCount();
+        });
+        updateChattelsCount();
+    });
+
+    // Outgoings toggle counter
+    function updateOutgoingsCount() {
+        const checks = document.querySelectorAll('#laOutgoingsGrid input[type="checkbox"]');
+        const checked = Array.from(checks).filter(c => c.checked).length;
+        const summaryEl = document.getElementById('laOgSummary');
+        if (summaryEl) summaryEl.textContent = `${checked} of ${checks.length} categories included`;
+        generateLeasePreview();
+    }
+    document.querySelectorAll('#laOutgoingsGrid input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateOutgoingsCount);
+    });
+
+    // Populate the review document (full ADLS)
+    function populateReviewDoc() {
+        const getVal = (key) => {
+            const inp = document.querySelector(`.la-input[data-la="${key}"]`);
+            return inp ? (inp.value || inp.textContent || '') : '';
+        };
+
+        // Front page fields
+        const frontAddr = document.getElementById('laFrontAddress');
+        if (frontAddr) frontAddr.textContent = getVal('premisesDesc') || getVal('landlordAddr') || '—';
+
+        // Parties (front page + execution)
+        const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+        setEl('laDocLandlord', getVal('landlord'));
+        setEl('laDocTenant', getVal('tenant'));
+        setEl('laDocGuarantor', getVal('guarantor'));
+        setEl('laExecLandlord', getVal('landlord'));
+        setEl('laExecTenant', getVal('tenant'));
+        setEl('laExecGuarantor', getVal('guarantor'));
+
+        // First Schedule table
+        const reviewTable = document.getElementById('laReviewTable');
+        if (reviewTable) {
+            // Get ALL outgoings — full ADLS wording for the review document, struck-through if excluded
+            const OUTGOINGS_FULL = [
+                'Rates or levies payable to any local authority.',
+                'Charges for water, gas, electricity, telecommunications and other utilities or services, including line charges and increases in charges attributable to increase in consumption of those utilities or services from the premises, but excluding any capital charges.',
+                'Rubbish collection and recycling charges.',
+                'Fire and Emergency levies and the maintenance charges in respect of all fire detection and firefighting equipment.',
+                'Insurance premiums and related valuation fees, and any excess applied to the cost of repairs under clause 24.4 of the Lease.',
+                'Service maintenance contract charges for air conditioning, lifts, other building services, security services, and roller doors and automatic doors, but excluding charges for inherent defects and renewal or replacement of building services.',
+                'Cleaning, maintenance and repair charges including charges for repainting the exterior of the building and fences, decorative repairs and the maintenance and repair of building services to the extent that such charges do not comprise part of the cost of a service maintenance contract, but excluding charges for structural repairs to the building (more than minor repairs to the roof of the building or fences are structural repairs), repairs due to defects in design or construction, inherent defects and renewal or replacement of building services.',
+                'The provisioning of toilets and other shared facilities.',
+                'The cost of maintenance of lawns, gardens and planted areas including plant hire and replacement.',
+                'Yard, car parking area and accessway maintenance and repair charges and minor repairs to those areas (including repairs to potholes) but excluding charges for repaving or resealing.',
+                'Body Corporate charges for any insurance premiums under any insurance policy effected by the Body Corporate and related valuation fees.',
+                'Management expenses and, in the case of a body corporate, includes reasonable management administration expenses (subject to clauses 3.9 and 3.10 of the Lease).',
+                'The costs incurred and payable by the Landlord in supplying to the territorial authority a building warrant of fitness and obtaining reports as required by sections 108 and 110 of the Building Act 2004 but excluding the costs of upgrading or other work to make the building comply with the Building Act 2004.'
+            ];
+            const ogChecks = document.querySelectorAll('#laOutgoingsGrid input[type="checkbox"]');
+            const ogText = OUTGOINGS_FULL.map((text, i) => {
+                const excluded = ogChecks[i] && !ogChecks[i].checked;
+                const num = `(${i + 1})`;
+                if (excluded) {
+                    return `<span style="text-decoration:line-through;color:#aaa;">${num} ${text}</span>`;
+                }
+                return `${num} ${text}`;
+            }).join('<br><br>');
+
+            const items = [
+                ['1', 'Premises', getVal('premisesDesc')],
+                ['', 'Record of Title', getVal('title')],
+                ['', 'Legal Description', getVal('legalDesc')],
+                ['', 'Lettable Area', getVal('area')],
+                ['2', 'Car Parks', getVal('carparks')],
+                ['3', 'Term', getVal('term')],
+                ['4', 'Commencement Date', getVal('commDate')],
+                ['5', 'Rights of Renewal', getVal('renewals')],
+                ['6', 'Renewal Date(s)', getVal('renewalDates')],
+                ['7', 'Renewal Notice Period', getVal('renewalNotice')],
+                ['8', 'Final Expiry Date', getVal('finalExpiry')],
+                ['9', 'Annual Rent (premises)', getVal('annualRentPremises')],
+                ['', 'Annual Rent (car parks)', getVal('annualRentCarparks')],
+                ['', 'Total Annual Rent', getVal('annualRentTotal')],
+                ['10', 'Monthly Rent', getVal('monthlyRent')],
+                ['11', 'Rent Payment Dates', getVal('paymentDates')],
+                ['12', 'Rent Review Dates', getVal('reviewDates')],
+                ['13', 'Lower Rent Limit', getVal('lowerLimit')],
+                ['', 'Upper Rent Limit', getVal('upperLimit')],
+                ['14', 'Interim Rent', getVal('interimRent')],
+                ['15', 'Fixed Rent Adjustment', getVal('fixedAdj')],
+                ['16', 'Proportion of Outgoings', getVal('outgoingsProportion')],
+                ['17', 'Outgoings', ogText.replace(/\n/g, '<br>')],
+                ['18', 'Default Interest Rate', getVal('defaultInterest')],
+                ['19', 'Business Use', getVal('businessUse')],
+                ['20', 'Landlord\'s Insurance', getVal('insuranceType')],
+                ['21', 'Insurance Excess', getVal('excess')],
+                ['22', 'Fair Proportion of Rent', getVal('fairProportion')],
+                ['23', 'No Access Period', getVal('noAccess')],
+                ['24', 'Bank Guarantee', getVal('bankGuarantee')],
+                ['25', 'Bank Guarantee Amount', getVal('bankGuaranteeAmt')],
+                ['26', 'Rental Bond', getVal('rentalBond')],
+                ['27', 'Rental Bond Amount', getVal('rentalBondAmt')],
+                ['28', 'Seismic Rating', getVal('seismic')],
+                ['29', 'Mortgagee\'s Consent', getVal('mortgageeConsent')],
+                ['31', 'Email (Landlord)', getVal('emailLandlord')],
+                ['', 'Email (Tenant)', getVal('emailTenant')],
+                ['32', 'Deposit', getVal('deposit')]
+            ];
+            reviewTable.innerHTML = items.map(([num, label, val]) =>
+                `<tr><td>${num}</td><td>${label}</td><td>${val || '—'}</td></tr>`
+            ).join('');
+        }
+
+        // Third Schedule further terms + AI-added clauses
+        const furtherEl = document.getElementById('laReviewFurther');
+        if (furtherEl) {
+            const furtherTerms = [
+                ['Rent-free Period', getVal('rentFree')],
+                ['Make Good / Reinstatement', getVal('makeGood')],
+                ['Assignment / Subletting', getVal('assignment')]
+            ].filter(([, v]) => v);
+            // Also include any AI-added clauses
+            const addedClauses = [];
+            document.querySelectorAll('.la-added-item').forEach(item => {
+                const title = item.querySelector('.la-added-item-title')?.textContent || '';
+                const text = item.querySelector('.la-added-item-text')?.textContent || '';
+                if (title && text) addedClauses.push([title, text]);
+            });
+            const allTerms = [...furtherTerms, ...addedClauses];
+            let clauseNum = 9;
+            furtherEl.innerHTML = allTerms.map(([title, text]) =>
+                `<div class="la-adls-further-item"><strong>${clauseNum++}.0 ${title}</strong><p>${text}</p></div>`
+            ).join('') || '<p style="color:#888;font-style:italic;">No further terms specified.</p>';
+        }
+
+        // Fourth Schedule — chattels
+        const chattelsEl = document.getElementById('laReviewChattels');
+        if (chattelsEl) {
+            const items = [];
+            document.querySelectorAll('#laChattelsGrid input[type="checkbox"]:checked').forEach(cb => {
+                const label = cb.closest('.la-chattel-item')?.querySelector('span:last-child')?.textContent || '';
+                if (label) items.push(label);
+            });
+            document.querySelectorAll('.la-chattel-custom-item span').forEach(sp => {
+                if (sp.textContent.trim()) items.push(sp.textContent.trim());
+            });
+            chattelsEl.innerHTML = items.length
+                ? items.map(item => `<div class="la-adls-chattel-item">${item}</div>`).join('')
+                : '<p style="color:#888;font-style:italic;">No fixtures, fittings or chattels specified.</p>';
+        }
+
+        // Back page — party details
+        const setEl2 = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+        setEl2('laBackLandlord', getVal('landlord'));
+        setEl2('laBackTenant', getVal('tenant'));
+        setEl2('laBackLandlordEmail', getVal('emailLandlord'));
+        setEl2('laBackTenantEmail', getVal('emailTenant'));
+    }
+
+    // Generate button — now also populates the review doc
     document.getElementById('laGenerateBtn')?.addEventListener('click', () => {
         generateLeasePreview();
+        populateReviewDoc();
         const sendBtn = document.getElementById('laSendBtn');
         if (sendBtn) sendBtn.disabled = false;
     });
+
+    // Approve button → switch to send tab
+    document.getElementById('laApproveBtn')?.addEventListener('click', () => {
+        document.querySelectorAll('.la-sec-btn').forEach(b => b.classList.toggle('active', b.dataset.laSec === 'send'));
+        document.querySelectorAll('.la-section').forEach(s => s.classList.toggle('active', s.dataset.laPanel === 'send'));
+    });
+
+    // When switching to review tab, auto-populate
+    const reviewSectionObs = new MutationObserver(() => {
+        const reviewPanel = document.querySelector('.la-section[data-la-panel="review"]');
+        if (reviewPanel?.classList.contains('active')) populateReviewDoc();
+    });
+    const reviewPanel = document.querySelector('.la-section[data-la-panel="review"]');
+    if (reviewPanel) reviewSectionObs.observe(reviewPanel, { attributes: true, attributeFilter: ['class'] });
 
     // Send button
     document.getElementById('laSendBtn')?.addEventListener('click', () => {
@@ -3083,12 +3754,195 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Wire HoT → Lease Agreement flow: the "Next: Generate Lease Agreement" button
+    // Wire HoT → Lease Agreement flow
     document.querySelector('.hot-next-btn')?.addEventListener('click', function() {
         if (this.disabled) return;
         hotModal?.classList.remove('active');
         const address = document.getElementById('hotTitle')?.textContent || 'Property';
-        openLeaseAgreement(address);
+        setTimeout(() => openLeaseAgreement(address), 150);
+    });
+
+    // --- Lease Agreement: Additional Clauses (Walter clause chat) ---
+    const laClauseMessages = document.getElementById('laClauseMessages');
+    const laClauseForm = document.getElementById('laClauseForm');
+    const laClauseInput = document.getElementById('laClauseInput');
+    const laAddedList = document.getElementById('laAddedList');
+    const laClauseCount = document.getElementById('laClauseCount');
+    let addedClauseNum = 0;
+
+    const CLAUSE_RESPONSES = {
+        'make-good': {
+            title: 'Reinstatement / Make-Good',
+            text: 'The Tenant shall, at the expiration or sooner determination of this Lease, reinstate the Premises to the condition they were in at the Commencement Date (fair wear and tear excepted), including the removal of all tenant fixtures, fittings and signage. A make-good assessment shall be conducted by mutual agreement no later than 6 months prior to the expiry of the Term or any renewal thereof.',
+            source: '92% of comparable Grey Lynn office leases include this clause'
+        },
+        'signage': {
+            title: 'Signage Rights',
+            text: 'The Tenant shall be entitled to install signage on the exterior of the Premises and within any common area directory board, subject to the Landlord\'s prior written approval (not to be unreasonably withheld) and compliance with all applicable council and building regulations. All signage costs, including installation, maintenance and removal, shall be borne by the Tenant. The Tenant shall remove all signage and make good any damage caused by such removal at the expiry or sooner determination of this Lease.',
+            source: 'Standard clause — ADLS 7th Edition cl 20'
+        },
+        'nocompete': {
+            title: 'Non-Compete Radius',
+            text: 'The Landlord covenants that for the duration of the Term and any renewal thereof, the Landlord shall not lease, licence or otherwise permit any other premises owned or controlled by the Landlord within a 2 kilometre radius of the Premises to be used for the same or substantially similar business purpose as the Tenant\'s permitted use under this Lease, without the Tenant\'s prior written consent.',
+            source: 'Used in 34% of retail leases — less common in office'
+        },
+        'access': {
+            title: '24/7 Access Rights',
+            text: 'The Tenant shall have unrestricted access to the Premises 24 hours per day, 7 days per week, 365 days per year, including all public holidays. The Landlord shall provide the Tenant with access credentials (keys, security codes, access cards) sufficient to enable such unrestricted access at all times. Any restriction of access by the Landlord (other than in an emergency or for scheduled maintenance with 5 working days\' notice) shall entitle the Tenant to an abatement of rent for the period of restriction.',
+            source: '76% of Auckland CBD/fringe office leases include 24/7 access'
+        },
+        'damage': {
+            title: 'Damage & Abatement',
+            text: 'If the Premises or any part thereof are damaged or destroyed so as to render the Premises or any part thereof unfit for the Tenant\'s use, then the rent and outgoings (or a fair proportion thereof having regard to the nature and extent of the damage) shall abate from the date of the damage until the Premises are reinstated to a condition fit for the Tenant\'s use. If the Premises are not reinstated within 9 months of the date of damage, either party may terminate this Lease by giving 20 working days\' notice.',
+            source: 'Based on ADLS 7th Edition cl 29 — 9-month no-access default'
+        },
+        'hns': {
+            title: 'Health & Safety Obligations',
+            text: 'The Landlord and the Tenant shall each comply with all obligations imposed on them respectively under the Health and Safety at Work Act 2015 (HSWA) in relation to the Premises and the Building. The parties shall cooperate in good faith to ensure that all persons at the Premises are not exposed to health and safety risks arising from the Premises. The Tenant shall notify the Landlord promptly of any health and safety incident, notifiable event (as defined in HSWA), or hazard identified at the Premises.',
+            source: '7th Edition addition — required under HSWA 2015'
+        }
+    };
+
+    function addClauseMessage(type, html) {
+        const msg = document.createElement('div');
+        msg.className = 'la-clause-msg ' + type;
+        msg.innerHTML = `
+            <div class="la-clause-msg-avatar">${type === 'walter' ? 'W' : 'You'}</div>
+            <div class="la-clause-msg-body">${html}</div>
+        `;
+        laClauseMessages?.appendChild(msg);
+        laClauseMessages?.scrollTo({ top: laClauseMessages.scrollHeight, behavior: 'smooth' });
+    }
+
+    function handleClauseRequest(key) {
+        const resp = CLAUSE_RESPONSES[key];
+        if (!resp) {
+            // Generic response for unrecognised requests
+            addClauseMessage('walter', `
+                <p>I can draft that for you. Based on the property type (Office) and location (Grey Lynn), here's a standard clause:</p>
+                <p style="padding:10px 14px;background:rgba(255,255,255,0.04);border-left:2px solid #8b5cf6;border-radius:6px;font-style:italic;">"The parties agree to [your requested term] in accordance with standard commercial practice for properties of this class in the Auckland region, subject to the terms and conditions of this Lease."</p>
+                <p style="font-size:11px;color:rgba(255,255,255,0.5);">This is a placeholder — refine your request for a more specific clause.</p>
+            `);
+            return;
+        }
+
+        // Show thinking briefly
+        addClauseMessage('walter', '<p style="color:rgba(255,255,255,0.6);">Searching 14,200 lease precedents for the best match&hellip;</p>');
+        setTimeout(() => {
+            // Replace the thinking message with the real clause
+            const lastMsg = laClauseMessages?.lastElementChild;
+            if (lastMsg) lastMsg.remove();
+
+            addClauseMessage('walter', `
+                <p><strong>${resp.title}</strong></p>
+                <p style="padding:12px 16px;background:rgba(255,255,255,0.04);border-left:2px solid #10b981;border-radius:6px;font-style:italic;line-height:1.6;">${resp.text}</p>
+                <p style="font-size:11px;color:rgba(255,255,255,0.5);">${resp.source}</p>
+                <button class="la-clause-add-btn" data-clause-title="${resp.title}" data-clause-text="${resp.text.replace(/"/g, '&quot;')}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add to agreement
+                </button>
+            `);
+
+            // Wire the add button
+            const addBtn = laClauseMessages?.querySelector('.la-clause-add-btn:last-of-type');
+            addBtn?.addEventListener('click', () => {
+                addClauseToAgreement(addBtn.dataset.clauseTitle, addBtn.dataset.clauseText);
+                addBtn.textContent = '✓ Added';
+                addBtn.disabled = true;
+                addBtn.style.background = '#047857';
+            });
+        }, 1200);
+    }
+
+    function addClauseToAgreement(title, text) {
+        addedClauseNum++;
+        const emptyMsg = laAddedList?.querySelector('.la-added-empty');
+        if (emptyMsg) emptyMsg.remove();
+
+        const item = document.createElement('div');
+        item.className = 'la-added-item';
+        item.innerHTML = `
+            <div class="la-added-item-num">${addedClauseNum}</div>
+            <div class="la-added-item-body">
+                <div class="la-added-item-title">${title}</div>
+                <div class="la-added-item-text">${text}</div>
+            </div>
+            <button class="la-added-item-remove">Remove</button>
+        `;
+        laAddedList?.appendChild(item);
+        if (laClauseCount) laClauseCount.textContent = `${addedClauseNum} clause${addedClauseNum === 1 ? '' : 's'}`;
+
+        item.querySelector('.la-added-item-remove')?.addEventListener('click', () => {
+            item.remove();
+            addedClauseNum--;
+            if (laClauseCount) laClauseCount.textContent = `${addedClauseNum} clause${addedClauseNum === 1 ? '' : 's'}`;
+            if (addedClauseNum === 0 && laAddedList) {
+                laAddedList.innerHTML = '<div class="la-added-empty">No additional clauses yet. Use Walter above to draft and add clauses.</div>';
+            }
+        });
+    }
+
+    // Suggestion chip clicks
+    document.querySelectorAll('.la-clause-suggest').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const key = btn.dataset.clause;
+            addClauseMessage('user', `<p>${btn.textContent}</p>`);
+            handleClauseRequest(key);
+        });
+    });
+
+    // Free-text clause input
+    laClauseForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = laClauseInput?.value.trim();
+        if (!text) return;
+        laClauseInput.value = '';
+        addClauseMessage('user', `<p>${text}</p>`);
+        // Try to match to known clause types
+        const t = text.toLowerCase();
+        const matchKey = Object.keys(CLAUSE_RESPONSES).find(k => {
+            const resp = CLAUSE_RESPONSES[k];
+            return resp.title.toLowerCase().split(/\s+/).some(w => t.includes(w));
+        });
+        handleClauseRequest(matchKey || null);
+    });
+
+    // --- Lease Agreement: Peer Review ---
+    const laPeerReviewer = document.getElementById('laPeerReviewer');
+    const laPeerEmailField = document.getElementById('laPeerEmailField');
+    const laPeerSendBtn = document.getElementById('laPeerSendBtn');
+    const laPeerTimeline = document.getElementById('laPeerTimeline');
+    const laPeerComments = document.getElementById('laPeerComments');
+    const laPeerBadge = document.getElementById('laPeerBadge');
+
+    // Show/hide custom email field
+    laPeerReviewer?.addEventListener('change', () => {
+        if (laPeerEmailField) laPeerEmailField.style.display = laPeerReviewer.value === 'custom' ? '' : 'none';
+    });
+
+    // Send for review
+    laPeerSendBtn?.addEventListener('click', () => {
+        if (!laPeerReviewer?.value) return;
+        if (laPeerBadge) { laPeerBadge.textContent = 'Reviewing'; laPeerBadge.className = 'la-peer-status-badge reviewing'; }
+        if (laPeerTimeline) laPeerTimeline.style.display = '';
+        if (laPeerComments) laPeerComments.style.display = '';
+        laPeerSendBtn.textContent = '✓ Sent';
+        laPeerSendBtn.disabled = true;
+        laPeerSendBtn.style.opacity = '0.5';
+    });
+
+    // Resolve button clicks
+    document.querySelectorAll('.la-peer-resolve-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const comment = btn.closest('.la-peer-comment');
+            if (comment) {
+                comment.style.opacity = '0.5';
+                comment.style.borderColor = '#10b981';
+                btn.textContent = '✓ Resolved';
+                btn.disabled = true;
+                btn.style.color = '#047857';
+            }
+        });
     });
 
     // --- Heads of Terms Generator Modal ---
@@ -3212,10 +4066,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const propDrillClose = document.getElementById('propDrillClose');
     const pdAddress = document.getElementById('pdAddress');
 
+    // Property image lookup — maps address keywords to listing images
+    const PROPERTY_IMAGES = {
+        'Crummer': 'listing-carlisle.jpg', // Using carlisle as placeholder
+        'Beaumont': 'carlisle-01.jpg',
+        'Dalgety': 'listing-manukau.jpg',
+        'Bryce': 'listing-wainui.jpg',
+        'Birmingham': 'listing-dacre.jpg',
+        'Mays': 'listing-manukau.jpg',
+        'Rosedale': 'listing-jervois.jpg',
+        'Earl Richardson': 'listing-wainui.jpg',
+        'Aviemore': 'listing-parnell.jpg',
+        'Cook': 'listing-jervois.jpg',
+        'Kellow': 'listing-dacre.jpg',
+        'Parnell': 'listing-parnell.jpg',
+        'Spring': 'listing-jervois.jpg',
+        'Remuera': 'listing-parnell.jpg',
+        'Kitchener': 'listing-dacre.jpg',
+        'Ellerslie': 'listing-dacre.jpg',
+        'Ormiston': 'listing-wainui.jpg',
+        'Shortland': 'sv-88-shortland.png',
+        'Ponsonby': 'listing-jervois.jpg',
+        'Fanshawe': 'listing-dacre.jpg',
+        'Westgate': 'listing-wainui.jpg',
+        'Chonny': 'listing-manukau.jpg',
+        'Galway': 'listing-manukau.jpg',
+        'Patiki': 'listing-dacre.jpg',
+        'High Street': 'listing-jervois.jpg',
+        'Pukemiro': 'listing-manukau.jpg',
+        'Manukau': 'listing-manukau.jpg',
+        'Moore': 'listing-dacre.jpg'
+    };
+
+    function getPropertyImage(address) {
+        for (const [key, img] of Object.entries(PROPERTY_IMAGES)) {
+            if (address.includes(key)) return img;
+        }
+        return 'sv-88-shortland.png'; // default
+    }
+
     function openPropDrill(address, tab) {
         if (pdAddress && address) pdAddress.textContent = address;
-        // Activate the selected tab (default: history)
-        const targetTab = tab || 'history';
+        // Set hero image
+        const heroImg = document.getElementById('pdHeroImg');
+        if (heroImg) heroImg.src = getPropertyImage(address);
+        // Activate the selected tab (default: overview)
+        const targetTab = tab || 'overview';
         document.querySelectorAll('.pd-tab').forEach(t => t.classList.toggle('active', t.dataset.pdTab === targetTab));
         document.querySelectorAll('.pd-panel').forEach(p => p.classList.toggle('active', p.id === 'pdPanel' + targetTab.charAt(0).toUpperCase() + targetTab.slice(1)));
         propDrillModal?.classList.add('active');
@@ -3324,7 +4220,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (address.includes('Crummer')) {
                         document.getElementById('crummerModal')?.classList.add('active');
                     } else {
-                        document.getElementById('propertyModal')?.classList.add('active');
+                        openPropDrill('Property', 'history');
                     }
                 } else if (tab === 'hot') {
                     openHeadsOfTerms(address);
@@ -3341,6 +4237,166 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', () => {
         document.querySelectorAll('.prop-action-menu.open').forEach(m => m.classList.remove('open'));
         document.querySelectorAll('.prop-action-btn.open').forEach(b => b.classList.remove('open'));
+    });
+
+    // --- My Properties: Export to CSV ---
+    document.querySelector('.mp-export-btn')?.addEventListener('click', () => {
+        const rows = document.querySelectorAll('#view-properties .properties-table tbody tr');
+        const headers = ['Address', 'Type', 'Tenant', 'Area (sqm)', '$/SQM', 'Expiry', 'Status'];
+        let csv = headers.join(',') + '\n';
+        rows.forEach(row => {
+            if (row.style.display === 'none') return;
+            const cells = row.querySelectorAll('td');
+            if (cells.length < 7) return;
+            const addr = (cells[0]?.childNodes[0]?.textContent || cells[0]?.textContent || '').trim().replace(/,/g, ' ');
+            const type = (cells[1]?.textContent || '').trim();
+            const tenant = (cells[2]?.textContent || '').trim().replace(/,/g, ' ');
+            const area = (cells[3]?.textContent || '').trim();
+            const psqm = (cells[4]?.textContent || '').trim();
+            const expiry = (cells[5]?.textContent || '').trim();
+            const status = (cells[6]?.textContent || '').trim();
+            csv += `"${addr}","${type}","${tenant}","${area}","${psqm}","${expiry}","${status}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'my-properties-export.csv';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    });
+
+    // --- My Properties: Add Property Modal ---
+    const addPropModal = document.getElementById('addPropertyModal');
+    const addPropSearch = document.getElementById('addPropSearch');
+    const addPropResults = document.getElementById('addPropResults');
+    const addPropSearchBtn = document.getElementById('addPropSearchBtn');
+
+    document.querySelector('.mp-add-btn')?.addEventListener('click', () => {
+        addPropModal?.classList.add('active');
+        setTimeout(() => addPropSearch?.focus(), 200);
+    });
+    document.getElementById('addPropClose')?.addEventListener('click', () => {
+        addPropModal?.classList.remove('active');
+    });
+    addPropModal?.addEventListener('click', (e) => {
+        if (e.target === addPropModal) addPropModal.classList.remove('active');
+    });
+
+    const sampleProperties = [
+        { address: '45 Queen Street, Auckland CBD', type: 'Office', area: '820', psqm: '$420', owner: 'Queen Street Holdings Ltd', tenant: 'Vacant', cv: '$4.2M (2021)', zoning: 'Business — City Centre', nbs: '85%' },
+        { address: '12 Queen Street, Auckland CBD', type: 'Retail', area: '340', psqm: '$580', owner: 'Precinct Properties Ltd', tenant: 'Cotton On Group', cv: '$2.8M (2021)', zoning: 'Business — City Centre', nbs: '100%' },
+        { address: '155 Queen Street, Auckland CBD', type: 'Office', area: '1,200', psqm: '$395', owner: 'Goodman Property Trust', tenant: 'Multiple', cv: '$8.5M (2021)', zoning: 'Business — City Centre', nbs: '67%' },
+        { address: '78 Victoria Street West, Auckland CBD', type: 'Office', area: '560', psqm: '$350', owner: 'Victoria Park Holdings', tenant: 'Tech Startup Ltd', cv: '$3.1M (2021)', zoning: 'Business — City Centre', nbs: '72%' },
+        { address: '22 Customs Street East, Auckland CBD', type: 'Retail', area: '280', psqm: '$490', owner: 'Britomart Group', tenant: 'Vacant', cv: '$2.2M (2021)', zoning: 'Business — City Centre', nbs: '100%' },
+        { address: '91 Albert Street, Auckland CBD', type: 'Office', area: '1,450', psqm: '$410', owner: 'Mansons TCLM Ltd', tenant: 'Fisher & Paykel Healthcare', cv: '$7.8M (2021)', zoning: 'Business — City Centre', nbs: '90%' },
+        { address: '8 Commerce Street, Auckland CBD', type: 'Industrial', area: '680', psqm: '$195', owner: 'Commerce Holdings Ltd', tenant: 'NZ Post', cv: '$1.9M (2021)', zoning: 'Business — Mixed Use', nbs: '55%' },
+        { address: '200 Great South Road, Greenlane', type: 'Retail', area: '950', psqm: '$310', owner: 'Greenlane Properties Ltd', tenant: 'Briscoes Group', cv: '$4.5M (2021)', zoning: 'Business — Mixed Use', nbs: '78%' },
+        { address: '14 Anzac Avenue, Auckland CBD', type: 'Office', area: '720', psqm: '$375', owner: 'Anzac Properties Trust', tenant: 'Deloitte NZ', cv: '$5.2M (2021)', zoning: 'Business — City Centre', nbs: '82%' },
+    ];
+
+    function searchAddProperties(query) {
+        const q = query.toLowerCase().trim();
+        if (!q) return [];
+        return sampleProperties.filter(p =>
+            p.address.toLowerCase().includes(q) ||
+            p.owner.toLowerCase().includes(q) ||
+            p.tenant.toLowerCase().includes(q) ||
+            p.type.toLowerCase().includes(q)
+        );
+    }
+
+    function renderAddPropResults(results, query) {
+        if (!addPropResults) return;
+        if (!query) {
+            addPropResults.innerHTML = '<div class="add-prop-empty">Search by address, owner name, or business name</div>';
+            return;
+        }
+        if (results.length === 0) {
+            addPropResults.innerHTML = '<div class="add-prop-empty">No properties found matching "' + query + '"</div>';
+            return;
+        }
+        addPropResults.innerHTML = `<div class="add-prop-count">${results.length} properties found</div>` +
+            results.map((p, i) => `
+                <div class="add-prop-card" data-idx="${i}">
+                    <div class="add-prop-card-header">
+                        <div>
+                            <div class="add-prop-address">${p.address}</div>
+                            <div class="add-prop-meta">
+                                <span class="type-badge badge-${p.type.toLowerCase()}">${p.type}</span>
+                                <span>${p.area} sqm</span>
+                                <span>${p.psqm}/sqm</span>
+                            </div>
+                        </div>
+                        <button class="add-prop-add-btn" data-idx="${i}">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Add to My Properties
+                        </button>
+                    </div>
+                    <div class="add-prop-details">
+                        <div class="add-prop-detail"><span>Owner</span><strong>${p.owner}</strong></div>
+                        <div class="add-prop-detail"><span>Tenant</span><strong>${p.tenant}</strong></div>
+                        <div class="add-prop-detail"><span>CV</span><strong>${p.cv}</strong></div>
+                        <div class="add-prop-detail"><span>Zoning</span><strong>${p.zoning}</strong></div>
+                        <div class="add-prop-detail"><span>NBS</span><strong>${p.nbs}</strong></div>
+                    </div>
+                </div>
+            `).join('');
+
+        // Bind add buttons
+        addPropResults.querySelectorAll('.add-prop-add-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = parseInt(btn.dataset.idx);
+                const prop = results[idx];
+                addPropertyToTable(prop);
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Added';
+                btn.disabled = true;
+                btn.style.background = '#059669';
+                btn.style.borderColor = '#059669';
+            });
+        });
+    }
+
+    function addPropertyToTable(prop) {
+        const tbody = document.querySelector('#view-properties .properties-table tbody');
+        if (!tbody) return;
+        const tr = document.createElement('tr');
+        tr.className = 'clickable-row';
+        const statusColors = { 'Office': '#4285f4', 'Retail': '#e8590c', 'Industrial': '#059669' };
+        tr.innerHTML = `
+            <td><span class="cell-primary">${prop.address}</span><span class="prop-deal-dot"><span class="prop-deal-indicator deal-new"></span><span class="prop-deal-tooltip">New</span></span></td>
+            <td><span class="type-badge badge-${prop.type.toLowerCase()}">${prop.type}</span></td>
+            <td>${prop.tenant}</td>
+            <td>${prop.area}</td>
+            <td>${prop.psqm}</td>
+            <td>—</td>
+            <td><div class="pipeline-bar"><div class="pipeline-fill" style="width:0%;background:${statusColors[prop.type] || '#888'}"></div></div></td>
+        `;
+        tbody.prepend(tr);
+        // Update count
+        const cnt = document.getElementById('propCountDisplay');
+        const total = tbody.querySelectorAll('tr').length;
+        if (cnt) cnt.textContent = `Showing ${total} of ${total}`;
+        // Add row click for drill modal
+        tr.addEventListener('click', () => openPropDrill(tr));
+        // Flash highlight
+        tr.style.background = '#f0fdf4';
+        setTimeout(() => tr.style.background = '', 2000);
+    }
+
+    function doAddPropSearch() {
+        const query = addPropSearch?.value || '';
+        if (!query.trim()) return;
+        addPropResults.innerHTML = '<div class="add-prop-loading"><div class="add-prop-spinner"></div>Searching Walter database, LINZ, Companies Office...</div>';
+        setTimeout(() => {
+            const results = searchAddProperties(query);
+            renderAddPropResults(results, query);
+        }, 1200);
+    }
+
+    addPropSearchBtn?.addEventListener('click', doAddPropSearch);
+    addPropSearch?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') doAddPropSearch();
     });
 
     // --- My Properties: filtering ---
@@ -3865,7 +4921,6 @@ document.addEventListener('DOMContentLoaded', () => {
             pipelineModal?.classList.remove('active');
             propDrillModal?.classList.remove('active');
             hotModal?.classList.remove('active');
-            leaseModal?.classList.remove('active');
         }
     });
 });

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Review — Agreement to Lease · 33 Crummer Road | Walter</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #f8f9fb; --white: #ffffff; --dark: #0f172a;
+            --text: #334155; --text2: #64748b; --text3: #94a3b8;
+            --blue: #3b82f6; --green: #10b981; --purple: #6366f1;
+            --border: #e2e8f0; --border2: #f1f5f9;
+            --radius: 14px;
+        }
+        html { font-size: 15px; scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+        /* Header */
+        .pr-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .pr-header-left { display: flex; align-items: center; gap: 16px; }
+        .pr-header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text3);
+        }
+        .pr-header-logo img { height: 22px; }
+        .pr-header-logo span { opacity: 0.3; }
+        .pr-walter-mark {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            background: linear-gradient(135deg, #1a1a2e, #0f172a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 12px;
+        }
+        .pr-header-info h2 { font-size: 16px; font-weight: 700; color: var(--dark); letter-spacing: -0.3px; }
+        .pr-header-info p { font-size: 11px; color: var(--text2); margin-top: 2px; }
+        .pr-header-right { display: flex; align-items: center; gap: 12px; }
+        .pr-reviewer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(99,102,241,0.08);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--purple);
+        }
+        .pr-submit-btn {
+            padding: 10px 22px;
+            background: var(--purple);
+            color: white;
+            border: 0;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+        .pr-submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.3); }
+
+        /* Layout */
+        .pr-layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* Document pane */
+        .pr-doc-pane {
+            padding: 32px;
+            overflow-y: auto;
+        }
+        .pr-doc-page {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            padding: 48px 56px;
+            max-width: 780px;
+            margin: 0 auto 24px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #1a1a1a;
+            position: relative;
+        }
+        .pr-doc-page h3 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 0 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .pr-doc-page table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .pr-doc-page td {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+            font-size: 12px;
+        }
+        .pr-doc-page td:first-child { width: 36px; font-weight: 700; text-align: center; color: #888; background: #f9f9f9; }
+        .pr-doc-page td:nth-child(2) { width: 150px; font-weight: 600; color: #333; }
+        .pr-doc-header { text-align: center; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 3px double #333; }
+        .pr-doc-header h2 { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+        .pr-doc-header p { font-size: 12px; color: #777; margin-top: 4px; font-style: italic; }
+        .pr-draft-mark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-35deg);
+            font-size: 64px;
+            font-weight: 800;
+            color: rgba(200,200,200,0.1);
+            letter-spacing: 10px;
+            font-family: 'Inter', sans-serif;
+            pointer-events: none;
+        }
+
+        /* Commentable sections — highlight on hover */
+        .pr-section {
+            position: relative;
+            border-left: 3px solid transparent;
+            padding-left: 12px;
+            margin: 16px 0;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .pr-section:hover {
+            border-left-color: var(--purple);
+            background: rgba(99,102,241,0.02);
+        }
+        .pr-section:hover::after {
+            content: '+ Add comment';
+            position: absolute;
+            right: -8px;
+            top: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--purple);
+            padding: 3px 8px;
+            background: rgba(99,102,241,0.08);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+        .pr-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #888;
+            margin-bottom: 6px;
+            font-family: 'Inter', sans-serif;
+        }
+        .pr-section-value {
+            font-size: 13px;
+            color: #1a1a1a;
+        }
+
+        /* Comments sidebar */
+        .pr-comments-pane {
+            background: var(--white);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px);
+            position: sticky;
+            top: 60px;
+        }
+        .pr-comments-head {
+            padding: 20px 20px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        .pr-comments-head h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin: 0 0 4px; }
+        .pr-comments-head p { font-size: 12px; color: var(--text2); margin: 0; }
+        .pr-comments-count {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 9px;
+            background: rgba(99,102,241,0.1);
+            color: var(--purple);
+            border-radius: 999px;
+            margin-left: 8px;
+        }
+
+        .pr-comment-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 16px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .pr-comment {
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+        }
+        .pr-comment-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+        .pr-comment-author { font-size: 12px; font-weight: 700; color: var(--dark); }
+        .pr-comment-section { font-size: 10px; color: var(--purple); font-weight: 600; padding: 2px 7px; background: rgba(99,102,241,0.06); border-radius: 4px; }
+        .pr-comment-text { font-size: 13px; color: var(--text); line-height: 1.55; }
+        .pr-comment-time { font-size: 10px; color: var(--text3); margin-top: 8px; }
+
+        .pr-comment-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text3);
+            font-size: 13px;
+        }
+        .pr-comment-empty svg { display: block; margin: 0 auto 12px; opacity: 0.4; }
+
+        /* Comment input */
+        .pr-comment-input-area {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            background: var(--white);
+        }
+        .pr-comment-section-select {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .pr-section-chip {
+            padding: 4px 10px;
+            background: var(--border2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text2);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .pr-section-chip.active { background: var(--purple); color: white; border-color: var(--purple); }
+        .pr-comment-input-row {
+            display: flex;
+            gap: 6px;
+        }
+        .pr-comment-textarea {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            outline: none;
+            resize: none;
+            min-height: 40px;
+            background: var(--bg);
+        }
+        .pr-comment-textarea:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+        .pr-comment-send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--purple);
+            border: 0;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+        .pr-comment-send-btn:hover { box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+
+        /* Submitted state */
+        .pr-submitted-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.95);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+        .pr-submitted-overlay.active { display: flex; }
+        .pr-submitted-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 12px 32px rgba(16,185,129,0.3);
+        }
+        .pr-submitted-icon svg { width: 32px; height: 32px; color: white; }
+        .pr-submitted-overlay h2 { font-size: 24px; font-weight: 700; color: var(--dark); }
+        .pr-submitted-overlay p { font-size: 15px; color: var(--text2); max-width: 420px; line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            .pr-layout { grid-template-columns: 1fr; }
+            .pr-comments-pane { position: static; height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="pr-header">
+        <div class="pr-header-left">
+            <div class="pr-header-logo">
+                <div class="pr-walter-mark">W</div>
+                <span>|</span>
+                <img src="bayleys-logo.png" alt="Bayleys">
+            </div>
+            <div class="pr-header-info">
+                <h2>Agreement to Lease — 33 Crummer Road, Grey Lynn</h2>
+                <p>Requested by Will Alexander · Draft review · 11 April 2026</p>
+            </div>
+        </div>
+        <div class="pr-header-right">
+            <span class="pr-reviewer-badge">Reviewing as Sarah Cincotta</span>
+            <button class="pr-submit-btn" id="prSubmitBtn">Submit review</button>
+        </div>
+    </header>
+
+    <!-- Layout -->
+    <div class="pr-layout">
+
+        <!-- Document -->
+        <div class="pr-doc-pane">
+            <div class="pr-doc-page">
+                <div class="pr-doc-header">
+                    <h2>Agreement to Lease</h2>
+                    <p>Sixth Edition 2024 · The Law Association of New Zealand</p>
+                </div>
+
+                <div class="pr-section" data-section="Parties">
+                    <div class="pr-section-label">Parties</div>
+                    <div class="pr-section-value">
+                        <strong>Landlord:</strong> Des Radonich Limited<br>
+                        <strong>Tenant:</strong> Glenn Cotterill Company Trust<br>
+                        <strong>Guarantor:</strong> Glenn Cotterill (personal guarantee)
+                    </div>
+                </div>
+
+                <h3>FIRST SCHEDULE</h3>
+
+                <div class="pr-section" data-section="Premises">
+                    <div class="pr-section-label">Items 1-2: Premises & Car Parks</div>
+                    <table>
+                        <tr><td>1</td><td>Premises</td><td>33 Crummer Road, Grey Lynn — Ground floor and first floor, 306 sqm</td></tr>
+                        <tr><td>2</td><td>Car Parks</td><td>4 allocated on-site, included in rent</td></tr>
+                    </table>
+                </div>
+
+                <div class="pr-section" data-section="Term">
+                    <div class="pr-section-label">Items 3-8: Term & Renewal</div>
+                    <table>
+                        <tr><td>3</td><td>Term</td><td>5 years</td></tr>
+                        <tr><td>4</td><td>Commencement</td><td>1 September 2026</td></tr>
+                        <tr><td>5</td><td>Renewals</td><td>1 further term of 3 years</td></tr>
+                        <tr><td>6</td><td>Renewal Date</td><td>1 September 2031</td></tr>
+                        <tr><td>7</td><td>Notice</td><td>6 months</td></tr>
+                        <tr><td>8</td><td>Final Expiry</td><td>31 August 2034</td></tr>
+                    </table>
+                </div>
+
+                <div class="pr-section" data-section="Rent">
+                    <div class="pr-section-label">Items 9-11: Rent</div>
+                    <table>
+                        <tr><td>9</td><td>Annual Rent</td><td>$92,412.00 + GST</td></tr>
+                        <tr><td>10</td><td>Monthly Rent</td><td>$7,701.00 + GST</td></tr>
+                        <tr><td>11</td><td>Payment Dates</td><td>1st day of each month in advance</td></tr>
+                    </table>
+                </div>
+
+                <div class="pr-section" data-section="Rent Reviews">
+                    <div class="pr-section-label">Items 12-15: Rent Reviews</div>
+                    <table>
+                        <tr><td>12</td><td>Review Dates</td><td>CPI annually; Market on renewal (1 Sep 2031)</td></tr>
+                        <tr><td>13</td><td>Lower Limit</td><td>Ratchet — rent cannot fall below preceding period</td></tr>
+                        <tr><td></td><td>Upper Limit</td><td>CPI capped at 3% per annum</td></tr>
+                    </table>
+                </div>
+
+                <div class="pr-section" data-section="Outgoings">
+                    <div class="pr-section-label">Items 16-17: Outgoings</div>
+                    <table>
+                        <tr><td>16</td><td>Proportion</td><td>100% (single tenancy)</td></tr>
+                        <tr><td>17</td><td>Outgoings</td><td>12 of 15 categories included (see schedule)</td></tr>
+                        <tr><td></td><td>Est. Annual</td><td><strong>$31,693.47 + GST</strong></td></tr>
+                        <tr><td></td><td>Total Occupancy</td><td><strong>$121,911.27 + GST p.a.</strong></td></tr>
+                    </table>
+                </div>
+
+                <div class="pr-section" data-section="Security">
+                    <div class="pr-section-label">Items 24-27: Security</div>
+                    <table>
+                        <tr><td>24</td><td>Bank Guarantee</td><td>Yes</td></tr>
+                        <tr><td>25</td><td>Amount</td><td>$26,612.07 (3 months gross)</td></tr>
+                    </table>
+                </div>
+
+                <div class="pr-section" data-section="Further Terms">
+                    <div class="pr-section-label">Third Schedule: Further Terms</div>
+                    <div class="pr-section-value">
+                        <p><strong>Rent-free period:</strong> 2 calendar months from Commencement Date for fit-out purposes. Outgoings apply from Commencement Date.</p>
+                        <p><strong>Make good:</strong> Tenant to reinstate to base-build at lease end, fair wear and tear excepted. Assessment 6 months prior to expiry.</p>
+                        <p><strong>Assignment:</strong> Permitted with Landlord's consent, not to be unreasonably withheld or delayed.</p>
+                    </div>
+                </div>
+
+                <div class="pr-draft-mark">DRAFT</div>
+            </div>
+        </div>
+
+        <!-- Comments sidebar -->
+        <div class="pr-comments-pane">
+            <div class="pr-comments-head">
+                <h3>Comments <span class="pr-comments-count" id="prCommentCount">0</span></h3>
+                <p>Click any section in the document to add a comment, or use the input below.</p>
+            </div>
+
+            <div class="pr-comment-list" id="prCommentList">
+                <div class="pr-comment-empty">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    No comments yet.<br>Click a section in the document or type below.
+                </div>
+            </div>
+
+            <div class="pr-comment-input-area">
+                <div class="pr-comment-section-select" id="prSectionSelect">
+                    <button class="pr-section-chip active" data-sec="General">General</button>
+                    <button class="pr-section-chip" data-sec="Rent Reviews">Rent Reviews</button>
+                    <button class="pr-section-chip" data-sec="Security">Security</button>
+                    <button class="pr-section-chip" data-sec="Further Terms">Further Terms</button>
+                </div>
+                <div class="pr-comment-input-row">
+                    <textarea class="pr-comment-textarea" id="prCommentInput" placeholder="Write a comment..." rows="1"></textarea>
+                    <button class="pr-comment-send-btn" id="prCommentSend">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submitted overlay -->
+    <div class="pr-submitted-overlay" id="prSubmitted">
+        <div class="pr-submitted-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2>Review submitted</h2>
+        <p>Your comments have been sent to Will Alexander. He'll receive a notification with your feedback and can action each item directly in Walter.</p>
+    </div>
+
+    <script>
+        // Section chip selection
+        document.querySelectorAll('.pr-section-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.pr-section-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
+
+        // Click section in document to select it
+        document.querySelectorAll('.pr-section').forEach(section => {
+            section.addEventListener('click', () => {
+                const secName = section.dataset.section;
+                // Activate the matching chip or add one
+                let chip = Array.from(document.querySelectorAll('.pr-section-chip')).find(c => c.dataset.sec === secName);
+                if (!chip) {
+                    chip = document.createElement('button');
+                    chip.className = 'pr-section-chip';
+                    chip.dataset.sec = secName;
+                    chip.textContent = secName;
+                    document.getElementById('prSectionSelect').appendChild(chip);
+                    chip.addEventListener('click', () => {
+                        document.querySelectorAll('.pr-section-chip').forEach(c => c.classList.remove('active'));
+                        chip.classList.add('active');
+                    });
+                }
+                document.querySelectorAll('.pr-section-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                document.getElementById('prCommentInput').focus();
+            });
+        });
+
+        // Add comment
+        let commentNum = 0;
+        function addComment(text, section) {
+            const list = document.getElementById('prCommentList');
+            const empty = list.querySelector('.pr-comment-empty');
+            if (empty) empty.remove();
+            commentNum++;
+
+            const comment = document.createElement('div');
+            comment.className = 'pr-comment';
+            comment.innerHTML = `
+                <div class="pr-comment-meta">
+                    <span class="pr-comment-author">Sarah Cincotta</span>
+                    <span class="pr-comment-section">${section}</span>
+                </div>
+                <div class="pr-comment-text">${text}</div>
+                <div class="pr-comment-time">Just now</div>
+            `;
+            list.appendChild(comment);
+            list.scrollTop = list.scrollHeight;
+            document.getElementById('prCommentCount').textContent = commentNum;
+        }
+
+        document.getElementById('prCommentSend').addEventListener('click', () => {
+            const input = document.getElementById('prCommentInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const activeChip = document.querySelector('.pr-section-chip.active');
+            const section = activeChip?.dataset.sec || 'General';
+            addComment(text, section);
+            input.value = '';
+        });
+
+        document.getElementById('prCommentInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('prCommentSend').click();
+            }
+        });
+
+        // Submit review
+        document.getElementById('prSubmitBtn').addEventListener('click', () => {
+            document.getElementById('prSubmitted').classList.add('active');
+        });
+    </script>
+</body>
+</html>
