@@ -2057,6 +2057,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
             walterMarkers[key] = marker;
         });
+
+        // Two-way map ↔ signals sidebar link
+        walterMap.on('popupopen', (e) => {
+            document.querySelectorAll('.feed-item').forEach(fi => fi.classList.remove('feed-active'));
+            Object.entries(walterMarkers).forEach(([k, m]) => {
+                if (m.getPopup() === e.popup) {
+                    const fi = document.querySelector(`.feed-item[data-pin="${k}"]`);
+                    if (fi) {
+                        fi.classList.add('feed-active');
+                        fi.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                    // Auto-switch to signals tab
+                    document.querySelectorAll('.intel-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.intel-content').forEach(c => c.classList.remove('active'));
+                    document.querySelector('.intel-tab[data-tab="signals"]')?.classList.add('active');
+                    document.querySelector('.intel-content[data-content="signals"]')?.classList.add('active');
+                }
+            });
+        });
+        walterMap.on('popupclose', () => {
+            document.querySelectorAll('.feed-item').forEach(fi => fi.classList.remove('feed-active'));
+        });
     }
 
     // Update property modal dynamically based on active property
@@ -4923,4 +4945,185 @@ document.addEventListener('DOMContentLoaded', () => {
             hotModal?.classList.remove('active');
         }
     });
+
+    // --- Priority Banner Dismiss ---
+    document.getElementById('priorityBannerDismiss')?.addEventListener('click', () => {
+        document.getElementById('priorityBanner')?.classList.add('dismissed');
+    });
+
+    // --- Advisory Prompt Dismiss ---
+    document.getElementById('advisoryPromptDismiss')?.addEventListener('click', () => {
+        document.getElementById('advisoryPrompt')?.classList.add('dismissed');
+    });
+
+    // --- My Properties: Inline Status Chips ---
+    (function addStatusChips() {
+        const chipMap = {
+            'At Risk': { text: 'At Risk', cls: 'chip-at-risk' },
+            'Expansion': { text: 'Expansion', cls: 'chip-expansion' },
+            'New': { text: 'New Signal', cls: 'chip-new' },
+            'Stable': { text: 'Stable', cls: 'chip-stable' },
+            'Expiring': { text: 'Expiring', cls: 'chip-expiring' },
+        };
+        document.querySelectorAll('#view-properties .properties-table tbody tr').forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length < 8) return;
+            const addrCell = cells[0];
+            if (!addrCell || addrCell.querySelector('.prop-status-chip')) return;
+
+            // Read the status text from the correct column (varies by table, check multiple)
+            let statusText = '';
+            for (let i = cells.length - 1; i >= 5; i--) {
+                const t = cells[i]?.textContent?.trim();
+                if (t && Object.keys(chipMap).some(k => t.includes(k))) {
+                    statusText = t;
+                    break;
+                }
+            }
+
+            let chipInfo = chipMap['Stable']; // default
+            for (const [key, info] of Object.entries(chipMap)) {
+                if (statusText.includes(key)) {
+                    chipInfo = info;
+                    break;
+                }
+            }
+
+            const chip = document.createElement('span');
+            chip.className = 'prop-status-chip ' + chipInfo.cls;
+            chip.textContent = chipInfo.text;
+            addrCell.appendChild(chip);
+        });
+    })();
+
+    // --- Settings: Add hero sections to non-Contactless tabs ---
+    (function polishSettingsTabs() {
+        const settingsHeroes = {
+            'settings-integrations': {
+                badge: 'Integrations',
+                title: 'Connected workspace',
+                sub: 'Your data sources, CRM, and productivity tools — all feeding into Walter\'s intelligence layer.',
+                stats: [{ num: '6', label: 'Connected' }, { num: '2', label: 'Pending' }, { num: '99.8%', label: 'Uptime' }]
+            },
+            'settings-alerts': {
+                badge: 'Alert Preferences',
+                title: 'Stay informed, not overwhelmed',
+                sub: 'Fine-tune which signals, triggers, and agent actions notify you — and how.',
+                stats: [{ num: '24', label: 'Active rules' }, { num: '142', label: 'Alerts this week' }, { num: '3', label: 'Channels' }]
+            },
+            'settings-agents': {
+                badge: 'AI Agents',
+                title: 'Your intelligence team',
+                sub: 'Configure how Zara, Wallace, Costello, Molloy, and Brittany work across your portfolio.',
+                stats: [{ num: '5', label: 'Active agents' }, { num: '847', label: 'Actions this week' }, { num: '96%', label: 'Accuracy' }]
+            },
+            'settings-context': {
+                badge: 'Personal Context',
+                title: 'Walter knows you',
+                sub: 'Your preferences, market focus, and communication style — so every recommendation is relevant.',
+                stats: [{ num: '12', label: 'Preferences set' }, { num: '3', label: 'Focus areas' }, { num: '8mo', label: 'Learning' }]
+            }
+        };
+        Object.entries(settingsHeroes).forEach(([id, data]) => {
+            const section = document.getElementById(id);
+            if (!section || section.querySelector('.settings-section-hero')) return;
+            const hero = document.createElement('div');
+            hero.className = 'settings-section-hero';
+            hero.innerHTML = `
+                <div class="settings-hero-badge"><span class="settings-hero-badge-dot"></span>${data.badge}</div>
+                <h2 class="settings-hero-title">${data.title}</h2>
+                <p class="settings-hero-sub">${data.sub}</p>
+                <div class="settings-hero-stats">
+                    ${data.stats.map(s => `<div><span class="settings-hero-stat-num">${s.num}</span><span class="settings-hero-stat-label">${s.label}</span></div>`).join('')}
+                </div>
+            `;
+            section.insertBefore(hero, section.firstChild);
+        });
+    })();
+
+    // --- Guided Tour ---
+    const tourSteps = [
+        {
+            target: '.priority-banner',
+            title: 'Your daily briefing',
+            text: 'Walter surfaces the most urgent action each morning. Review it, act on it, or dismiss to see the next.',
+            arrow: 'top',
+            offsetY: 8
+        },
+        {
+            target: '.nav-item[data-view="properties"]',
+            title: 'Your portfolio',
+            text: 'All 54 properties in your portfolio — with AI-powered signals, stickiness scores, and deal status tracking.',
+            arrow: 'left',
+            offsetX: 8
+        },
+        {
+            target: '.walter-fab',
+            title: 'Ask Walter anything',
+            text: 'Click here to ask Walter about any property, tenant, market trend, or to draft documents. Walter works across all your data.',
+            arrow: 'bottom',
+            offsetY: -8
+        }
+    ];
+
+    let tourStep = 0;
+    const tourOverlay = document.getElementById('tourOverlay');
+    const tourTooltip = document.getElementById('tourTooltip');
+    const tourContent = document.getElementById('tourContent');
+    const tourStepIndicator = document.getElementById('tourStepIndicator');
+    const tourNext = document.getElementById('tourNext');
+    const tourSkip = document.getElementById('tourSkip');
+
+    function showTourStep(idx) {
+        if (idx >= tourSteps.length) { closeTour(); return; }
+        const step = tourSteps[idx];
+        const el = document.querySelector(step.target);
+        if (!el) { showTourStep(idx + 1); return; }
+
+        tourContent.innerHTML = `<h4>${step.title}</h4><p>${step.text}</p>`;
+        tourStepIndicator.textContent = `${idx + 1} of ${tourSteps.length}`;
+        tourNext.textContent = idx === tourSteps.length - 1 ? 'Get started' : 'Next';
+
+        tourTooltip.className = 'tour-tooltip arrow-' + step.arrow;
+
+        const rect = el.getBoundingClientRect();
+        let top, left;
+
+        if (step.arrow === 'top') {
+            top = rect.bottom + (step.offsetY || 0) + 12;
+            left = rect.left;
+        } else if (step.arrow === 'left') {
+            top = rect.top;
+            left = rect.right + (step.offsetX || 0) + 12;
+        } else if (step.arrow === 'bottom') {
+            top = rect.top - 180 + (step.offsetY || 0);
+            left = rect.left - 280;
+        }
+
+        tourTooltip.style.top = top + 'px';
+        tourTooltip.style.left = Math.max(10, Math.min(left, window.innerWidth - 360)) + 'px';
+    }
+
+    function startTour() {
+        if (sessionStorage.getItem('walter-tour-done')) return;
+        tourStep = 0;
+        tourOverlay?.classList.add('active');
+        showTourStep(0);
+    }
+
+    function closeTour() {
+        tourOverlay?.classList.remove('active');
+        sessionStorage.setItem('walter-tour-done', '1');
+    }
+
+    tourNext?.addEventListener('click', () => {
+        tourStep++;
+        showTourStep(tourStep);
+    });
+    tourSkip?.addEventListener('click', closeTour);
+    document.getElementById('tourBackdrop')?.addEventListener('click', closeTour);
+
+    // Auto-start tour after 800ms
+    setTimeout(startTour, 800);
+
 });

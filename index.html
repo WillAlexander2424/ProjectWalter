@@ -7,7 +7,7 @@
     <!-- Google Fonts Inter loaded async for production -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <link rel="stylesheet" href="styles.css?v=55">
+    <link rel="stylesheet" href="styles.css?v=56">
 </head>
 <body>
     <!-- Sidebar -->
@@ -154,7 +154,23 @@
                 </div>
             </div>
 
-            <!-- Quick Prompt Bar -->
+            <!-- Priority Action Banner (top action elevated) -->
+            <div class="priority-banner" id="priorityBanner">
+                <div class="priority-banner-indicator"></div>
+                <div class="priority-banner-content">
+                    <div class="priority-banner-main">
+                        <span class="priority-banner-label">Priority Action</span>
+                        <span class="priority-banner-title">Lumiere Design — Lease expiry in 7 months</span>
+                        <span class="priority-banner-meta">24 Beaumont St, Freemans Bay · Expansion Opportunity · Surfaced by Zara</span>
+                    </div>
+                    <div class="priority-banner-actions">
+                        <button class="priority-banner-cta" data-action="beaumont">Review now</button>
+                        <span class="agent-pip zara" style="width:28px;height:28px;font-size:12px">Z</span>
+                    </div>
+                </div>
+                <button class="priority-banner-dismiss" id="priorityBannerDismiss" title="Dismiss">&times;</button>
+            </div>
+
             <!-- Dashboard Cards -->
             <div class="dashboard-grid">
                 <div class="dash-card priority">
@@ -410,6 +426,43 @@
                             <span class="cal-legend-item"><span class="cal-legend-dot m365"></span>Meetings</span>
                             <span class="cal-legend-item"><span class="cal-legend-dot zara"></span>Zara</span>
                             <span class="cal-legend-item"><span class="cal-legend-dot costello"></span>Costello</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wallace Ambient Matching -->
+                <div class="dash-card wallace-ambient-card">
+                    <div class="dash-card-header">
+                        <h3>Wallace Matching</h3>
+                        <div class="wallace-ambient-badge">
+                            <span class="agent-pip wallace" style="width:20px;height:20px;font-size:9px;">W</span>
+                            <span style="font-size:11px;color:var(--text-secondary);">3 new today</span>
+                        </div>
+                    </div>
+                    <div class="wallace-match-list">
+                        <div class="wallace-match-item">
+                            <div class="wallace-match-score">96%</div>
+                            <div class="wallace-match-info">
+                                <span class="wallace-match-title">Harbour Capital &rarr; 170-174 Carlisle Rd</span>
+                                <span class="wallace-match-meta">Investment buyer · $3.8M budget · Matched on yield + location</span>
+                            </div>
+                            <a href="#" class="wallace-match-action" data-listing="carlisle">Review</a>
+                        </div>
+                        <div class="wallace-match-item">
+                            <div class="wallace-match-score">89%</div>
+                            <div class="wallace-match-info">
+                                <span class="wallace-match-title">TechFlow Ltd &rarr; 88 Shortland St</span>
+                                <span class="wallace-match-meta">Office tenant · ICP active · Matched on size + sector</span>
+                            </div>
+                            <a href="#" class="wallace-match-action">Review</a>
+                        </div>
+                        <div class="wallace-match-item">
+                            <div class="wallace-match-score">84%</div>
+                            <div class="wallace-match-info">
+                                <span class="wallace-match-title">Meridian Creative &rarr; 135 Parnell Rd</span>
+                                <span class="wallace-match-meta">Design studio · Expanding · Matched on fit-out + area</span>
+                            </div>
+                            <a href="#" class="wallace-match-action">Review</a>
                         </div>
                     </div>
                 </div>
@@ -1675,6 +1728,19 @@
                     <h1 class="view-title">Advisory</h1>
                     <p class="view-subtitle">Walter advises you, you advise your clients &mdash; lease reviews, comparisons, OPEX budgets and S&amp;P agreement analysis, all powered by an LLM trained on thousands of NZ commercial agreements</p>
                 </div>
+            </div>
+
+            <!-- Proactive Advisory Suggestion -->
+            <div class="advisory-prompt" id="advisoryPrompt">
+                <div class="advisory-prompt-icon">
+                    <span class="agent-pip zara" style="width:32px;height:32px;font-size:13px;">Z</span>
+                </div>
+                <div class="advisory-prompt-content">
+                    <strong>3 leases are approaching renewal in the next 90 days</strong>
+                    <span>15 Osterley Way (Nov 2026), 33 Crummer Rd (Mar 2027), and 135 Parnell Rd (May 2027) — Zara recommends starting reviews now to maximise negotiation leverage.</span>
+                </div>
+                <button class="advisory-prompt-cta" data-result="docResultReview">Start review</button>
+                <button class="advisory-prompt-dismiss" id="advisoryPromptDismiss">&times;</button>
             </div>
 
             <!-- ============ UNIFIED DOCUMENTS HUB ============ -->
@@ -7468,6 +7534,21 @@
     </main>
 
     <!-- Floating Walter chat launcher -->
+    <!-- Guided Tour Overlay -->
+    <div class="tour-overlay" id="tourOverlay">
+        <div class="tour-backdrop" id="tourBackdrop"></div>
+        <div class="tour-tooltip" id="tourTooltip">
+            <div class="tour-tooltip-content" id="tourContent"></div>
+            <div class="tour-tooltip-footer">
+                <span class="tour-step-indicator" id="tourStepIndicator"></span>
+                <div class="tour-tooltip-actions">
+                    <button class="tour-skip" id="tourSkip">Skip tour</button>
+                    <button class="tour-next" id="tourNext">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Property Modal -->
     <div class="modal-overlay" id="addPropertyModal">
         <div class="modal-content add-prop-modal">
@@ -7568,6 +7649,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=55"></script>
+    <script src="app.js?v=56"></script>
 </body>
 </html>
