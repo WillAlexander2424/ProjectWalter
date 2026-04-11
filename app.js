@@ -2973,6 +2973,240 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => applyPropertyFilter(filterMap[pmCurrentTab]), 150);
     });
 
+    // --- Lease Agreement Generator Modal ---
+    const leaseModal = document.getElementById('leaseModal');
+    const leaseClose = document.getElementById('leaseClose');
+
+    function openLeaseAgreement(address) {
+        const titleEl = document.getElementById('laTitle');
+        if (titleEl) titleEl.textContent = address || 'Property';
+        // Reset to first section
+        document.querySelectorAll('.la-sec-btn').forEach(b => b.classList.toggle('active', b.dataset.laSec === 'parties'));
+        document.querySelectorAll('.la-section').forEach(s => s.classList.toggle('active', s.dataset.laPanel === 'parties'));
+        generateLeasePreview();
+        leaseModal?.classList.add('active');
+    }
+
+    leaseClose?.addEventListener('click', () => leaseModal?.classList.remove('active'));
+    leaseModal?.addEventListener('click', (e) => {
+        if (e.target === leaseModal) leaseModal?.classList.remove('active');
+    });
+
+    // Section nav
+    document.querySelectorAll('.la-sec-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.la-sec-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.la-section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            const panel = document.querySelector(`.la-section[data-la-panel="${btn.dataset.laSec}"]`);
+            panel?.classList.add('active');
+            generateLeasePreview();
+        });
+    });
+
+    // Live preview: ADLS First Schedule table
+    function generateLeasePreview() {
+        const tableEl = document.getElementById('laDocTable');
+        if (!tableEl) return;
+        const getVal = (key) => {
+            const inp = document.querySelector(`.la-input[data-la="${key}"]`);
+            return inp ? (inp.value || inp.textContent || '') : '';
+        };
+        const items = [
+            ['1', 'Premises', getVal('premisesDesc') || '33 Crummer Road, Grey Lynn'],
+            ['', 'Record of Title', getVal('title')],
+            ['', 'Legal Description', getVal('legalDesc')],
+            ['', 'Lettable Area', getVal('area')],
+            ['2', 'Car Parks', getVal('carparks')],
+            ['3', 'Term', getVal('term')],
+            ['4', 'Commencement', getVal('commDate')],
+            ['5', 'Rights of Renewal', getVal('renewals')],
+            ['6', 'Renewal Date(s)', getVal('renewalDates')],
+            ['7', 'Renewal Notice', getVal('renewalNotice')],
+            ['8', 'Final Expiry', getVal('finalExpiry')],
+            ['9', 'Annual Rent', getVal('annualRentTotal')],
+            ['10', 'Monthly Rent', getVal('monthlyRent')],
+            ['11', 'Payment Dates', getVal('paymentDates')],
+            ['12', 'Review Dates', getVal('reviewDates')],
+            ['13', 'Lower Limit', getVal('lowerLimit')],
+            ['', 'Upper Limit', getVal('upperLimit')],
+            ['14', 'Interim Rent', getVal('interimRent')],
+            ['16', 'Outgoings Proportion', getVal('outgoingsProportion')],
+            ['18', 'Default Interest', getVal('defaultInterest')],
+            ['19', 'Business Use', getVal('businessUse')],
+            ['20', 'Insurance Type', getVal('insuranceType')],
+            ['21', 'Insurance Excess', getVal('excess')],
+            ['22', 'Fair Proportion', getVal('fairProportion')],
+            ['23', 'No-Access Period', getVal('noAccess')],
+            ['24', 'Bank Guarantee', getVal('bankGuarantee')],
+            ['25', 'Guarantee Amount', getVal('bankGuaranteeAmt')],
+            ['28', 'Seismic Rating', getVal('seismic')],
+            ['29', 'Mortgagee Consent', getVal('mortgageeConsent')],
+            ['32', 'Deposit', getVal('deposit')]
+        ];
+        tableEl.innerHTML = items.map(([num, label, val]) =>
+            `<tr><td>${num}</td><td>${label}</td><td>${val || '—'}</td></tr>`
+        ).join('');
+
+        // Update progress
+        const allInputs = document.querySelectorAll('.la-input[data-la]');
+        let filled = 0;
+        allInputs.forEach(inp => { if ((inp.value || '').trim()) filled++; });
+        const total = allInputs.length;
+        const pct = Math.round((filled / total) * 100);
+        const progressText = document.getElementById('laProgressText');
+        const progressFill = document.getElementById('laProgressFill');
+        if (progressText) progressText.textContent = `${filled} of ${total} fields complete`;
+        if (progressFill) progressFill.style.width = pct + '%';
+    }
+
+    // Update preview on any input change
+    document.querySelectorAll('.la-input[data-la]').forEach(inp => {
+        inp.addEventListener('input', generateLeasePreview);
+    });
+
+    // Generate button
+    document.getElementById('laGenerateBtn')?.addEventListener('click', () => {
+        generateLeasePreview();
+        const sendBtn = document.getElementById('laSendBtn');
+        if (sendBtn) sendBtn.disabled = false;
+    });
+
+    // Send button
+    document.getElementById('laSendBtn')?.addEventListener('click', () => {
+        const signStatus = document.getElementById('laSignStatus');
+        if (signStatus) signStatus.style.display = '';
+        const statusEl = document.getElementById('laStatus');
+        if (statusEl) {
+            statusEl.className = 'hot-status sent';
+            statusEl.innerHTML = '<span class="hot-status-dot sent"></span>Sent';
+        }
+    });
+
+    // Wire HoT → Lease Agreement flow: the "Next: Generate Lease Agreement" button
+    document.querySelector('.hot-next-btn')?.addEventListener('click', function() {
+        if (this.disabled) return;
+        hotModal?.classList.remove('active');
+        const address = document.getElementById('hotTitle')?.textContent || 'Property';
+        openLeaseAgreement(address);
+    });
+
+    // --- Heads of Terms Generator Modal ---
+    const hotModal = document.getElementById('hotModal');
+    const hotClose = document.getElementById('hotClose');
+
+    function openHeadsOfTerms(address) {
+        const titleEl = document.getElementById('hotTitle');
+        if (titleEl) titleEl.textContent = address || 'Property';
+        // Reset to edit tab
+        document.querySelectorAll('.hot-tab').forEach(t => t.classList.toggle('active', t.dataset.hotTab === 'edit'));
+        document.querySelectorAll('.hot-panel').forEach(p => p.classList.toggle('active', p.dataset.hotPanel === 'edit' || (!p.dataset.hotPanel && p.classList.contains('active'))));
+        // Set first panel active
+        const firstPanel = document.querySelector('.hot-panel');
+        document.querySelectorAll('.hot-panel').forEach(p => p.classList.remove('active'));
+        firstPanel?.classList.add('active');
+        hotModal?.classList.add('active');
+    }
+
+    hotClose?.addEventListener('click', () => hotModal?.classList.remove('active'));
+    hotModal?.addEventListener('click', (e) => {
+        if (e.target === hotModal) hotModal?.classList.remove('active');
+    });
+
+    // Tab switching
+    document.querySelectorAll('.hot-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.hot-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.hot-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            const key = tab.dataset.hotTab;
+            const panel = document.querySelector(`.hot-panel[data-hot-panel="${key}"]`);
+            if (!panel) {
+                // First panel (edit) doesn't have data attribute
+                document.querySelector('.hot-panel')?.classList.add('active');
+            } else {
+                panel.classList.add('active');
+            }
+            // Generate preview when switching to preview tab
+            if (key === 'preview') generateHotPreview();
+        });
+    });
+
+    function generateHotPreview() {
+        const bodyEl = document.getElementById('hotDocBody');
+        if (!bodyEl) return;
+        const fields = {};
+        document.querySelectorAll('.hot-input[data-hot]').forEach(inp => {
+            fields[inp.dataset.hot] = inp.value || inp.textContent || '';
+        });
+        bodyEl.innerHTML = `
+            <table>
+                <tr><th colspan="2">PARTIES</th></tr>
+                <tr><td>Landlord</td><td>${fields.landlord || ''}</td></tr>
+                <tr><td>Landlord Solicitor</td><td>${fields.landlordSolicitor || ''}</td></tr>
+                <tr><td>Tenant</td><td>${fields.tenant || ''}</td></tr>
+                <tr><td>Tenant Solicitor</td><td>${fields.tenantSolicitor || ''}</td></tr>
+            </table>
+            <table>
+                <tr><th colspan="2">PREMISES</th></tr>
+                <tr><td>Address</td><td>${fields.address || ''}</td></tr>
+                <tr><td>Area</td><td>${fields.area || ''} sqm (subject to BOMA measurement)</td></tr>
+                <tr><td>Type</td><td>${fields.type || ''}</td></tr>
+                <tr><td>Car Parks</td><td>${fields.carparks || ''}</td></tr>
+                <tr><td>Permitted Use</td><td>${fields.use || ''}</td></tr>
+            </table>
+            <table>
+                <tr><th colspan="2">TERM & RENEWALS</th></tr>
+                <tr><td>Initial Term</td><td>${fields.term || ''}</td></tr>
+                <tr><td>Rights of Renewal</td><td>${fields.renewals || ''}</td></tr>
+                <tr><td>Commencement</td><td>${fields.commDate || ''}</td></tr>
+                <tr><td>Final Expiry</td><td>${fields.expiryDate || ''}</td></tr>
+            </table>
+            <table>
+                <tr><th colspan="2">RENT</th></tr>
+                <tr><td>Annual Rent</td><td>${fields.annualRent || ''}</td></tr>
+                <tr><td>Rate</td><td>${fields.rate || ''}/sqm</td></tr>
+                <tr><td>Rent Free Period</td><td>${fields.rentFree || ''}</td></tr>
+                <tr><td>Payment</td><td>${fields.payment || ''}</td></tr>
+            </table>
+            <table>
+                <tr><th colspan="2">RENT REVIEWS</th></tr>
+                <tr><td>Annual Review</td><td>${fields.annualReview || ''}</td></tr>
+                <tr><td>Market Review</td><td>${fields.marketReview || ''}</td></tr>
+            </table>
+            <table>
+                <tr><th colspan="2">OUTGOINGS & INSURANCE</th></tr>
+                <tr><td>Outgoings</td><td>${fields.outgoings || ''}</td></tr>
+                <tr><td>Tenant Insurance</td><td>${fields.tenantInsurance || ''}</td></tr>
+                <tr><td>Bond / Guarantee</td><td>${fields.bond || ''}</td></tr>
+            </table>
+            <table>
+                <tr><th colspan="2">ADDITIONAL TERMS</th></tr>
+                <tr><td>Fit-out & Works</td><td>${fields.fitout || ''}</td></tr>
+                <tr><td>Make Good</td><td>${fields.makeGood || ''}</td></tr>
+                <tr><td>Assignment</td><td>${fields.assignment || ''}</td></tr>
+                <tr><td>Default Interest</td><td>${fields.defaultInterest || ''}</td></tr>
+            </table>
+        `;
+    }
+
+    // Send button simulation
+    document.getElementById('hotSendBtn')?.addEventListener('click', () => {
+        // Switch to status tab
+        document.querySelectorAll('.hot-tab').forEach(t => t.classList.toggle('active', t.dataset.hotTab === 'status'));
+        document.querySelectorAll('.hot-panel').forEach(p => p.classList.remove('active'));
+        document.querySelector('.hot-panel[data-hot-panel="status"]')?.classList.add('active');
+        // Update status badge
+        const statusEl = document.getElementById('hotStatus');
+        if (statusEl) {
+            statusEl.className = 'hot-status sent';
+            statusEl.innerHTML = '<span class="hot-status-dot sent"></span><span>Sent</span>';
+        }
+    });
+
+    // Add to Escape handler
+    // (hotModal is already handled via the generic modal close below)
+
     // --- My Properties: per-row action menu + drill-down modal ---
     const propDrillModal = document.getElementById('propDrillModal');
     const propDrillClose = document.getElementById('propDrillClose');
@@ -3045,6 +3279,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="pam-label">Data</span>
                 </button>
                 <div class="pam-divider"></div>
+                <button data-pd="hot">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <span class="pam-label">Generate Heads of Terms</span>
+                </button>
+                <button data-pd="lease">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <span class="pam-label">Lease Agreement</span>
+                </button>
+                <div class="pam-divider"></div>
                 <button data-pd="summary">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
                     <span class="pam-label">Open property summary</span>
@@ -3078,12 +3321,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 menu.classList.remove('open');
                 btn.classList.remove('open');
                 if (tab === 'summary') {
-                    // Trigger the existing row-click behaviour
                     if (address.includes('Crummer')) {
                         document.getElementById('crummerModal')?.classList.add('active');
                     } else {
                         document.getElementById('propertyModal')?.classList.add('active');
                     }
+                } else if (tab === 'hot') {
+                    openHeadsOfTerms(address);
+                } else if (tab === 'lease') {
+                    openLeaseAgreement(address);
                 } else {
                     openPropDrill(address, tab);
                 }
@@ -3618,6 +3864,8 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackModal?.classList.remove('active');
             pipelineModal?.classList.remove('active');
             propDrillModal?.classList.remove('active');
+            hotModal?.classList.remove('active');
+            leaseModal?.classList.remove('active');
         }
     });
 });

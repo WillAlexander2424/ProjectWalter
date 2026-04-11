@@ -3190,6 +3190,18 @@
                         <span class="connection-status connected">Connected</span>
                     </div>
 
+                    <!-- LuminPDF eSign -->
+                    <div class="setting-row">
+                        <div class="integration-icon lumin" style="background:linear-gradient(135deg,#6366f1,#3b82f6);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        </div>
+                        <div class="setting-info">
+                            <span class="setting-name">LuminPDF eSign</span>
+                            <span class="setting-desc">Digital signatures for Heads of Terms, lease agreements, and client acknowledgements &middot; SOC 2, eIDAS, GDPR</span>
+                        </div>
+                        <span class="connection-status connected">Connected</span>
+                    </div>
+
                     <!-- Uber for Business with sub-options -->
                     <div class="integration-group">
                         <div class="setting-row integration-parent">
@@ -5644,6 +5656,761 @@
             </div>
         </div>
 
+        <!-- ============ LEASE AGREEMENT GENERATOR MODAL ============ -->
+        <div class="modal-overlay" id="leaseModal">
+            <div class="modal-content lease-modal">
+                <button class="modal-close" id="leaseClose">&times;</button>
+
+                <!-- Top bar -->
+                <div class="la-topbar">
+                    <div class="la-topbar-left">
+                        <div class="la-topbar-badge">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            ADLS Deed of Lease &middot; 7th Edition 2024
+                        </div>
+                        <h2 id="laTitle">33 Crummer Road, Grey Lynn</h2>
+                    </div>
+                    <div class="la-topbar-right">
+                        <div class="la-progress-mini">
+                            <span id="laProgressText">12 of 32 fields complete</span>
+                            <div class="la-progress-bar-mini"><div class="la-progress-fill-mini" id="laProgressFill" style="width:38%"></div></div>
+                        </div>
+                        <div class="hot-status" id="laStatus">
+                            <span class="hot-status-dot draft"></span>
+                            Draft
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section navigation -->
+                <div class="la-sections-nav">
+                    <button class="la-sec-btn active" data-la-sec="parties">Parties</button>
+                    <button class="la-sec-btn" data-la-sec="premises">Premises</button>
+                    <button class="la-sec-btn" data-la-sec="term">Term &amp; Renewal</button>
+                    <button class="la-sec-btn" data-la-sec="rent">Rent</button>
+                    <button class="la-sec-btn" data-la-sec="reviews">Rent Reviews</button>
+                    <button class="la-sec-btn" data-la-sec="outgoings">Outgoings</button>
+                    <button class="la-sec-btn" data-la-sec="insurance">Insurance</button>
+                    <button class="la-sec-btn" data-la-sec="security">Security</button>
+                    <button class="la-sec-btn" data-la-sec="further">Further Terms</button>
+                    <button class="la-sec-btn" data-la-sec="send">Send &amp; Sign</button>
+                </div>
+
+                <!-- Split pane: left = form, right = preview -->
+                <div class="la-split">
+                    <!-- LEFT: Editable form -->
+                    <div class="la-form-pane">
+                        <!-- Zara recommendation banner (contextual) -->
+                        <div class="la-zara-banner" id="laZaraBanner">
+                            <span class="agent-pip zara" style="width:24px;height:24px;font-size:10px;border-radius:6px;">Z</span>
+                            <div class="la-zara-body">
+                                <strong>Zara's clause recommendations for this property</strong>
+                                <span id="laZaraText">Office lease, Grey Lynn &mdash; Zara recommends including CPI-capped reviews, a 9-month no-access period, and a $5,000 insurance excess (7th Ed. default). 3 clauses auto-applied.</span>
+                            </div>
+                        </div>
+
+                        <!-- PARTIES SECTION -->
+                        <div class="la-section active" data-la-panel="parties">
+                            <div class="la-sec-head">
+                                <h3>Parties &amp; Property</h3>
+                                <span class="la-sec-sub">Items 1-2 of the First Schedule</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Landlord name</label><input type="text" class="la-input" value="Des Radonich Limited" data-la="landlord"></div>
+                                <div class="la-field"><label>Landlord address</label><input type="text" class="la-input" value="PO Box 99-123, Auckland 1149" data-la="landlordAddr"></div>
+                                <div class="la-field"><label>Tenant name</label><input type="text" class="la-input" value="Glenn Cotterill Company Trust" data-la="tenant"></div>
+                                <div class="la-field"><label>Tenant address</label><input type="text" class="la-input" value="33 Crummer Road, Grey Lynn, Auckland 1021" data-la="tenantAddr"></div>
+                                <div class="la-field"><label>Guarantor</label><input type="text" class="la-input" value="Glenn Cotterill (personal guarantee)" data-la="guarantor"></div>
+                                <div class="la-field"><label>Guarantor address</label><input type="text" class="la-input" value="45 West End Road, Westmere, Auckland" data-la="guarantorAddr"></div>
+                            </div>
+                            <div class="la-auto-tag">
+                                <span class="la-auto-pip">Auto</span>
+                                Pulled from Vault RE contact records &middot; Last updated 3 days ago
+                            </div>
+                        </div>
+
+                        <!-- PREMISES SECTION -->
+                        <div class="la-section" data-la-panel="premises">
+                            <div class="la-sec-head">
+                                <h3>Premises</h3>
+                                <span class="la-sec-sub">First Schedule Item 1</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field wide"><label>Description</label><input type="text" class="la-input" value="That part of the building comprising the ground floor and first floor, known as 33 Crummer Road, Grey Lynn" data-la="premisesDesc"></div>
+                                <div class="la-field"><label>Record of Title</label><input type="text" class="la-input" value="NA123A/456" data-la="title"></div>
+                                <div class="la-field"><label>Legal Description</label><input type="text" class="la-input" value="Lot 4 DP 56789" data-la="legalDesc"></div>
+                                <div class="la-field"><label>Lettable Area</label><input type="text" class="la-input" value="306 sqm (subject to BOMA measure)" data-la="area"></div>
+                                <div class="la-field"><label>Car Parks (Item 2)</label><input type="text" class="la-input" value="4 allocated on-site, included in rent" data-la="carparks"></div>
+                            </div>
+                        </div>
+
+                        <!-- TERM SECTION -->
+                        <div class="la-section" data-la-panel="term">
+                            <div class="la-sec-head">
+                                <h3>Term &amp; Renewal</h3>
+                                <span class="la-sec-sub">First Schedule Items 3-8</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Item 3: Term</label><input type="text" class="la-input" value="5 years" data-la="term"></div>
+                                <div class="la-field"><label>Item 4: Commencement</label><input type="text" class="la-input" value="1 September 2026" data-la="commDate"></div>
+                                <div class="la-field"><label>Item 5: Rights of Renewal</label><input type="text" class="la-input" value="1 further term of 3 years" data-la="renewals"></div>
+                                <div class="la-field"><label>Item 6: Renewal Date(s)</label><input type="text" class="la-input" value="1 September 2031" data-la="renewalDates"></div>
+                                <div class="la-field"><label>Item 7: Renewal Notice</label><input type="text" class="la-input" value="6 months (cl 34.1)" data-la="renewalNotice"></div>
+                                <div class="la-field"><label>Item 8: Final Expiry</label><input type="text" class="la-input" value="31 August 2034" data-la="finalExpiry"></div>
+                            </div>
+                            <div class="la-auto-tag">
+                                <span class="la-auto-pip">HoT</span>
+                                Populated from accepted Heads of Terms &middot; HOT-2026-0411-CRM
+                            </div>
+                        </div>
+
+                        <!-- RENT SECTION -->
+                        <div class="la-section" data-la-panel="rent">
+                            <div class="la-sec-head">
+                                <h3>Rent</h3>
+                                <span class="la-sec-sub">First Schedule Items 9-11</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Item 9: Annual Rent (premises)</label><input type="text" class="la-input" value="$92,412.00 + GST" data-la="annualRentPremises"></div>
+                                <div class="la-field"><label>Item 9: Annual Rent (car parks)</label><input type="text" class="la-input" value="Included" data-la="annualRentCarparks"></div>
+                                <div class="la-field"><label>Item 9: Total Annual Rent</label><input type="text" class="la-input" value="$92,412.00 + GST" data-la="annualRentTotal"></div>
+                                <div class="la-field"><label>Item 10: Monthly Rent</label><input type="text" class="la-input" value="$7,701.00 + GST" data-la="monthlyRent"></div>
+                                <div class="la-field"><label>Item 11: Payment Dates</label><input type="text" class="la-input" value="1st day of each calendar month in advance" data-la="paymentDates"></div>
+                                <div class="la-field"><label>Item 32: Deposit</label><input type="text" class="la-input" value="$7,701.00 (1 month advance)" data-la="deposit"></div>
+                            </div>
+                        </div>
+
+                        <!-- RENT REVIEWS SECTION -->
+                        <div class="la-section" data-la-panel="reviews">
+                            <div class="la-sec-head">
+                                <h3>Rent Reviews</h3>
+                                <span class="la-sec-sub">First Schedule Items 12-15</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field wide"><label>Item 12: Review Dates &amp; Type</label><input type="text" class="la-input" value="CPI annually on 1 Sep; Market on renewal date (1 Sep 2031)" data-la="reviewDates"></div>
+                                <div class="la-field"><label>Item 13: Lower Rent Limit</label><input type="text" class="la-input" value="Ratchet — rent cannot fall below preceding period" data-la="lowerLimit"></div>
+                                <div class="la-field"><label>Item 13: Upper Rent Limit</label><input type="text" class="la-input" value="CPI capped at 3% per annum" data-la="upperLimit"></div>
+                                <div class="la-field"><label>Item 14: Interim Rent</label><input type="text" class="la-input" value="Current rent continues until review determined" data-la="interimRent"></div>
+                                <div class="la-field"><label>Item 15: Fixed Adjustment</label><input type="text" class="la-input" value="N/A — CPI applies" data-la="fixedAdj"></div>
+                            </div>
+                            <div class="la-zara-clause">
+                                <span class="agent-pip zara" style="width:20px;height:20px;font-size:9px;border-radius:5px;">Z</span>
+                                <span>Zara: CPI with 3% cap is the most common review structure for Grey Lynn office leases (78% of comparable deals). Ratchet clause protects landlord downside.</span>
+                            </div>
+                        </div>
+
+                        <!-- OUTGOINGS SECTION -->
+                        <div class="la-section" data-la-panel="outgoings">
+                            <div class="la-sec-head">
+                                <h3>Outgoings</h3>
+                                <span class="la-sec-sub">First Schedule Items 16-17</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Item 16: Proportion</label><input type="text" class="la-input" value="100% (single tenancy)" data-la="outgoingsProportion"></div>
+                                <div class="la-field wide"><label>Item 17: Outgoings categories</label>
+                                    <textarea class="la-input la-textarea" data-la="outgoingsCategories" rows="5">1. Rates (territorial authority)
+2. Water and wastewater charges
+3. Insurance — building and public liability
+4. Fire protection systems maintenance
+5. Building warrant of fitness costs
+6. Common area cleaning and maintenance
+7. Lift maintenance and servicing
+8. HVAC servicing and compliance
+9. Grounds and landscaping
+10. Refuse collection
+11. Building management fee (4%)
+12. Body corporate levies (if applicable)
+13. Exterior repainting (7th Ed. addition)</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- INSURANCE SECTION -->
+                        <div class="la-section" data-la-panel="insurance">
+                            <div class="la-sec-head">
+                                <h3>Insurance &amp; Seismic</h3>
+                                <span class="la-sec-sub">First Schedule Items 20-23, 28</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Item 20: Landlord insurance type</label><input type="text" class="la-input" value="Full replacement (cl 24.1)" data-la="insuranceType"></div>
+                                <div class="la-field"><label>Consequential loss period</label><input type="text" class="la-input" value="24 months" data-la="consequentialLoss"></div>
+                                <div class="la-field"><label>Item 21: Insurance excess</label><input type="text" class="la-input" value="$5,000 (7th Ed. default)" data-la="excess"></div>
+                                <div class="la-field"><label>Item 22: Fair proportion of rent</label><input type="text" class="la-input" value="50% (cl 29.2 default)" data-la="fairProportion"></div>
+                                <div class="la-field"><label>Item 23: No-access period</label><input type="text" class="la-input" value="9 months (cl 29.6)" data-la="noAccess"></div>
+                                <div class="la-field"><label>Item 28: Seismic rating</label><input type="text" class="la-input" value="85% NBS (IL2)" data-la="seismic"></div>
+                            </div>
+                            <div class="la-zara-clause">
+                                <span class="agent-pip zara" style="width:20px;height:20px;font-size:9px;border-radius:5px;">Z</span>
+                                <span>Zara: $5,000 excess and 9-month no-access period are the 7th Edition defaults. 85% NBS is above the 67% minimum — premium positioning for this building.</span>
+                            </div>
+                        </div>
+
+                        <!-- SECURITY SECTION -->
+                        <div class="la-section" data-la-panel="security">
+                            <div class="la-sec-head">
+                                <h3>Security</h3>
+                                <span class="la-sec-sub">First Schedule Items 24-27</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Item 24: Bank Guarantee</label><input type="text" class="la-input" value="Yes (cl 38.1(a))" data-la="bankGuarantee"></div>
+                                <div class="la-field"><label>Item 25: Bank Guarantee Amount</label><input type="text" class="la-input" value="3 months gross rent ($26,612.07)" data-la="bankGuaranteeAmt"></div>
+                                <div class="la-field"><label>Item 26: Rental Bond</label><input type="text" class="la-input" value="No" data-la="rentalBond"></div>
+                                <div class="la-field"><label>Item 27: Rental Bond Amount</label><input type="text" class="la-input" value="N/A" data-la="rentalBondAmt"></div>
+                            </div>
+                        </div>
+
+                        <!-- FURTHER TERMS SECTION -->
+                        <div class="la-section" data-la-panel="further">
+                            <div class="la-sec-head">
+                                <h3>Further Terms (Third Schedule)</h3>
+                                <span class="la-sec-sub">Bespoke clauses for this lease</span>
+                            </div>
+                            <div class="la-form-grid">
+                                <div class="la-field"><label>Item 18: Default Interest</label><input type="text" class="la-input" value="OCR + 5% per annum (cl 5.1)" data-la="defaultInterest"></div>
+                                <div class="la-field"><label>Item 19: Business Use</label><input type="text" class="la-input" value="Professional office and ancillary (cl 16.1)" data-la="businessUse"></div>
+                                <div class="la-field"><label>Item 29: Mortgagee Consent</label><input type="text" class="la-input" value="Not required (cl 46.1)" data-la="mortgageeConsent"></div>
+                                <div class="la-field"><label>Item 31: Email (Landlord)</label><input type="text" class="la-input" value="des@radonich.co.nz" data-la="emailLandlord"></div>
+                                <div class="la-field"><label>Item 31: Email (Tenant)</label><input type="text" class="la-input" value="glenn@cotterill.co.nz" data-la="emailTenant"></div>
+                                <div class="la-field wide"><label>Rent-free period</label><textarea class="la-input la-textarea" data-la="rentFree" rows="2">The Tenant shall be entitled to a rent-free period of 2 calendar months from the Commencement Date for the purposes of fit-out. Outgoings apply from the Commencement Date.</textarea></div>
+                                <div class="la-field wide"><label>Make good / reinstatement</label><textarea class="la-input la-textarea" data-la="makeGood" rows="2">The Tenant shall reinstate the Premises to base-build condition at lease end, fair wear and tear excepted. A make-good assessment shall be agreed between the parties no later than 6 months prior to expiry.</textarea></div>
+                                <div class="la-field wide"><label>Assignment / subletting</label><textarea class="la-input la-textarea" data-la="assignment" rows="2">Assignment or subletting permitted with the Landlord's prior written consent, such consent not to be unreasonably withheld or delayed.</textarea></div>
+                            </div>
+                            <div class="la-zara-clause">
+                                <span class="agent-pip zara" style="width:20px;height:20px;font-size:9px;border-radius:5px;">Z</span>
+                                <span>Zara: Based on 847 comparable Grey Lynn office leases, 92% include a make-good clause and 88% specify assignment with landlord consent. These terms are market-standard.</span>
+                            </div>
+                        </div>
+
+                        <!-- SEND & SIGN SECTION -->
+                        <div class="la-section" data-la-panel="send">
+                            <div class="la-sec-head">
+                                <h3>Send &amp; Sign</h3>
+                                <span class="la-sec-sub">Generate the ADLS lease, send for digital execution</span>
+                            </div>
+
+                            <div class="la-send-flow">
+                                <div class="la-send-step-card">
+                                    <div class="la-send-step-num">1</div>
+                                    <div class="la-send-step-body">
+                                        <strong>Generate the ADLS Deed of Lease</strong>
+                                        <span>Walter populates the 7th Edition template with all 32 First Schedule items from this form. The Third Schedule further terms are appended automatically.</span>
+                                    </div>
+                                    <button class="la-generate-btn" id="laGenerateBtn">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                        Generate lease document
+                                    </button>
+                                </div>
+
+                                <div class="la-send-step-card">
+                                    <div class="la-send-step-num">2</div>
+                                    <div class="la-send-step-body">
+                                        <strong>Review &amp; approve</strong>
+                                        <span>The generated document appears in the preview pane (right). Review every page, make final edits, then approve for signing.</span>
+                                    </div>
+                                </div>
+
+                                <div class="la-send-step-card">
+                                    <div class="la-send-step-num">3</div>
+                                    <div class="la-send-step-body">
+                                        <strong>Send for digital execution via LuminPDF</strong>
+                                        <span>All parties receive the lease via email (web link + PDF). Each signs in their designated fields. Walter tracks the signing status in real time.</span>
+                                    </div>
+                                    <button class="la-send-btn" id="laSendBtn" disabled>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                        Send for signing
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Signing status (appears after send) -->
+                            <div class="la-sign-status" id="laSignStatus" style="display:none">
+                                <h4>Signing Status</h4>
+                                <div class="hot-status-cards">
+                                    <div class="hot-status-card">
+                                        <div class="hot-sc-head">
+                                            <span class="hot-send-role owner">Landlord</span>
+                                            <span class="hot-sc-name">Des Radonich Limited</span>
+                                        </div>
+                                        <div class="hot-sc-timeline">
+                                            <div class="hot-sc-event done"><span class="hot-sc-tick">&#10003;</span><div><strong>Document sent</strong><span>Via LuminPDF</span></div></div>
+                                            <div class="hot-sc-event active"><span class="hot-sc-tick pulse">&#9679;</span><div><strong>Awaiting signature</strong><span>4 signature fields</span></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="hot-status-card">
+                                        <div class="hot-sc-head">
+                                            <span class="hot-send-role tenant">Tenant</span>
+                                            <span class="hot-sc-name">Glenn Cotterill Company Trust</span>
+                                        </div>
+                                        <div class="hot-sc-timeline">
+                                            <div class="hot-sc-event done"><span class="hot-sc-tick">&#10003;</span><div><strong>Document sent</strong><span>Via LuminPDF</span></div></div>
+                                            <div class="hot-sc-event active"><span class="hot-sc-tick pulse">&#9679;</span><div><strong>Awaiting signature</strong><span>4 signature fields</span></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Live ADLS document preview -->
+                    <div class="la-preview-pane">
+                        <div class="la-preview-header">
+                            <span class="la-preview-label">Live preview &mdash; ADLS 7th Edition</span>
+                            <div class="la-preview-actions">
+                                <button class="la-preview-btn" title="Download PDF">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                </button>
+                                <button class="la-preview-btn" title="Print">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="la-preview-doc" id="laPreviewDoc">
+                            <div class="la-doc-page">
+                                <div class="la-doc-adls-header">
+                                    <div class="la-doc-edition">Deed of Lease &middot; Seventh Edition 2024</div>
+                                    <div class="la-doc-approved">Approved by Auckland District Law Society Inc.</div>
+                                </div>
+                                <h3 class="la-doc-h3">FIRST SCHEDULE</h3>
+                                <table class="la-doc-table" id="laDocTable">
+                                    <!-- Populated by JS -->
+                                </table>
+                                <div class="la-doc-watermark">DRAFT &mdash; Subject to execution</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ HEADS OF TERMS GENERATOR MODAL ============ -->
+        <div class="modal-overlay" id="hotModal">
+            <div class="modal-content hot-modal">
+                <button class="modal-close" id="hotClose">&times;</button>
+
+                <!-- Top header -->
+                <div class="hot-header">
+                    <div class="hot-header-left">
+                        <div class="hot-header-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            Heads of Terms
+                        </div>
+                        <h2 id="hotTitle">33 Crummer Road, Grey Lynn</h2>
+                        <p class="hot-sub">Draft key terms and conditions for tenant and owner acknowledgement &mdash; powered by Walter's LLM and Brittany's captured conversations.</p>
+                    </div>
+                    <div class="hot-header-right">
+                        <div class="hot-status" id="hotStatus">
+                            <span class="hot-status-dot draft"></span>
+                            Draft
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs: Edit | Preview | Send | Status -->
+                <div class="hot-tabs">
+                    <button class="hot-tab active" data-hot-tab="edit">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        Edit Terms
+                    </button>
+                    <button class="hot-tab" data-hot-tab="preview">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Preview
+                    </button>
+                    <button class="hot-tab" data-hot-tab="send">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Send
+                    </button>
+                    <button class="hot-tab" data-hot-tab="status">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                        Signing Status
+                    </button>
+                </div>
+
+                <div class="hot-body">
+
+                    <!-- ============ EDIT TAB ============ -->
+                    <div class="hot-panel active" data-hot-panel="edit">
+                        <!-- AI-generated banner -->
+                        <div class="hot-ai-banner">
+                            <div class="hot-ai-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                            </div>
+                            <div>
+                                <strong>Auto-generated from Walter's LLM + Brittany's capture data</strong>
+                                <span>All fields are editable. Walter has pulled property details from Vault RE, tenant/owner contacts from CRM, and verbal agreements captured by Brittany across email, WhatsApp and phone calls.</span>
+                            </div>
+                        </div>
+
+                        <!-- Editable form sections -->
+                        <div class="hot-form">
+                            <div class="hot-section-title">Parties</div>
+                            <div class="hot-form-grid">
+                                <div class="hot-field">
+                                    <label>Landlord / Owner</label>
+                                    <input type="text" class="hot-input" value="Des Radonich Limited" data-hot="landlord">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Landlord Solicitor</label>
+                                    <input type="text" class="hot-input" value="Morrison Kent, Auckland" data-hot="landlordSolicitor">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Tenant</label>
+                                    <input type="text" class="hot-input" value="Glenn Cotterill Company Trust" data-hot="tenant">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Tenant Solicitor</label>
+                                    <input type="text" class="hot-input" value="Simpson Grierson, Auckland" data-hot="tenantSolicitor">
+                                </div>
+                            </div>
+
+                            <div class="hot-section-title">Premises</div>
+                            <div class="hot-form-grid">
+                                <div class="hot-field wide">
+                                    <label>Address</label>
+                                    <input type="text" class="hot-input" value="33 Crummer Road, Grey Lynn, Auckland" data-hot="address">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Area (sqm)</label>
+                                    <input type="text" class="hot-input" value="306" data-hot="area">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Type</label>
+                                    <input type="text" class="hot-input" value="Office" data-hot="type">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Car Parks</label>
+                                    <input type="text" class="hot-input" value="4 on-site (allocated)" data-hot="carparks">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Permitted Use</label>
+                                    <input type="text" class="hot-input" value="Professional office and ancillary" data-hot="use">
+                                </div>
+                            </div>
+
+                            <div class="hot-section-title">Term &amp; Renewals</div>
+                            <div class="hot-form-grid">
+                                <div class="hot-field">
+                                    <label>Initial Term</label>
+                                    <input type="text" class="hot-input" value="5 years" data-hot="term">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Rights of Renewal</label>
+                                    <input type="text" class="hot-input" value="1 x 3 years" data-hot="renewals">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Commencement Date</label>
+                                    <input type="text" class="hot-input" value="1 September 2026" data-hot="commDate">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Final Expiry</label>
+                                    <input type="text" class="hot-input" value="31 August 2034" data-hot="expiryDate">
+                                </div>
+                            </div>
+
+                            <div class="hot-section-title">Rent</div>
+                            <div class="hot-form-grid">
+                                <div class="hot-field">
+                                    <label>Annual Rent</label>
+                                    <input type="text" class="hot-input" value="$92,412.00 + GST" data-hot="annualRent">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Rate ($/sqm)</label>
+                                    <input type="text" class="hot-input" value="$302" data-hot="rate">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Rent Free Period</label>
+                                    <input type="text" class="hot-input" value="2 months (fit-out)" data-hot="rentFree">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Payment</label>
+                                    <input type="text" class="hot-input" value="Monthly in advance, 1st of month" data-hot="payment">
+                                </div>
+                            </div>
+
+                            <div class="hot-section-title">Rent Reviews</div>
+                            <div class="hot-form-grid">
+                                <div class="hot-field">
+                                    <label>Annual Review</label>
+                                    <input type="text" class="hot-input" value="CPI (capped at 3%)" data-hot="annualReview">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Market Review</label>
+                                    <input type="text" class="hot-input" value="On renewal, ratchet applies" data-hot="marketReview">
+                                </div>
+                            </div>
+
+                            <div class="hot-section-title">Outgoings &amp; Insurance</div>
+                            <div class="hot-form-grid">
+                                <div class="hot-field wide">
+                                    <label>Outgoings</label>
+                                    <textarea class="hot-input hot-textarea" data-hot="outgoings" rows="3">Tenant pays a proportionate share of building outgoings including rates, insurance, building maintenance, cleaning of common areas, fire safety compliance, and body corporate levies. Structural repairs remain the landlord's responsibility.</textarea>
+                                </div>
+                                <div class="hot-field">
+                                    <label>Tenant Insurance</label>
+                                    <input type="text" class="hot-input" value="Public liability $10M, plate glass, business interruption" data-hot="tenantInsurance">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Bond / Guarantee</label>
+                                    <input type="text" class="hot-input" value="Bank guarantee, 3 months gross rent" data-hot="bond">
+                                </div>
+                            </div>
+
+                            <div class="hot-section-title">Additional Terms</div>
+                            <div class="hot-form-grid">
+                                <div class="hot-field wide">
+                                    <label>Fit-out &amp; Works</label>
+                                    <textarea class="hot-input hot-textarea" data-hot="fitout" rows="2">Tenant's fit-out at tenant's cost. Landlord provides premises in base-build condition with HVAC, fire systems, lighting, and floor coverings to existing standard.</textarea>
+                                </div>
+                                <div class="hot-field wide">
+                                    <label>Make Good / Reinstatement</label>
+                                    <textarea class="hot-input hot-textarea" data-hot="makeGood" rows="2">Tenant to reinstate premises to base-build condition at lease end, fair wear and tear excepted. Make-good assessment to be agreed 6 months prior to expiry.</textarea>
+                                </div>
+                                <div class="hot-field">
+                                    <label>Assignment / Subletting</label>
+                                    <input type="text" class="hot-input" value="With landlord's consent (not to be unreasonably withheld)" data-hot="assignment">
+                                </div>
+                                <div class="hot-field">
+                                    <label>Default Interest</label>
+                                    <input type="text" class="hot-input" value="OCR + 5% per annum" data-hot="defaultInterest">
+                                </div>
+                            </div>
+
+                            <!-- Brittany-captured verbal agreements -->
+                            <div class="hot-brittany-card">
+                                <div class="hot-brittany-head">
+                                    <span class="hot-brittany-pip">B</span>
+                                    <div>
+                                        <strong>Brittany captured 3 verbal agreements</strong>
+                                        <span>From phone calls and WhatsApp messages in the last 30 days &mdash; auto-included above.</span>
+                                    </div>
+                                </div>
+                                <div class="hot-brittany-items">
+                                    <div class="hot-brittany-item">
+                                        <span class="hot-bi-ch calls">Call</span>
+                                        <span class="hot-bi-text">"Glenn confirmed he's happy with 5+3 term and $302/sqm" &mdash; 12 Mar via phone</span>
+                                    </div>
+                                    <div class="hot-brittany-item">
+                                        <span class="hot-bi-ch whatsapp">WA</span>
+                                        <span class="hot-bi-text">"Des agreed to 2 months rent-free for fit-out" &mdash; 8 Mar via WhatsApp</span>
+                                    </div>
+                                    <div class="hot-brittany-item">
+                                        <span class="hot-bi-ch email">Email</span>
+                                        <span class="hot-bi-text">"Both parties agree CPI review capped at 3%" &mdash; 5 Mar via email thread</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hot-disclaimer">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                This document records agreed commercial terms only and is not legally binding. These Heads of Terms are subject to the preparation and execution of a formal lease agreement on the ADLS template.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ PREVIEW TAB ============ -->
+                    <div class="hot-panel" data-hot-panel="preview">
+                        <div class="hot-preview-wrap">
+                            <div class="hot-preview-doc" id="hotPreviewDoc">
+                                <div class="hot-doc-header">
+                                    <img src="bayleys-logo.png" alt="Bayleys" class="hot-doc-logo">
+                                    <div class="hot-doc-title-block">
+                                        <h3>Heads of Terms</h3>
+                                        <p>Commercial Lease &mdash; Key Terms &amp; Conditions</p>
+                                    </div>
+                                    <div class="hot-doc-ref">
+                                        <span>Ref: HOT-2026-0411-CRM</span>
+                                        <span>Date: 11 April 2026</span>
+                                    </div>
+                                </div>
+                                <div class="hot-doc-body" id="hotDocBody">
+                                    <!-- Populated by JS from form fields -->
+                                </div>
+                                <div class="hot-doc-footer">
+                                    <div class="hot-doc-sig">
+                                        <div class="hot-sig-block">
+                                            <strong>Prepared by</strong>
+                                            <p>Will Alexander<br>Head of Innovation | National Director<br>Bayleys Real Estate<br>will.alexander@bayleys.co.nz<br>+64 21 661 234</p>
+                                        </div>
+                                    </div>
+                                    <div class="hot-doc-disclaimer">This document records the agreed commercial terms and is subject to the preparation and execution of formal lease documentation on the ADLS template.</div>
+                                    <div class="hot-doc-branding">
+                                        <img src="bayleys-logo.png" alt="Bayleys" style="height:18px;opacity:0.5;">
+                                        <span>Walter Intelligence</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ SEND TAB ============ -->
+                    <div class="hot-panel" data-hot-panel="send">
+                        <div class="hot-send-options">
+                            <h4>Send to both parties for acknowledgement</h4>
+                            <p class="hot-send-sub">The Heads of Terms will be sent via email with a link to an interactive web page where the owner and tenant can review and toggle their agreement. Digital signatures powered by LuminPDF.</p>
+
+                            <div class="hot-send-grid">
+                                <!-- Owner -->
+                                <div class="hot-send-card">
+                                    <div class="hot-send-card-head">
+                                        <span class="hot-send-role owner">Owner</span>
+                                        <span class="hot-send-name" id="hotSendOwner">Des Radonich Limited</span>
+                                    </div>
+                                    <div class="hot-send-field">
+                                        <label>Email</label>
+                                        <input type="text" class="hot-input" value="des@radonich.co.nz">
+                                    </div>
+                                    <div class="hot-send-field">
+                                        <label>Send as</label>
+                                        <div class="hot-send-toggles">
+                                            <label class="hot-send-toggle active"><input type="checkbox" checked> Web link</label>
+                                            <label class="hot-send-toggle active"><input type="checkbox" checked> PDF attachment</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tenant -->
+                                <div class="hot-send-card">
+                                    <div class="hot-send-card-head">
+                                        <span class="hot-send-role tenant">Tenant</span>
+                                        <span class="hot-send-name" id="hotSendTenant">Glenn Cotterill Company Trust</span>
+                                    </div>
+                                    <div class="hot-send-field">
+                                        <label>Email</label>
+                                        <input type="text" class="hot-input" value="glenn@cotterill.co.nz">
+                                    </div>
+                                    <div class="hot-send-field">
+                                        <label>Send as</label>
+                                        <div class="hot-send-toggles">
+                                            <label class="hot-send-toggle active"><input type="checkbox" checked> Web link</label>
+                                            <label class="hot-send-toggle active"><input type="checkbox" checked> PDF attachment</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- LuminPDF integration -->
+                            <div class="hot-lumin-card">
+                                <div class="hot-lumin-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                </div>
+                                <div class="hot-lumin-body">
+                                    <strong>Digital signatures via LuminPDF</strong>
+                                    <span>Both parties will receive a simple acknowledgement toggle &mdash; "I agree to these Heads of Terms". No wet signature required. SOC 2 compliant, eIDAS certified.</span>
+                                </div>
+                                <span class="hot-lumin-status connected">Connected</span>
+                            </div>
+
+                            <!-- Engagement tracking -->
+                            <div class="hot-tracking-row">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <span>Engagement tracking enabled &mdash; you'll be notified when each party opens and acknowledges</span>
+                            </div>
+
+                            <div class="hot-send-actions">
+                                <button class="hot-send-btn" id="hotSendBtn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                    Send to both parties via Outlook 365
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ SIGNING STATUS TAB ============ -->
+                    <div class="hot-panel" data-hot-panel="status">
+                        <div class="hot-status-wrap">
+                            <!-- Progress bar -->
+                            <div class="hot-progress">
+                                <div class="hot-progress-bar">
+                                    <div class="hot-progress-fill" id="hotProgressFill" style="width:66%"></div>
+                                </div>
+                                <div class="hot-progress-labels">
+                                    <span class="done">Drafted</span>
+                                    <span class="done">Sent</span>
+                                    <span class="active">Awaiting</span>
+                                    <span>Complete</span>
+                                </div>
+                            </div>
+
+                            <div class="hot-status-cards">
+                                <!-- Owner status -->
+                                <div class="hot-status-card">
+                                    <div class="hot-sc-head">
+                                        <span class="hot-send-role owner">Owner</span>
+                                        <span class="hot-sc-name">Des Radonich Limited</span>
+                                    </div>
+                                    <div class="hot-sc-timeline">
+                                        <div class="hot-sc-event done">
+                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <div>
+                                                <strong>Email sent</strong>
+                                                <span>11 Apr 2026, 2:34 PM</span>
+                                            </div>
+                                        </div>
+                                        <div class="hot-sc-event done">
+                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <div>
+                                                <strong>Opened</strong>
+                                                <span>11 Apr 2026, 3:12 PM &middot; Read 4m 22s</span>
+                                            </div>
+                                        </div>
+                                        <div class="hot-sc-event active">
+                                            <span class="hot-sc-tick pulse">&#9679;</span>
+                                            <div>
+                                                <strong>Awaiting acknowledgement</strong>
+                                                <span>Reminder sent 12 Apr 2026, 9:00 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tenant status -->
+                                <div class="hot-status-card">
+                                    <div class="hot-sc-head">
+                                        <span class="hot-send-role tenant">Tenant</span>
+                                        <span class="hot-sc-name">Glenn Cotterill Company Trust</span>
+                                    </div>
+                                    <div class="hot-sc-timeline">
+                                        <div class="hot-sc-event done">
+                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <div>
+                                                <strong>Email sent</strong>
+                                                <span>11 Apr 2026, 2:34 PM</span>
+                                            </div>
+                                        </div>
+                                        <div class="hot-sc-event done">
+                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <div>
+                                                <strong>Opened</strong>
+                                                <span>11 Apr 2026, 2:48 PM &middot; Read 8m 14s</span>
+                                            </div>
+                                        </div>
+                                        <div class="hot-sc-event done">
+                                            <span class="hot-sc-tick">&#10003;</span>
+                                            <div>
+                                                <strong>Acknowledged &mdash; "I agree"</strong>
+                                                <span>11 Apr 2026, 3:02 PM &middot; via LuminPDF</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Next step CTA -->
+                            <div class="hot-next-step">
+                                <div class="hot-next-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                </div>
+                                <div class="hot-next-body">
+                                    <strong>Next: Generate Lease Agreement</strong>
+                                    <span>Once both parties acknowledge, Walter will draft the formal lease on the ADLS template using these agreed Heads of Terms as the instruction set.</span>
+                                </div>
+                                <button class="hot-next-btn" disabled>Waiting for owner&hellip;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Feedback Modal -->
         <div class="modal-overlay" id="feedbackModal">
             <div class="modal-content feedback-modal">
@@ -5899,6 +6666,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=30"></script>
+    <script src="app.js?v=32"></script>
 </body>
 </html>
