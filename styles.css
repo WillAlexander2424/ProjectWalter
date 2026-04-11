@@ -665,6 +665,245 @@ body {
     100% { transform: scale(2.2); opacity: 0; }
 }
 
+/* ============ FEEDBACK — BRITTANY AUTO-DEPLOY STAGE ============ */
+.fb-stage-deploy { text-align: left; padding: 30px 36px 28px; }
+.fb-deploy-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+.fb-deploy-avatar {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.fb-deploy-avatar > span {
+    position: relative;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ec4899, #a855f7, #6366f1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: 0 8px 24px rgba(236,72,153,0.4);
+}
+.fb-deploy-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(236,72,153,0.5);
+    opacity: 0;
+    animation: brittanyRing 3s ease-out infinite;
+}
+.fb-deploy-ring.d2 { animation-delay: 1.5s; border-color: rgba(139,92,246,0.4); }
+.fb-deploy-title-wrap { flex: 1; }
+.fb-deploy-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 3px;
+    letter-spacing: -0.3px;
+}
+.fb-deploy-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* Triage card */
+.fb-deploy-triage {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.fb-triage-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+.fb-triage-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.fb-triage-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.fb-triage-low {
+    color: #047857;
+    background: rgba(16,185,129,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+}
+.fb-triage-yes {
+    color: #047857;
+    font-weight: 700;
+}
+
+/* Deploy steps */
+.fb-deploy-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.fb-deploy-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.fb-deploy-step.active { color: var(--text-primary); font-weight: 600; }
+.fb-deploy-step.done { color: #047857; }
+.fb-ds-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1.5px solid var(--border);
+    color: var(--border);
+    transition: all 0.3s;
+}
+.fb-deploy-step.active .fb-ds-icon {
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+    animation: fbDeployPulse 1.2s ease-in-out infinite;
+}
+.fb-deploy-step.done .fb-ds-icon {
+    background: #10b981;
+    border-color: #10b981;
+    color: white;
+    box-shadow: none;
+    animation: none;
+}
+@keyframes fbDeployPulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(139,92,246,0.12); }
+    50% { box-shadow: 0 0 0 6px rgba(139,92,246,0.06); }
+}
+
+/* Code preview */
+.fb-deploy-code {
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    animation: fbCodeIn 0.4s ease;
+}
+@keyframes fbCodeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.fb-code-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.fb-code-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+.fb-code-dot.red { background: #ef4444; }
+.fb-code-dot.yellow { background: #f59e0b; }
+.fb-code-dot.green { background: #10b981; }
+.fb-code-filename {
+    flex: 1;
+    text-align: center;
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.fb-code-body {
+    padding: 14px 18px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    white-space: pre-wrap;
+    max-height: 140px;
+    overflow-y: auto;
+    margin: 0;
+}
+.fb-code-body .code-add { color: #10b981; }
+.fb-code-body .code-remove { color: #ef4444; text-decoration: line-through; opacity: 0.6; }
+.fb-code-body .code-comment { color: #6b7280; font-style: italic; }
+
+/* Deploy complete banner */
+.fb-deploy-done {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(59,130,246,0.06));
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 10px;
+    animation: fbDoneIn 0.5s ease;
+}
+@keyframes fbDoneIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.fb-deploy-done-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #10b981;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px rgba(16,185,129,0.3);
+}
+.fb-deploy-done-body strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+.fb-deploy-done-body p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+}
+
 /* Collapsible "show more" activities */
 .activity-more {
     display: flex;

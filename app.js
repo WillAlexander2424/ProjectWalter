@@ -3263,6 +3263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fbStageCompose.classList.add('active');
         fbStageThinking.classList.remove('active');
         fbStageResponse.classList.remove('active');
+        fbStageDeploy?.classList.remove('active');
         if (fbInput) fbInput.value = '';
         if (fbCharCount) fbCharCount.textContent = '0 chars';
         document.querySelectorAll('.fb-thinking-step').forEach(s => s.classList.remove('visible'));
@@ -3312,18 +3313,199 @@ document.addEventListener('DOMContentLoaded', () => {
         runFeedbackFlow(text);
     });
 
+    // --- Brittany auto-deploy triage logic ---
+    const fbStageDeploy = document.getElementById('fbStageDeploy');
+
+    // Deployable feedback patterns — each with a simulated code diff and deploy description
+    const DEPLOYABLE_FEEDBACK = [
+        {
+            keywords: ['sort', 'order', 'alphabetical', 'a-z'],
+            count: 7,
+            complexity: 'Low · Sort order change',
+            desc: 'Added alphabetical sort option to the properties table. Agents can now click any column header to sort A-Z or Z-A.',
+            filename: 'app.js',
+            code: `<span class="code-comment">// Sort toggle on properties table</span>\n<span class="code-add">+ const headers = document.querySelectorAll('.properties-table th');</span>\n<span class="code-add">+ headers.forEach(th => {</span>\n<span class="code-add">+   th.style.cursor = 'pointer';</span>\n<span class="code-add">+   th.addEventListener('click', () => sortTable(th));</span>\n<span class="code-add">+ });</span>`
+        },
+        {
+            keywords: ['colour', 'color', 'theme', 'contrast', 'readability'],
+            count: 6,
+            complexity: 'Low · CSS variable update',
+            desc: 'Increased text contrast on secondary labels from 0.55 to 0.7 opacity. Better readability across all views.',
+            filename: 'styles.css',
+            code: `<span class="code-comment">/* Improved text contrast per agent feedback */</span>\n<span class="code-remove">- --text-secondary: #6b7280;</span>\n<span class="code-add">+ --text-secondary: #4b5563;</span>\n<span class="code-remove">- --text-tertiary: #9ca3af;</span>\n<span class="code-add">+ --text-tertiary: #6b7280;</span>`
+        },
+        {
+            keywords: ['font', 'text size', 'small text', 'too small', 'bigger', 'larger'],
+            count: 9,
+            complexity: 'Low · Font scale adjustment',
+            desc: 'Bumped the base font size from 14px to 15px across all views. Tables and cards now render at a more comfortable reading size.',
+            filename: 'styles.css',
+            code: `<span class="code-comment">/* Font size bump — 9 agents requested */</span>\n<span class="code-remove">- html { font-size: 14px; }</span>\n<span class="code-add">+ html { font-size: 15px; }</span>\n<span class="code-remove">- .properties-table td { font-size: 12.5px; }</span>\n<span class="code-add">+ .properties-table td { font-size: 13.5px; }</span>`
+        },
+        {
+            keywords: ['filter', 'search', 'find', 'can\'t find', 'hard to find'],
+            count: 5,
+            complexity: 'Low · UI addition',
+            desc: 'Added a persistent search bar to the top of the properties table. Live-filters across address, tenant, and region as you type.',
+            filename: 'index.html',
+            code: `<span class="code-comment">&lt;!-- Search bar added to properties --&gt;</span>\n<span class="code-add">+ &lt;input type="text" class="mp-search"</span>\n<span class="code-add">+   placeholder="Search address, tenant..."</span>\n<span class="code-add">+   id="propQuickSearch"&gt;</span>\n<span class="code-comment">// Live filter wired to table rows</span>\n<span class="code-add">+ input.addEventListener('input', filterRows);</span>`
+        },
+        {
+            keywords: ['slow', 'loading', 'performance', 'lag', 'speed'],
+            count: 8,
+            complexity: 'Low · Performance optimisation',
+            desc: 'Lazy-loaded listing images and deferred non-critical CSS. Page load time reduced by ~40% on slower connections.',
+            filename: 'index.html',
+            code: `<span class="code-comment">&lt;!-- Lazy load images --&gt;</span>\n<span class="code-remove">- &lt;img src="listing-parnell.jpg"&gt;</span>\n<span class="code-add">+ &lt;img src="listing-parnell.jpg" loading="lazy"&gt;</span>\n<span class="code-comment">&lt;!-- Defer non-critical CSS --&gt;</span>\n<span class="code-add">+ &lt;link rel="preload" as="style" href="styles.css"&gt;</span>`
+        },
+        {
+            keywords: ['tooltip', 'hover', 'explain', 'what does', 'help text', 'confus'],
+            count: 6,
+            complexity: 'Low · Tooltip addition',
+            desc: 'Added contextual tooltips to stickiness bars, status badges, and agent pips across the properties table and home dashboard.',
+            filename: 'app.js',
+            code: `<span class="code-comment">// Contextual tooltips for data elements</span>\n<span class="code-add">+ document.querySelectorAll('.stickiness-bar')</span>\n<span class="code-add">+   .forEach(bar => {</span>\n<span class="code-add">+     const pct = bar.querySelector('.stickiness-fill');</span>\n<span class="code-add">+     bar.title = \`Stickiness: \${pct.style.width}\`;</span>\n<span class="code-add">+   });</span>`
+        },
+        {
+            keywords: ['print', 'printer', 'hard copy'],
+            count: 5,
+            complexity: 'Low · CSS print stylesheet',
+            desc: 'Added a print stylesheet for Strategy Cards and lease reviews. Hit Ctrl+P on any analysis view and it formats perfectly for A4.',
+            filename: 'styles.css',
+            code: `<span class="code-comment">/* Print stylesheet for Strategy Cards */</span>\n<span class="code-add">+ @media print {</span>\n<span class="code-add">+   .sidebar, .walter-fab, .modal-close { display: none; }</span>\n<span class="code-add">+   .strategy-card { box-shadow: none; border: 1px solid #ddd; }</span>\n<span class="code-add">+   body { background: white; font-size: 12pt; }</span>\n<span class="code-add">+ }</span>`
+        }
+    ];
+
+    function triageFeedback(text) {
+        const t = text.toLowerCase();
+        return DEPLOYABLE_FEEDBACK.find(d => d.keywords.some(k => t.includes(k)));
+    }
+
+    function runDeployFlow(deployData) {
+        const stepsEl = fbStageDeploy.querySelectorAll('.fb-deploy-step');
+        const codeEl = document.getElementById('fbDeployCode');
+        const codeBodyEl = document.getElementById('fbCodeBody');
+        const filenameEl = document.getElementById('fbCodeFilename');
+        const doneEl = document.getElementById('fbDeployDone');
+        const doneDescEl = document.getElementById('fbDeployDoneDesc');
+        const triageCountEl = document.getElementById('fbTriageCount');
+        const triageComplexityEl = document.getElementById('fbTriageComplexity');
+
+        // Set triage details
+        if (triageCountEl) triageCountEl.textContent = deployData.count + ' agents reported this';
+        if (triageComplexityEl) triageComplexityEl.textContent = deployData.complexity;
+
+        // Reset
+        stepsEl.forEach(s => { s.classList.remove('active', 'done'); });
+        if (codeEl) codeEl.style.display = 'none';
+        if (doneEl) doneEl.style.display = 'none';
+
+        // Animate steps sequentially
+        const stepTimings = [400, 1800, 3200, 4400];
+        const doneTimings = [1400, 3000, 4200, 5200];
+
+        stepTimings.forEach((delay, i) => {
+            setTimeout(() => {
+                stepsEl[i]?.classList.add('active');
+                // Show code preview at step 2 (writing the change)
+                if (i === 1 && codeEl) {
+                    codeEl.style.display = '';
+                    if (filenameEl) filenameEl.textContent = deployData.filename;
+                    if (codeBodyEl) codeBodyEl.innerHTML = deployData.code;
+                }
+            }, delay);
+        });
+
+        doneTimings.forEach((delay, i) => {
+            setTimeout(() => {
+                stepsEl[i]?.classList.remove('active');
+                stepsEl[i]?.classList.add('done');
+                const textEl = stepsEl[i]?.querySelector('.fb-ds-text');
+                if (textEl) textEl.textContent = textEl.textContent.replace('…', ' — done');
+            }, delay);
+        });
+
+        // Show deploy complete
+        setTimeout(() => {
+            if (doneEl) doneEl.style.display = 'flex';
+            if (doneDescEl) doneDescEl.textContent = deployData.desc;
+        }, 5600);
+    }
+
     function runFeedbackFlow(text) {
         fbStageCompose.classList.remove('active');
-        fbStageThinking.classList.add('active');
-        const steps = document.querySelectorAll('.fb-thinking-step');
-        steps.forEach((s, i) => {
-            setTimeout(() => s.classList.add('visible'), 350 + i * 500);
-        });
-        setTimeout(() => {
-            fbStageThinking.classList.remove('active');
-            fbStageResponse.classList.add('active');
-            renderFeedbackResponse(text);
-        }, 2200);
+
+        // Check if this feedback is auto-deployable
+        const deployMatch = triageFeedback(text);
+
+        if (deployMatch) {
+            // Route through the extended thinking → deploy → response flow
+            fbStageThinking.classList.add('active');
+            const thinkTitle = document.getElementById('fbThinkingTitle');
+            const thinkSteps = document.getElementById('fbThinkingSteps');
+            if (thinkTitle) thinkTitle.textContent = 'Walter is analysing your feedback…';
+            if (thinkSteps) {
+                thinkSteps.innerHTML = `
+                    <div class="fb-thinking-step" data-step="1"><span class="fb-step-tick">&#10003;</span> Matched against 1,247 prior submissions</div>
+                    <div class="fb-thinking-step" data-step="2"><span class="fb-step-tick">&#10003;</span> ${deployMatch.count} agents reported the same thing</div>
+                    <div class="fb-thinking-step" data-step="3"><span class="fb-step-tick">&#10003;</span> Complexity assessed: ${deployMatch.complexity}</div>
+                    <div class="fb-thinking-step" data-step="4"><span class="fb-step-tick">&#10003;</span> Routing to Brittany for auto-deploy</div>
+                `;
+            }
+            const steps = thinkSteps?.querySelectorAll('.fb-thinking-step') || [];
+            steps.forEach((s, i) => {
+                setTimeout(() => s.classList.add('visible'), 300 + i * 450);
+            });
+
+            // After thinking, show Brittany deploy stage
+            setTimeout(() => {
+                fbStageThinking.classList.remove('active');
+                fbStageDeploy?.classList.add('active');
+                runDeployFlow(deployMatch);
+            }, 2400);
+
+            // After deploy completes, show Walter's response (with deploy context)
+            setTimeout(() => {
+                fbStageDeploy?.classList.remove('active');
+                fbStageResponse.classList.add('active');
+                const titleEl = document.getElementById('fbResponseTitle');
+                const bodyEl = document.getElementById('fbResponseBody');
+                const extrasEl = document.getElementById('fbResponseExtras');
+                titleEl.textContent = 'Done — Brittany shipped it';
+                bodyEl.innerHTML = `Your feedback matched <strong>${deployMatch.count} other agents</strong> this week. Brittany assessed the complexity as low-risk, wrote the change, ran automated tests, and deployed it &mdash; all in under 10 seconds.<br><br>The fix is <strong>live right now</strong> across all Bayleys agents. No page refresh needed.<br><br>&mdash; Walter`;
+                extrasEl.innerHTML = `
+                    <div class="fb-popularity" style="background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(236,72,153,0.08));border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:14px 16px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:12px;flex-shrink:0;">B</span>
+                            <span style="font-size:12px;color:var(--text-secondary);">Brittany auto-deployed &middot; ${deployMatch.filename} &middot; ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
+                        </div>
+                    </div>
+                `;
+            }, 8400);
+
+        } else {
+            // Standard feedback flow (no deploy)
+            fbStageThinking.classList.add('active');
+            const thinkTitle = document.getElementById('fbThinkingTitle');
+            const thinkSteps = document.getElementById('fbThinkingSteps');
+            if (thinkTitle) thinkTitle.textContent = 'Walter is reading your feedback…';
+            if (thinkSteps) {
+                thinkSteps.innerHTML = `
+                    <div class="fb-thinking-step" data-step="1"><span class="fb-step-tick">&#10003;</span> Matching against 1,247 prior submissions</div>
+                    <div class="fb-thinking-step" data-step="2"><span class="fb-step-tick">&#10003;</span> Checking against current roadmap</div>
+                    <div class="fb-thinking-step" data-step="3"><span class="fb-step-tick">&#10003;</span> Preparing response</div>
+                `;
+            }
+            const steps = thinkSteps?.querySelectorAll('.fb-thinking-step') || [];
+            steps.forEach((s, i) => {
+                setTimeout(() => s.classList.add('visible'), 350 + i * 500);
+            });
+            setTimeout(() => {
+                fbStageThinking.classList.remove('active');
+                fbStageResponse.classList.add('active');
+                renderFeedbackResponse(text);
+            }, 2200);
+        }
     }
 
     function renderFeedbackResponse(text) {
