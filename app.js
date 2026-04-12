@@ -4978,45 +4978,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('advisoryPrompt')?.classList.add('dismissed');
     });
 
-    // --- My Properties: Inline Status Chips ---
-    (function addStatusChips() {
-        const chipMap = {
-            'At Risk': { text: 'At Risk', cls: 'chip-at-risk' },
-            'Expansion': { text: 'Expansion', cls: 'chip-expansion' },
-            'New': { text: 'New Signal', cls: 'chip-new' },
-            'Stable': { text: 'Stable', cls: 'chip-stable' },
-            'Expiring': { text: 'Expiring', cls: 'chip-expiring' },
-        };
-        document.querySelectorAll('#view-properties .properties-table tbody tr').forEach(row => {
-            const cells = row.querySelectorAll('td');
-            if (cells.length < 8) return;
-            const addrCell = cells[0];
-            if (!addrCell || addrCell.querySelector('.prop-status-chip')) return;
-
-            // Read the status text from the correct column (varies by table, check multiple)
-            let statusText = '';
-            for (let i = cells.length - 1; i >= 5; i--) {
-                const t = cells[i]?.textContent?.trim();
-                if (t && Object.keys(chipMap).some(k => t.includes(k))) {
-                    statusText = t;
-                    break;
-                }
-            }
-
-            let chipInfo = chipMap['Stable']; // default
-            for (const [key, info] of Object.entries(chipMap)) {
-                if (statusText.includes(key)) {
-                    chipInfo = info;
-                    break;
-                }
-            }
-
-            const chip = document.createElement('span');
-            chip.className = 'prop-status-chip ' + chipInfo.cls;
-            chip.textContent = chipInfo.text;
-            addrCell.appendChild(chip);
-        });
-    })();
+    // --- My Properties: Status chips removed (STATUS column already present) ---
 
     // --- Settings: Add hero sections to non-Contactless tabs ---
     (function polishSettingsTabs() {
