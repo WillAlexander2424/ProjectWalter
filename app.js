@@ -4946,10 +4946,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Priority Banner Dismiss ---
+    // --- Priority Banner ---
     document.getElementById('priorityBannerDismiss')?.addEventListener('click', () => {
         document.getElementById('priorityBanner')?.classList.add('dismissed');
     });
+    document.querySelector('.priority-banner-cta')?.addEventListener('click', () => {
+        document.getElementById('strategyModal')?.classList.add('active');
+    });
+
+    // --- Dynamic Date & Greeting ---
+    (function setDynamicDate() {
+        const now = new Date();
+        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const dayName = days[now.getDay()];
+        const monthName = months[now.getMonth()];
+        const dateStr = `${dayName}, ${now.getDate()} ${monthName} ${now.getFullYear()}`;
+        const dateEl = document.querySelector('.date-display');
+        if (dateEl) dateEl.textContent = dateStr;
+
+        const hour = now.getHours();
+        let greeting = 'Good morning';
+        if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
+        else if (hour >= 17) greeting = 'Good evening';
+        const titleEl = document.querySelector('#view-home .view-title');
+        if (titleEl) titleEl.textContent = `${greeting}, Will`;
+    })();
 
     // --- Advisory Prompt Dismiss ---
     document.getElementById('advisoryPromptDismiss')?.addEventListener('click', () => {
