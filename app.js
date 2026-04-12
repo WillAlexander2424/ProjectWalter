@@ -4439,6 +4439,205 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => applyPropertyFilter(filterMap[pmCurrentTab]), 150);
     });
 
+    // --- Agreement Type Selector ---
+    let pendingAgreementAddress = '';
+
+    function openAgreementSelector(address) {
+        pendingAgreementAddress = address || 'Property';
+        document.getElementById('agrTypeAddress').textContent = address || 'this property';
+        document.getElementById('agreementTypeModal')?.classList.add('active');
+    }
+
+    document.getElementById('agrTypeClose')?.addEventListener('click', () => {
+        document.getElementById('agreementTypeModal')?.classList.remove('active');
+    });
+    document.getElementById('agreementTypeModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'agreementTypeModal') e.target.classList.remove('active');
+    });
+
+    document.getElementById('agrTypeLease')?.addEventListener('click', () => {
+        document.getElementById('agreementTypeModal')?.classList.remove('active');
+        openLeaseAgreement(pendingAgreementAddress);
+    });
+
+    document.getElementById('agrTypeSublease')?.addEventListener('click', () => {
+        document.getElementById('agreementTypeModal')?.classList.remove('active');
+        openSubleaseAgreement(pendingAgreementAddress);
+    });
+
+    // --- Sublease Agreement — Full Page View ---
+    function openSubleaseAgreement(address) {
+        const titleEl = document.getElementById('slaTitle');
+        if (titleEl) titleEl.textContent = address || 'Property';
+        // Reset to first section
+        document.querySelectorAll('#view-sublease [data-sla-sec]').forEach(b => b.classList.toggle('active', b.dataset.slaSec === 'schedule5'));
+        document.querySelectorAll('#view-sublease [data-sla-panel]').forEach(s => s.classList.remove('active'));
+        document.querySelector('#view-sublease [data-sla-panel="schedule5"]')?.classList.add('active');
+        switchView('sublease');
+    }
+
+    // Sublease tab switching (scoped to #view-sublease)
+    document.querySelectorAll('#view-sublease [data-sla-sec]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('#view-sublease [data-sla-sec]').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#view-sublease [data-sla-panel]').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            const key = btn.dataset.slaSec;
+            document.querySelectorAll(`#view-sublease [data-sla-panel="${key}"]`).forEach(p => p.classList.add('active'));
+            // Scroll to top
+            const formPane = document.querySelector('#view-sublease .la-form-pane');
+            if (formPane) formPane.scrollTop = 0;
+            // Brand review pages if on review tab
+            if (key === 'review') {
+                setTimeout(() => {
+                    const pages = document.querySelectorAll('#slaReviewDoc .la-adls-page');
+                    pages.forEach((page, i) => {
+                        if (page.querySelector('.la-page-header')) return;
+                        const schedNames = ['Front Page'];
+                        const body = document.createElement('div');
+                        body.className = 'la-page-body';
+                        while (page.firstChild) body.appendChild(page.firstChild);
+                        const draftMark = body.querySelector('.la-adls-draft-mark');
+                        if (draftMark) body.removeChild(draftMark);
+                        page.appendChild(body);
+                        const header = document.createElement('div');
+                        header.className = 'la-page-header';
+                        header.innerHTML = '<img src="bayleys-logo.png" alt="Bayleys" class="la-page-header-logo"><div class="la-page-header-right">' + (schedNames[i] || 'Agreement to Sublease') + '</div>';
+                        page.insertBefore(header, page.firstChild);
+                        const footer = document.createElement('div');
+                        footer.className = 'la-page-footer';
+                        footer.innerHTML = '<span class="la-page-footer-left">Bayleys Real Estate Limited · Licensed under the REAA 2008 · Prepared by Walter AI</span><span class="la-page-footer-right">Page ' + (i+1) + '</span>';
+                        page.appendChild(footer);
+                        const draft = document.createElement('div');
+                        draft.className = 'la-adls-draft-mark';
+                        draft.textContent = 'DRAFT';
+                        body.appendChild(draft);
+                    });
+                }, 100);
+            }
+        });
+    });
+
+    // Sublease back button
+    document.getElementById('slaBackBtn')?.addEventListener('click', () => switchView('properties'));
+
+    // Sublease HoT button
+    document.getElementById('slaHotBtn')?.addEventListener('click', () => {
+        const addr = document.getElementById('slaTitle')?.textContent || 'Property';
+        openHeadsOfTerms(addr);
+    });
+
+    // Head Lease upload simulation
+    document.getElementById('slaUploadZone')?.addEventListener('click', () => {
+        const zone = document.getElementById('slaUploadZone');
+        zone.innerHTML = '<div style="padding:20px;text-align:center;"><div class="add-prop-spinner" style="margin:0 auto 10px"></div>Walter is extracting terms from the Head Lease...</div>';
+        setTimeout(() => {
+            zone.style.display = 'none';
+            document.getElementById('slaExtracted').style.display = '';
+        }, 2000);
+    });
+
+    // Sublease peer review send
+    document.getElementById('slaPeerSendBtn')?.addEventListener('click', function() {
+        const badge = document.getElementById('slaPeerBadge');
+        if (badge) { badge.textContent = 'Reviewing'; badge.className = 'la-peer-status-badge reviewing'; }
+        const timeline = document.getElementById('slaPeerTimeline');
+        if (timeline) timeline.style.display = '';
+        const comments = document.getElementById('slaPeerComments');
+        if (comments) setTimeout(() => { comments.style.display = ''; }, 2000);
+        this.textContent = 'Sent';
+        this.disabled = true;
+        this.style.opacity = '0.5';
+    });
+
+    // Sublease generate button
+    document.getElementById('slaGenerateBtn')?.addEventListener('click', () => {
+        const sendBtn = document.getElementById('slaSendBtn');
+        if (sendBtn) sendBtn.disabled = false;
+    });
+
+    // Sublease send button
+    document.getElementById('slaSendBtn')?.addEventListener('click', () => {
+        const signStatus = document.getElementById('slaSignStatus');
+        if (signStatus) signStatus.style.display = '';
+        const statusEl = document.getElementById('slaStatus');
+        if (statusEl) {
+            statusEl.className = 'hot-status sent';
+            statusEl.innerHTML = '<span class="hot-status-dot sent"></span>Sent';
+        }
+        const addr = document.getElementById('slaTitle')?.textContent || 'Property';
+        CMD_EMAILS.unshift({
+            id: 'sla-sent-' + Date.now(), from: 'Walter', fromOrg: 'Sent', email: null,
+            subject: 'Agreement to Sublease sent for signing — ' + addr,
+            preview: 'ADLS Agreement to Sublease (First Edition 2018) sent via LuminPDF. Awaiting 3 signatures.',
+            property: addr.split(',')[0], category: 'ai', time: 'Just now', unread: true,
+            body: '<div class="cmd-ai-body"><strong>Agreement to Sublease — Sent for Signing</strong><br><br>The ADLS Agreement to Sublease for <strong>' + addr + '</strong> has been sent to all parties via LuminPDF.<br><br><strong>Signing status:</strong><br>• Sublandlord: Pending<br>• Subtenant: Pending<br>• Guarantor: Pending<br><br><em>Brittany has filed this agreement against the property record in Vault RE.</em></div>',
+            aiReply: null, zaraNote: null
+        });
+    });
+
+    // Sublease clause suggestion chips
+    document.querySelectorAll('.la-clause-suggest[data-sla-clause]').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const input = document.getElementById('slaClauseInput');
+            if (input) { input.value = chip.dataset.slaClause; input.focus(); }
+        });
+    });
+
+    // Sublease clause form submit
+    let slaClauseCounter = 0;
+    document.getElementById('slaClauseForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('slaClauseInput');
+        const messages = document.getElementById('slaClauseMessages');
+        if (!input?.value?.trim() || !messages) return;
+        const text = input.value.trim();
+        // Add user message
+        messages.innerHTML += `<div class="la-clause-msg user"><div class="la-clause-bubble">${text}</div></div>`;
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+        // Simulate AI response
+        setTimeout(() => {
+            const clauses = {
+                'make good': 'The Subtenant shall, at the expiry or earlier termination of the Sublease, make good any damage to the Premises caused by the Subtenant and restore the Premises to substantially the same condition as at the commencement date, fair wear and tear excepted. Any dispute as to the extent of make-good obligations shall be referred to an independent surveyor.',
+                'head landlord access': 'The Subtenant acknowledges that the Head Landlord and its agents shall have the right of access to the Premises at all reasonable times upon giving not less than 48 hours written notice to the Sublandlord and Subtenant for the purposes of inspection, maintenance, or compliance with the Head Lease. Emergency access may be taken without notice.',
+                'early termination': 'Either party may terminate this Sublease by giving not less than three (3) months written notice to the other party, provided that such termination shall not take effect earlier than the second anniversary of the commencement date. The Subtenant shall pay all rent and outgoings up to the date of termination.',
+                'signage rights': 'The Subtenant shall be entitled to display signage on the Premises subject to obtaining the prior written consent of the Sublandlord and the Head Landlord, and compliance with all applicable Council regulations and building consent requirements. All signage shall be removed and the Premises made good at the Subtenant\'s cost upon expiry or termination.',
+                'assignment': 'The Subtenant shall not assign, sublet, or part with possession of the Premises or any part thereof without the prior written consent of both the Sublandlord and the Head Landlord, such consent not to be unreasonably withheld or delayed.',
+                'insurance': 'The Subtenant shall maintain public liability insurance of not less than $2,000,000 and shall provide evidence of such insurance to the Sublandlord upon request. The Subtenant shall not do or permit anything that may invalidate any insurance policy effected by the Head Landlord or Sublandlord.'
+            };
+            const response = clauses[text.toLowerCase()] || `The Subtenant and Sublandlord agree as follows in respect of ${text}: [Clause text to be drafted based on the specific requirements. This is an AI-generated draft and should be reviewed by legal counsel before inclusion in the final agreement.]`;
+            const clauseId = 'sla-clause-' + (++slaClauseCounter);
+            messages.innerHTML += `<div class="la-clause-msg assistant"><div class="la-clause-avatar">W</div><div class="la-clause-bubble">${response}<div class="la-clause-actions"><button class="la-clause-accept" data-clause-id="${clauseId}" data-clause-text="${response.replace(/"/g, '&quot;')}">Accept clause</button><button class="la-clause-edit">Edit</button></div></div></div>`;
+            messages.scrollTop = messages.scrollHeight;
+
+            // Bind accept button
+            messages.querySelector(`[data-clause-id="${clauseId}"]`)?.addEventListener('click', function() {
+                const clauseText = this.dataset.clauseText;
+                const list = document.getElementById('slaAddedList');
+                const count = document.getElementById('slaClauseCount');
+                const empty = list?.querySelector('.la-added-empty');
+                if (empty) empty.remove();
+                const item = document.createElement('div');
+                item.className = 'la-added-clause-item';
+                item.textContent = clauseText;
+                list?.appendChild(item);
+                const total = list?.querySelectorAll('.la-added-clause-item').length || 0;
+                if (count) count.textContent = total + ' clause' + (total !== 1 ? 's' : '');
+                this.textContent = 'Added';
+                this.style.background = '#047857';
+                this.disabled = true;
+            });
+        }, 1500);
+    });
+
+    // Enable send button when review tab is visited
+    document.querySelector('[data-sla-sec="review"]')?.addEventListener('click', () => {
+        const sendBtn = document.getElementById('slaSendBtn');
+        if (sendBtn) sendBtn.disabled = false;
+    });
+
     // --- Lease Agreement — Full Page View ---
 
     function openLeaseAgreement(address) {
@@ -4465,15 +4664,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Section nav — show ALL panels matching the key (schedule1 has multiple sub-panels)
-    document.querySelectorAll('.la-sec-btn').forEach(btn => {
+    // Scoped to #view-lease to avoid conflicts with sublease tabs
+    document.querySelectorAll('#view-lease .la-sec-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.la-sec-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.la-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('#view-lease .la-sec-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#view-lease .la-section').forEach(s => s.classList.remove('active'));
             btn.classList.add('active');
             const key = btn.dataset.laSec;
-            document.querySelectorAll(`.la-section[data-la-panel="${key}"]`).forEach(p => p.classList.add('active'));
+            document.querySelectorAll(`#view-lease .la-section[data-la-panel="${key}"]`).forEach(p => p.classList.add('active'));
             // Scroll to top of new section
-            const formPane = document.querySelector('.la-form-pane');
+            const formPane = document.querySelector('#view-lease .la-form-pane');
             if (formPane) formPane.scrollTop = 0;
             generateLeasePreview();
         });
@@ -4779,12 +4979,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Wire HoT → Lease Agreement flow
+    // HoT type toggle
+    let hotAgreementType = 'lease';
+    document.querySelectorAll('.hot-type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.hot-type-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            hotAgreementType = btn.dataset.hotType;
+            // Update field labels based on type
+            const labels = document.querySelectorAll('#hotModal .hot-form label');
+            labels.forEach(l => {
+                if (hotAgreementType === 'sublease') {
+                    l.textContent = l.textContent.replace('Landlord / Owner', 'Sublandlord').replace('Tenant', 'Subtenant');
+                } else {
+                    l.textContent = l.textContent.replace('Sublandlord', 'Landlord / Owner').replace('Subtenant', 'Tenant');
+                }
+            });
+        });
+    });
+
+    // Wire HoT → Agreement flow (type-aware)
     document.querySelector('.hot-next-btn')?.addEventListener('click', function() {
         if (this.disabled) return;
         hotModal?.classList.remove('active');
         const address = document.getElementById('hotTitle')?.textContent || 'Property';
-        setTimeout(() => openLeaseAgreement(address), 150);
+        if (hotAgreementType === 'sublease') {
+            setTimeout(() => openSubleaseAgreement(address), 150);
+        } else {
+            setTimeout(() => openLeaseAgreement(address), 150);
+        }
     });
 
     // --- Lease Agreement: Additional Clauses (Walter clause chat) ---
@@ -5265,9 +5488,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     <span class="pam-label">Generate Heads of Terms</span>
                 </button>
-                <button data-pd="lease">
+                <button data-pd="agreements">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-                    <span class="pam-label">Lease Agreement</span>
+                    <span class="pam-label">Agreements</span>
                 </button>
                 <div class="pam-divider"></div>
                 <button data-pd="summary">
@@ -5311,8 +5534,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else if (tab === 'hot') {
                     openHeadsOfTerms(address);
-                } else if (tab === 'lease') {
-                    openLeaseAgreement(address);
+                } else if (tab === 'agreements') {
+                    openAgreementSelector(address);
                 } else {
                     openPropDrill(address, tab);
                 }
