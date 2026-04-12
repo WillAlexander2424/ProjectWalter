@@ -4235,7 +4235,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mi.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const tab = mi.dataset.pd;
-                const address = row.querySelector('.cell-primary')?.textContent?.trim() || 'Property';
+                const addrEl = row.querySelector('.cell-primary');
+                const address = (addrEl?.childNodes[0]?.textContent || addrEl?.textContent || 'Property').trim();
                 menu.classList.remove('open');
                 btn.classList.remove('open');
                 if (tab === 'summary') {
@@ -5026,27 +5027,108 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     // --- Guided Tour ---
+    // --- Guided Tour (multi-page) ---
     const tourSteps = [
+        // HOME (steps 0-1)
         {
+            view: 'home',
             target: '.priority-banner',
             title: 'Your daily briefing',
-            text: 'Walter surfaces the most urgent action each morning. Review it, act on it, or dismiss to see the next.',
+            text: 'Walter surfaces the most urgent action each morning. Review it, act on it, or dismiss to move to the next priority.',
+            arrow: 'top'
+        },
+        {
+            view: 'home',
+            target: '.wallace-ambient-card',
+            title: 'Wallace works in the background',
+            text: 'Wallace continuously matches tenants and buyers to your listings. New matches appear here each day — review and send introductions with one click.',
             arrow: 'top',
-            offsetY: 8
+            scroll: true
+        },
+        // MY PROPERTIES (steps 2-4)
+        {
+            view: 'properties',
+            target: '.mp-dashboard',
+            title: 'Portfolio at a glance',
+            text: 'Eight smart widgets filter your 54 properties by risk, signals, stickiness, and value. Click any widget to instantly filter the table below.',
+            arrow: 'top'
         },
         {
-            target: '.nav-item[data-view="properties"]',
-            title: 'Your portfolio',
-            text: 'All 54 properties in your portfolio — with AI-powered signals, stickiness scores, and deal status tracking.',
-            arrow: 'left',
-            offsetX: 8
+            view: 'properties',
+            target: '.mp-export-btn',
+            title: 'Export & add properties',
+            text: 'Export your portfolio to CSV, or search Walter\'s database of 113,000+ NZ commercial properties to add new ones to your watchlist.',
+            arrow: 'top'
         },
         {
+            view: 'properties',
+            target: '.properties-table',
+            title: 'Click any row for the full picture',
+            text: 'Every row opens a detailed property card with owner and tenant intel, lease history, and AI insights. Use the ⋮ menu on the right for quick actions like Heads of Terms or Lease Agreement.',
+            arrow: 'top',
+            scroll: true
+        },
+        // MARKET (steps 5-6)
+        {
+            view: 'market',
+            target: '#leafletMap',
+            title: 'Interactive market map',
+            text: 'Explore Auckland\'s commercial landscape. Click any pin to see property details, tenant signals, and predicted demand. Blue = office, purple = retail, green = industrial, orange = new signal.',
+            arrow: 'top'
+        },
+        {
+            view: 'market',
+            target: '.market-intel-panel',
+            title: 'Market intelligence sidebar',
+            text: 'Three tabs — Overview for market stats, Signals for live property feeds, and Insights for AI-generated market trends. Clicking a signal flies the map to that property.',
+            arrow: 'left'
+        },
+        // LISTINGS (steps 7-8)
+        {
+            view: 'listings',
+            target: '.listing-card',
+            title: 'Your active listings',
+            text: 'Each listing card shows real market data, Walter\'s AI insight, and Wallace match indicators. Click any card for the full gallery, comparable analysis, and tenant matching.',
+            arrow: 'top'
+        },
+        {
+            view: 'listings',
+            target: '.listing-card .wallace-pips',
+            title: 'Wallace match pips',
+            text: 'These coloured dots show how many prospective matches Wallace has found for each listing. More pips = stronger demand signal.',
+            arrow: 'top',
+            fallback: '.listing-card'
+        },
+        // ADVISORY (steps 9-10)
+        {
+            view: 'documents',
+            target: '.advisory-prompt',
+            title: 'Proactive advisory',
+            text: 'Walter monitors your portfolio and prompts you when leases need attention. Zara identifies upcoming renewals and recommends starting reviews early for negotiation leverage.',
+            arrow: 'top'
+        },
+        {
+            view: 'documents',
+            target: '.docs-workflows-4',
+            title: 'Four advisory workflows',
+            text: 'Single lease review, lease comparison, OPEX budget generator, and S&P agreement analysis — each powered by Walter\'s LLM trained on thousands of NZ commercial agreements.',
+            arrow: 'top'
+        },
+        // SETTINGS (step 11)
+        {
+            view: 'settings',
+            target: '.settings-page-tabs',
+            title: 'Configure your setup',
+            text: 'Maximise Walter by connecting your data sources, fine-tuning alert preferences, configuring your five AI agents, and setting your personal context so every recommendation is relevant to you.',
+            arrow: 'top'
+        },
+        // FINAL (step 12)
+        {
+            view: 'home',
             target: '.walter-fab',
             title: 'Ask Walter anything',
-            text: 'Click here to ask Walter about any property, tenant, market trend, or to draft documents. Walter works across all your data.',
-            arrow: 'bottom',
-            offsetY: -8
+            text: 'Walter is always available. Click this button from any page to ask about properties, tenants, market trends, or to draft documents. Walter works across all your data.',
+            arrow: 'bottom'
         }
     ];
 
@@ -5061,31 +5143,52 @@ document.addEventListener('DOMContentLoaded', () => {
     function showTourStep(idx) {
         if (idx >= tourSteps.length) { closeTour(); return; }
         const step = tourSteps[idx];
-        const el = document.querySelector(step.target);
-        if (!el) { showTourStep(idx + 1); return; }
 
-        tourContent.innerHTML = `<h4>${step.title}</h4><p>${step.text}</p>`;
-        tourStepIndicator.textContent = `${idx + 1} of ${tourSteps.length}`;
-        tourNext.textContent = idx === tourSteps.length - 1 ? 'Get started' : 'Next';
-
-        tourTooltip.className = 'tour-tooltip arrow-' + step.arrow;
-
-        const rect = el.getBoundingClientRect();
-        let top, left;
-
-        if (step.arrow === 'top') {
-            top = rect.bottom + (step.offsetY || 0) + 12;
-            left = rect.left;
-        } else if (step.arrow === 'left') {
-            top = rect.top;
-            left = rect.right + (step.offsetX || 0) + 12;
-        } else if (step.arrow === 'bottom') {
-            top = rect.top - 180 + (step.offsetY || 0);
-            left = rect.left - 280;
+        // Navigate to the correct view
+        const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
+        if (step.view && step.view !== currentView) {
+            switchView(step.view);
         }
 
-        tourTooltip.style.top = top + 'px';
-        tourTooltip.style.left = Math.max(10, Math.min(left, window.innerWidth - 360)) + 'px';
+        // Small delay to allow view to render
+        setTimeout(() => {
+            let el = document.querySelector(step.target);
+            if (!el && step.fallback) el = document.querySelector(step.fallback);
+            if (!el) { tourStep++; showTourStep(tourStep); return; }
+
+            // Scroll element into view if needed
+            if (step.scroll) {
+                el.scrollIntoView({ behavior: 'instant', block: 'center' });
+            }
+
+            // Update content
+            tourContent.innerHTML = `<h4>${step.title}</h4><p>${step.text}</p>`;
+            tourStepIndicator.textContent = `${idx + 1} of ${tourSteps.length}`;
+            tourNext.textContent = idx === tourSteps.length - 1 ? 'Get started' : 'Next';
+
+            tourTooltip.className = 'tour-tooltip arrow-' + step.arrow;
+
+            const rect = el.getBoundingClientRect();
+            let top, left;
+
+            if (step.arrow === 'top') {
+                top = rect.bottom + 12;
+                left = Math.max(20, rect.left);
+            } else if (step.arrow === 'left') {
+                top = rect.top + Math.min(rect.height / 2, 40);
+                left = rect.right + 12;
+            } else if (step.arrow === 'bottom') {
+                top = rect.top - 200;
+                left = rect.left - 260;
+            }
+
+            // Clamp within viewport
+            top = Math.max(10, Math.min(top, window.innerHeight - 220));
+            left = Math.max(10, Math.min(left, window.innerWidth - 360));
+
+            tourTooltip.style.top = top + 'px';
+            tourTooltip.style.left = left + 'px';
+        }, step.view !== currentView ? 250 : 50);
     }
 
     function startTour() {
@@ -5098,6 +5201,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeTour() {
         tourOverlay?.classList.remove('active');
         sessionStorage.setItem('walter-tour-done', '1');
+        // Return to home
+        switchView('home');
     }
 
     tourNext?.addEventListener('click', () => {

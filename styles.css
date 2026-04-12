@@ -681,7 +681,7 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 16px 28px;
+    padding: 20px 28px;
     border-bottom: 1px solid var(--border-light);
     background: linear-gradient(180deg, #fbfbfd, #fff);
     flex-shrink: 0;
