@@ -1010,11 +1010,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function getBeaumontResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Queried CRM database — match found</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> LINZ title search — Beaumont Trustees Ltd</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> ICP Registry — Active since Nov 2022</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> NZBN entity check — Lumiere Design Group Ltd</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> OpenClaw scan — 6 active Seek listings detected</div>
+                <div class="processing-step"><span class="step-dot done"></span> Queried CRM database — match found</div>
+                <div class="processing-step"><span class="step-dot done"></span> LINZ title search — Beaumont Trustees Ltd</div>
+                <div class="processing-step"><span class="step-dot done"></span> ICP Registry — Active since Nov 2022</div>
+                <div class="processing-step"><span class="step-dot done"></span> NZBN entity check — Lumiere Design Group Ltd</div>
+                <div class="processing-step"><span class="step-dot done"></span> OpenClaw scan — 6 active Seek listings detected</div>
             </div>
             <strong>24-28 Beaumont Street, Freemans Bay</strong><br><br>
             I've completed a full analysis across 5 data streams. Here's the summary:<br><br>
@@ -1035,9 +1035,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getExpiryResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Filtered database — Ponsonby, lease expiry within 12 months</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Cross-referenced ICP and NZBN signals</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Applied stickiness scoring model</div>
+                <div class="processing-step"><span class="step-dot done"></span> Filtered database — Ponsonby, lease expiry within 12 months</div>
+                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced ICP and NZBN signals</div>
+                <div class="processing-step"><span class="step-dot done"></span> Applied stickiness scoring model</div>
             </div>
             <strong>Ponsonby — Lease Expiries (Next 12 Months)</strong><br><br>
             Found <strong>14 properties</strong> with predicted lease expiries in Ponsonby over the next 12 months:<br><br>
@@ -1056,31 +1056,42 @@ document.addEventListener('DOMContentLoaded', () => {
     function getRiskResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Filtered — South Auckland, Industrial, elevated risk signals</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> NZBN annual return status check</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> OpenClaw business vitality scan</div>
+                <div class="processing-step"><span class="step-dot done"></span> Filtered — South Auckland, Industrial, elevated risk signals</div>
+                <div class="processing-step"><span class="step-dot done"></span> NZBN annual return status check</div>
+                <div class="processing-step"><span class="step-dot done"></span> OpenClaw business vitality scan</div>
             </div>
-            <strong>South Auckland Industrial — Elevated Flight Risk</strong><br><br>
-            Identified <strong>8 tenants</strong> with high flight risk signals across South Auckland industrial:<br><br>
-            &bull; <strong>Pacific Traders Ltd</strong> — 45 Queen St · Annual return 3 months overdue · Google reviews declining · Score: 28%<br>
-            &bull; <strong>Atlas Logistics NZ</strong> — 22 Wiri Station Rd · Director linked to recent liquidation · Score: 31%<br>
-            &bull; <strong>Southern Steel Fabrication</strong> — 8 Kerrs Rd, Manukau · ICP consumption dropped 40% · Score: 35%<br><br>
-            <strong>Recommended Actions:</strong><br>
-            1. Immediate landlord engagement for Pacific Traders — prepare backfill strategy<br>
-            2. Monitor Atlas Logistics monthly — director contagion risk<br>
-            3. Check Southern Steel ICP trend next 30 days before escalating<br><br>
-            Shall I generate a Pre-emptive Backfill strategy for any of these properties?
+            <div class="chat-section-title">South Auckland Industrial — Elevated Flight Risk</div>
+            <p class="chat-body">Identified <strong>8 tenants</strong> with high flight risk signals across South Auckland industrial:</p>
+            <div class="chat-risk-card risk-high">
+                <div class="chat-risk-header"><span class="chat-risk-dot high"></span><strong>Pacific Traders Ltd</strong><span class="chat-risk-score">28%</span></div>
+                <div class="chat-risk-meta">45 Queen St · Annual return 3 months overdue · Google reviews declining</div>
+            </div>
+            <div class="chat-risk-card risk-high">
+                <div class="chat-risk-header"><span class="chat-risk-dot high"></span><strong>Atlas Logistics NZ</strong><span class="chat-risk-score">31%</span></div>
+                <div class="chat-risk-meta">22 Wiri Station Rd · Director linked to recent liquidation</div>
+            </div>
+            <div class="chat-risk-card risk-medium">
+                <div class="chat-risk-header"><span class="chat-risk-dot medium"></span><strong>Southern Steel Fabrication</strong><span class="chat-risk-score">35%</span></div>
+                <div class="chat-risk-meta">8 Kerrs Rd, Manukau · ICP consumption dropped 40%</div>
+            </div>
+            <div class="chat-section-title" style="margin-top:16px">Recommended Actions</div>
+            <div class="chat-actions-list">
+                <div class="chat-action-item"><span class="chat-action-num">1</span>Immediate landlord engagement for Pacific Traders — prepare backfill strategy</div>
+                <div class="chat-action-item"><span class="chat-action-num">2</span>Monitor Atlas Logistics monthly — director contagion risk</div>
+                <div class="chat-action-item"><span class="chat-action-num">3</span>Check Southern Steel ICP trend next 30 days before escalating</div>
+            </div>
+            <p class="chat-body" style="margin-top:12px;color:var(--blue);">Shall I generate a Pre-emptive Backfill strategy for any of these properties?</p>
         `;
     }
 
     function getWallaceResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Wallace activated — scanning market for 33 Crummer Rd matches</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched Bayleys database — 3 active tenant requirements matched</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Scanned competitor listings — Colliers, CBRE, JLL</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Checked Walter signals — ICP activations, Seek, NZBN</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Scored 8 matches by compatibility</div>
+                <div class="processing-step"><span class="step-dot done"></span> Wallace activated — scanning market for 33 Crummer Rd matches</div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched Bayleys database — 3 active tenant requirements matched</div>
+                <div class="processing-step"><span class="step-dot done"></span> Scanned competitor listings — Colliers, CBRE, JLL</div>
+                <div class="processing-step"><span class="step-dot done"></span> Checked Walter signals — ICP activations, Seek, NZBN</div>
+                <div class="processing-step"><span class="step-dot done"></span> Scored 8 matches by compatibility</div>
             </div>
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
                 <div style="width:28px;height:28px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:13px;flex-shrink:0;">W</div>
@@ -1111,11 +1122,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function getCostelloResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Costello activated — aggregating market data for Grey Lynn office sector</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Pulled ownership records — Des Radonich Limited (33 Crummer Rd)</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Analysed 142 Grey Lynn office transactions (2021-2026)</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Cross-referenced RBNZ, Stats NZ, and realestate.co.nz data</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Generated Bayleys Commercial Market Report</div>
+                <div class="processing-step"><span class="step-dot done"></span> Costello activated — aggregating market data for Grey Lynn office sector</div>
+                <div class="processing-step"><span class="step-dot done"></span> Pulled ownership records — Des Radonich Limited (33 Crummer Rd)</div>
+                <div class="processing-step"><span class="step-dot done"></span> Analysed 142 Grey Lynn office transactions (2021-2026)</div>
+                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced RBNZ, Stats NZ, and realestate.co.nz data</div>
+                <div class="processing-step"><span class="step-dot done"></span> Generated Bayleys Commercial Market Report</div>
             </div>
             <div class="msg-agent-header">
                 <div class="msg-agent-avatar costello">C</div>
@@ -1148,9 +1159,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getCPIResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched Bayleys clause library — 73.0 CPI Adjustment Formula</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Cross-referenced ADLS 6th Edition rent review provisions</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Analysed 1,240 commercial leases with CPI clauses</div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched Bayleys clause library — 73.0 CPI Adjustment Formula</div>
+                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced ADLS 6th Edition rent review provisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Analysed 1,240 commercial leases with CPI clauses</div>
             </div>
             <strong>CPI Adjustment Clause — Drafted for 5-Year Term, Capped at 3%</strong><br><br>
             Based on Bayleys Clause 73.0 and ADLS 6th Edition Schedule 1, Field 12, here is the recommended clause:<br><br>
@@ -1168,9 +1179,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getDeedResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Retrieved Bayleys Clause 62.0 — Conditional on Deed of Lease</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Cross-referenced 847 conditional sale agreements</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Checked relevant tribunal decisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Retrieved Bayleys Clause 62.0 — Conditional on Deed of Lease</div>
+                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced 847 conditional sale agreements</div>
+                <div class="processing-step"><span class="step-dot done"></span> Checked relevant tribunal decisions</div>
             </div>
             <strong>Conditional on Deed of Lease — Clause 62.0</strong><br><br>
             This clause is used when a sale is conditional upon the purchaser receiving and approving a signed lease. Here is the standard Bayleys clause:<br><br>
@@ -1187,9 +1198,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getFloorResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Retrieved Bayleys Clause 56.0 — Verification of Floor Areas</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Referenced BOMA/PCNZ Measurement Standard</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Analysed 326 lease disputes involving floor area discrepancies</div>
+                <div class="processing-step"><span class="step-dot done"></span> Retrieved Bayleys Clause 56.0 — Verification of Floor Areas</div>
+                <div class="processing-step"><span class="step-dot done"></span> Referenced BOMA/PCNZ Measurement Standard</div>
+                <div class="processing-step"><span class="step-dot done"></span> Analysed 326 lease disputes involving floor area discrepancies</div>
             </div>
             <strong>Floor Area Verification Clause — BOMA Standard</strong><br><br>
             Based on Bayleys Clause 56.0, here is the recommended clause for inclusion in the Agreement to Lease:<br><br>
@@ -1206,9 +1217,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getRetailClausesResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched clause library — Retail lease provisions</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Analysed 2,180 retail leases in Bayleys database</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Referenced 89 retail lease tribunal decisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched clause library — Retail lease provisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Analysed 2,180 retail leases in Bayleys database</div>
+                <div class="processing-step"><span class="step-dot done"></span> Referenced 89 retail lease tribunal decisions</div>
             </div>
             <strong>Key Clauses for Retail Lease Review</strong><br><br>
             Based on our analysis of 2,180 retail leases and 89 tribunal decisions, here are the critical clauses to review:<br><br>
@@ -1228,9 +1239,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getConsentResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched 72,000 judicial decisions — lease assignment consent</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Referenced Property Law Act 2007 s.226</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Found 23 relevant tribunal decisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched 72,000 judicial decisions — lease assignment consent</div>
+                <div class="processing-step"><span class="step-dot done"></span> Referenced Property Law Act 2007 s.226</div>
+                <div class="processing-step"><span class="step-dot done"></span> Found 23 relevant tribunal decisions</div>
             </div>
             <strong>Unreasonable Withholding of Consent — Lease Assignment</strong><br><br>
             <strong>The Law:</strong> Property Law Act 2007, Section 226 provides that where a lease requires landlord consent for assignment, <em>"consent shall not be unreasonably withheld."</em><br><br>
@@ -1249,9 +1260,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getMaintenanceResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Referenced Property Law Act 2007 s.232 — Landlord obligations</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched Tenancy Tribunal decisions — maintenance claims</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Found 156 relevant commercial lease decisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Referenced Property Law Act 2007 s.232 — Landlord obligations</div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched Tenancy Tribunal decisions — maintenance claims</div>
+                <div class="processing-step"><span class="step-dot done"></span> Found 156 relevant commercial lease decisions</div>
             </div>
             <strong>Landlord Maintenance Obligations — Property Law Act 2007</strong><br><br>
             <strong>Section 232</strong> of the Property Law Act 2007 implies a covenant that the landlord will <em>"keep the premises in a reasonable state of repair having regard to the age, character, and prospective life of the premises."</em><br><br>
@@ -1269,9 +1280,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getREAResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched REA Complaints Assessment Committee decisions</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Filtered for commercial agent disciplinary actions (2020-2026)</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Found 38 relevant decisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched REA Complaints Assessment Committee decisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Filtered for commercial agent disciplinary actions (2020-2026)</div>
+                <div class="processing-step"><span class="step-dot done"></span> Found 38 relevant decisions</div>
             </div>
             <strong>REA Disclosure Decisions — Commercial Agents</strong><br><br>
             Summary of recent disciplinary decisions relevant to Bayleys commercial agents:<br><br>
@@ -1292,9 +1303,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getOPEXDisputeResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Referenced ADLS 6th Edition — Second Schedule OPEX provisions</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched tribunal decisions — OPEX capital vs operating disputes</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Found 42 relevant cases</div>
+                <div class="processing-step"><span class="step-dot done"></span> Referenced ADLS 6th Edition — Second Schedule OPEX provisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched tribunal decisions — OPEX capital vs operating disputes</div>
+                <div class="processing-step"><span class="step-dot done"></span> Found 42 relevant cases</div>
             </div>
             <strong>OPEX Dispute — Capital vs Operating Expenditure</strong><br><br>
             This is one of the most common commercial lease disputes. The ADLS 6th Edition Second Schedule defines 13 categories of recoverable OPEX but <strong>explicitly excludes capital items</strong>.<br><br>
@@ -1319,10 +1330,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function getConfirmResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Generating Strategy Cards for 4 Ponsonby properties</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Queried CRM, LINZ, ICP, and NZBN data</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Applied stickiness model and renewal predictions</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Assigned to Zara for follow-up scheduling</div>
+                <div class="processing-step"><span class="step-dot done"></span> Generating Strategy Cards for 4 Ponsonby properties</div>
+                <div class="processing-step"><span class="step-dot done"></span> Queried CRM, LINZ, ICP, and NZBN data</div>
+                <div class="processing-step"><span class="step-dot done"></span> Applied stickiness model and renewal predictions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Assigned to Zara for follow-up scheduling</div>
             </div>
             <strong>Strategy Cards Generated</strong><br><br>
             I've created Strategy Cards for the 4 priority properties in Ponsonby:<br><br>
@@ -1370,10 +1381,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const pick = theories[Math.floor(Math.random() * theories.length)];
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Searched CRM, HR records, and NZBN</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Cross-referenced 14 internal Slack channels</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Consulted physics department (just in case)</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Result: <em>inconclusive</em></div>
+                <div class="processing-step"><span class="step-dot done"></span> Searched CRM, HR records, and NZBN</div>
+                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced 14 internal Slack channels</div>
+                <div class="processing-step"><span class="step-dot done"></span> Consulted physics department (just in case)</div>
+                <div class="processing-step"><span class="step-dot done"></span> Result: <em>inconclusive</em></div>
             </div>
             <strong>${pick.title}</strong><br><br>
             ${pick.body}<br><br>
@@ -1387,8 +1398,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function getGenericResponse(text) {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Analysed query across database</div>
-                <div class="processing-step"><span class="step-icon done">&#10003;</span> Cross-referenced market data</div>
+                <div class="processing-step"><span class="step-dot done"></span> Analysed query across database</div>
+                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced market data</div>
             </div>
             I've processed your query: <em>"${escapeHtml(text)}"</em><br><br>
             I can help you with:<br>
@@ -1489,10 +1500,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="message-avatar">W</div>
                 <div class="message-bubble">
                     <div class="processing-steps">
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Read ${file.name.includes('.pdf') ? 'PDF' : 'document'} — ${Math.floor(Math.random() * 30 + 15)} pages</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Extracted key terms and parties</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Identified document type: Lease Agreement</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Matched to property record in Vault RE</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Read ${file.name.includes('.pdf') ? 'PDF' : 'document'} — ${Math.floor(Math.random() * 30 + 15)} pages</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Extracted key terms and parties</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Identified document type: Lease Agreement</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Matched to property record in Vault RE</div>
                     </div>
                     <strong>I've read the document. What would you like me to do?</strong><br><br>
                     <div class="chat-action-chips">
@@ -1566,10 +1577,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (action === 'hot') {
                 responseHtml = `
                     <div class="processing-steps">
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Extracted 14 key lease terms</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Identified landlord, tenant, and guarantor</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Mapped rent, reviews, outgoings, and term structure</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Pre-populated a draft Heads of Terms</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Extracted 14 key lease terms</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Identified landlord, tenant, and guarantor</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Mapped rent, reviews, outgoings, and term structure</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Pre-populated a draft Heads of Terms</div>
                     </div>
                     <strong>Done — I've drafted a Heads of Terms from this lease.</strong><br><br>
                     Here's what I extracted:<br><br>
@@ -1589,8 +1600,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (action === 'review') {
                 responseHtml = `
                     <div class="processing-steps">
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Analysed against 14,200+ NZ lease precedents</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Identified 3 review items and 1 alert</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Analysed against 14,200+ NZ lease precedents</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Identified 3 review items and 1 alert</div>
                     </div>
                     <strong>Walter Advisory — 4 items flagged</strong><br><br>
                     <strong style="color:var(--orange);">⬤ Review:</strong> CPI at 3% fixed exceeds RBNZ forecast of 2.1-2.4%<br>
@@ -1606,10 +1617,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (action === 'file') {
                 responseHtml = `
                     <div class="processing-steps">
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Matched to: 15 Osterley Way, Manukau</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Tagged as: Lease Agreement (ADLS 6th Ed.)</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Filed to Vault RE property record</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Added to property timeline</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Matched to: 15 Osterley Way, Manukau</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Tagged as: Lease Agreement (ADLS 6th Ed.)</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Filed to Vault RE property record</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Added to property timeline</div>
                     </div>
                     <strong>Filed by Brittany</strong> — the document has been automatically:<br><br>
                     ✓ Stored against the property record for <strong>15 Osterley Way</strong><br>
@@ -1621,8 +1632,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (action === 'compare') {
                 responseHtml = `
                     <div class="processing-steps">
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Found existing lease on file: 15 Osterley Way (2022)</div>
-                        <div class="processing-step"><span class="step-icon done">&#10003;</span> Compared 12 key terms side-by-side</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Found existing lease on file: 15 Osterley Way (2022)</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Compared 12 key terms side-by-side</div>
                     </div>
                     <strong>Comparison: New terms vs. Existing lease</strong><br><br>
                     <strong>Rent:</strong> $90,217 → <span style="color:#047857;">same</span><br>
@@ -1691,6 +1702,66 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pdStrategyBtn')?.addEventListener('click', () => {
         propertyModal.classList.remove('active');
         strategyModal.classList.add('active');
+    });
+
+    // Ask Walter from property card — opens Walter popout alongside
+    document.getElementById('pdAskWalter')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const addr = document.querySelector('#propDrillModal .pd-hero-content h2')?.textContent ||
+                     document.querySelector('#propDrillModal #pdAddress')?.textContent || 'this property';
+        // Open Walter FAB popout
+        const popout = document.getElementById('walterPopout');
+        const fab = document.getElementById('walterFab');
+        if (popout && !popout.classList.contains('open')) {
+            popout.classList.add('open');
+            fab?.classList.add('popout-open');
+        }
+        // Pre-fill the popout input with property context
+        const popInput = document.getElementById('walterPopoutInput');
+        if (popInput) {
+            popInput.value = 'Tell me about ' + addr;
+            popInput.focus();
+        }
+    });
+
+    // Add to My Properties from property card
+    document.getElementById('pdAddProperty')?.addEventListener('click', function() {
+        const addr = document.querySelector('#propDrillModal .pd-hero-content h2')?.textContent ||
+                     document.querySelector('#propDrillModal #pdAddress')?.textContent || 'Property';
+        const type = document.querySelector('#propDrillModal .pd-hero-chip')?.textContent?.trim()?.split('·')[0]?.trim() || 'Office';
+        const tenant = document.querySelector('#propDrillModal .pd-ov-person-card:last-child .pd-ov-person-name')?.textContent || '—';
+
+        // Add row to My Properties table
+        const tbody = document.querySelector('#view-properties .properties-table tbody');
+        if (tbody) {
+            const tr = document.createElement('tr');
+            tr.className = 'clickable-row';
+            tr.innerHTML = `
+                <td><span class="cell-primary">${addr}</span><span class="prop-deal-dot"><span class="prop-deal-indicator deal-new"></span><span class="prop-deal-tooltip">New</span></span></td>
+                <td><span class="type-badge badge-${type.toLowerCase()}">${type}</span></td>
+                <td>${tenant}</td>
+                <td>—</td><td>—</td><td>—</td>
+                <td><div class="pipeline-bar"><div class="pipeline-fill" style="width:0%"></div></div></td>
+            `;
+            tbody.prepend(tr);
+            tr.addEventListener('click', () => openPropDrill(tr));
+        }
+
+        // Visual feedback
+        this.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Added';
+        this.disabled = true;
+        this.style.background = '#059669';
+        this.style.color = 'white';
+        this.style.borderColor = '#059669';
+
+        // Reset after 3s
+        setTimeout(() => {
+            this.innerHTML = 'Add to My Properties';
+            this.disabled = false;
+            this.style.background = '';
+            this.style.color = '';
+            this.style.borderColor = '';
+        }, 3000);
     });
 
     // Open from properties table
@@ -2120,6 +2191,691 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Market Page Filters ---
+    function applyMarketFilters() {
+        const region = document.getElementById('filterRegion')?.value || 'auckland';
+        const type = document.getElementById('filterType')?.value || 'all';
+        const status = document.getElementById('filterStatus')?.value || 'all';
+        const source = document.getElementById('filterSource')?.value || 'all';
+
+        let visible = 0;
+        const total = Object.keys(propertyData).length;
+
+        // Status → type mapping for prototype
+        const statusTypeMap = {
+            'listings': ['office', 'retail', 'industrial'],
+            'expiring': ['office', 'retail'],
+            'occupied': ['industrial', 'office']
+        };
+        // Source → type mapping for prototype
+        const sourceTypeMap = {
+            'realestate': ['office', 'retail', 'industrial'],
+            'bayleys': ['office', 'retail'],
+            'icp': ['signal']
+        };
+
+        Object.entries(walterMarkers).forEach(([key, marker]) => {
+            const data = propertyData[key];
+            if (!data) return;
+
+            let show = true;
+
+            // Region filter
+            if (region !== 'auckland' && region !== 'all') show = false;
+
+            // Type filter
+            if (type !== 'all' && data.type !== type) show = false;
+
+            // Status filter
+            if (status !== 'all') {
+                const allowed = statusTypeMap[status] || [];
+                if (!allowed.includes(data.type)) show = false;
+            }
+
+            // Source filter
+            if (source !== 'all') {
+                const allowed = sourceTypeMap[source] || [];
+                if (!allowed.includes(data.type)) show = false;
+            }
+
+            if (show) {
+                marker.addTo(walterMap);
+                visible++;
+            } else {
+                walterMap.removeLayer(marker);
+            }
+        });
+
+        // Update count
+        const countEl = document.querySelector('.result-count');
+        const totalPool = { auckland: 7561, wellington: 2340, christchurch: 1820, all: 11721 };
+        const pool = totalPool[region] || 7561;
+        if (countEl) countEl.textContent = `${visible} of ${pool.toLocaleString()} properties`;
+    }
+
+    ['filterRegion', 'filterType', 'filterStatus', 'filterSource'].forEach(id => {
+        document.getElementById(id)?.addEventListener('change', applyMarketFilters);
+    });
+
+    // --- Wallace Match Strategy Cards ---
+    const WALLACE_MATCH_DATA = {
+        'harbour-carlisle': {
+            type: 'investment',
+            score: 96,
+            title: 'Harbour Capital → 170-174 Carlisle Rd',
+            subtitle: 'Investment buyer matched to North Shore retail investment',
+            leftLabel: 'Investment Buyer',
+            left: {
+                name: 'Harbour Capital Ltd',
+                type: 'Private investment fund · Auckland',
+                rows: [
+                    ['Investment focus', 'Retail & mixed-use'],
+                    ['Budget range', '$3.0M – $5.5M'],
+                    ['Target yield', '5.5% – 6.5%'],
+                    ['Preferred locations', 'North Shore, CBD fringe'],
+                    ['Decision maker', 'James Chen, Director'],
+                    ['Source', 'Bayleys CRM · Active buyer']
+                ]
+            },
+            right: {
+                name: '170-174 Carlisle Road, North Shore',
+                type: 'Retail investment · For Sale',
+                rows: [
+                    ['Floor area', '1,050 sqm'],
+                    ['Annual income', '$509k p.a.'],
+                    ['Net yield', '6.1%'],
+                    ['WALE', '4.8 years'],
+                    ['Tenants', 'Magic Garden ECE (15yr lease)'],
+                    ['Asking price', '$3.8M – $4.2M']
+                ]
+            },
+            compat: [
+                { label: 'Yield', status: 'pass' },
+                { label: 'Location', status: 'pass' },
+                { label: 'Tenant quality', status: 'pass' },
+                { label: 'Price range', status: 'pass' },
+                { label: 'Sector fit', status: 'pass' }
+            ],
+            rec: {
+                title: 'Draft introduction email to James Chen',
+                body: 'This is a strong match across all five criteria. The 6.1% yield exceeds Harbour Capital\'s minimum, the North Shore location is preferred, and the 15-year ECE lease provides the income security they require.',
+                script: '"Hi James — I have a retail investment at 170-174 Carlisle Road that closely matches your brief. It\'s returning 6.1% on a 15-year lease to Magic Garden ECE, asking $3.8M–$4.2M. Would you like me to send through the investment summary?"'
+            },
+            actions: [
+                { label: 'Send Introduction', primary: true },
+                { label: 'Schedule Call', primary: false },
+                { label: 'View Property', primary: false }
+            ]
+        },
+        'techflow-shortland': {
+            type: 'tenant',
+            score: 89,
+            title: 'TechFlow Ltd → 88 Shortland St',
+            subtitle: 'Office tenant matched to CBD Grade A space',
+            leftLabel: 'Prospective Tenant',
+            left: {
+                name: 'TechFlow Ltd',
+                type: 'SaaS / Technology · Auckland CBD',
+                rows: [
+                    ['Industry', 'Technology / SaaS'],
+                    ['Headcount', '45 (growing +30% YoY)'],
+                    ['Space need', '400 – 600 sqm'],
+                    ['Budget', '$380 – $450/sqm'],
+                    ['ICP status', 'Active since Nov 2025'],
+                    ['Decision maker', 'Sarah Park, COO']
+                ]
+            },
+            right: {
+                name: '88 Shortland Street, CBD',
+                type: 'Office · Grade A · For Lease',
+                rows: [
+                    ['Floor area', '1,200 sqm (partitionable)'],
+                    ['Asking rent', '$435/sqm + OPEX'],
+                    ['Grade', 'A — recently refurbished'],
+                    ['Fit-out', 'Open plan, modern amenities'],
+                    ['Available', 'Immediate'],
+                    ['Parking', '8 spaces available']
+                ]
+            },
+            compat: [
+                { label: 'Size match', status: 'pass' },
+                { label: 'Budget fit', status: 'partial' },
+                { label: 'Location', status: 'pass' },
+                { label: 'Grade/amenities', status: 'pass' },
+                { label: 'Growth capacity', status: 'pass' }
+            ],
+            rec: {
+                title: 'Arrange a viewing for Sarah Park',
+                body: 'TechFlow\'s ICP has been active for 5 months and their hiring growth suggests they\'ll outgrow their current space within 6 months. The 1,200sqm floor at 88 Shortland can be partitioned to 500sqm initially with expansion options — ideal for their trajectory.',
+                script: '"Hi Sarah — I noticed TechFlow is growing rapidly and wanted to introduce a Grade A office at 88 Shortland Street. It\'s 1,200sqm with flexible partitioning, recently refurbished, at $435/sqm. I think it could suit your team\'s growth plans — would a viewing next week work?"'
+            },
+            actions: [
+                { label: 'Send Space Profile', primary: true },
+                { label: 'Arrange Viewing', primary: false },
+                { label: 'View Listing', primary: false }
+            ]
+        },
+        'meridian-parnell': {
+            type: 'expansion',
+            score: 84,
+            title: 'Meridian Creative → 135 Parnell Rd',
+            subtitle: 'Existing tenant showing expansion signals, matched to adjacent space',
+            leftLabel: 'Expanding Tenant',
+            left: {
+                name: 'Meridian Creative Ltd',
+                type: 'Design studio · Parnell',
+                rows: [
+                    ['Current lease', '85 Parnell Rd (180 sqm)'],
+                    ['Lease expiry', 'May 2027'],
+                    ['Stickiness', '91%'],
+                    ['Seek listings', '6 active roles'],
+                    ['Revenue signal', '+40% YoY (Companies Office)'],
+                    ['Decision maker', 'Tom & Lisa Mercer, Directors']
+                ]
+            },
+            right: {
+                name: '135 Parnell Road, Parnell',
+                type: 'Office · Character · For Lease',
+                rows: [
+                    ['Floor area', '320 sqm'],
+                    ['Asking rent', '$395/sqm + OPEX'],
+                    ['Character', 'Heritage conversion, exposed brick'],
+                    ['Fit-out', 'Creative-ready, high stud'],
+                    ['Available', 'From March 2027'],
+                    ['Parking', '4 on-site']
+                ]
+            },
+            compat: [
+                { label: 'Growth signals', status: 'pass' },
+                { label: 'Location match', status: 'pass' },
+                { label: 'Space type', status: 'pass' },
+                { label: 'Timing', status: 'pass' },
+                { label: 'Budget estimate', status: 'partial' }
+            ],
+            rec: {
+                title: 'Present relocation options to Tom & Lisa Mercer',
+                body: 'Meridian Creative is showing strong expansion signals — 6 active Seek listings and 40% revenue growth. Their current 180sqm space at 85 Parnell Rd will be outgrown within 12 months. 135 Parnell Rd offers nearly double the space in a character building that matches their brand identity.',
+                script: '"Hi Tom — congratulations on Meridian\'s growth this year. I wanted to flag 135 Parnell Road, which is coming available around the time your lease at 85 Parnell is up for renewal. It\'s a heritage conversion with 320sqm — nearly double your current space, and still in the Parnell creative precinct. Worth a look?"'
+            },
+            actions: [
+                { label: 'Send Options Brief', primary: true },
+                { label: 'Schedule Meeting', primary: false },
+                { label: 'View Property', primary: false }
+            ]
+        }
+    };
+
+    function openWallaceMatch(matchId) {
+        const data = WALLACE_MATCH_DATA[matchId];
+        if (!data) return;
+
+        document.getElementById('wmTitle').textContent = data.title;
+        document.getElementById('wmSubtitle').textContent = data.subtitle;
+        document.getElementById('wmScore').textContent = data.score + '%';
+        document.getElementById('wmLeftLabel').textContent = data.leftLabel;
+
+        // Left card (prospect)
+        document.getElementById('wmLeftCard').innerHTML = `
+            <div class="wm-card-name">${data.left.name}</div>
+            <div class="wm-card-type">${data.left.type}</div>
+            ${data.left.rows.map(r => `<div class="wm-card-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('')}
+        `;
+
+        // Right card (property)
+        document.getElementById('wmRightCard').innerHTML = `
+            <div class="wm-card-name">${data.right.name}</div>
+            <div class="wm-card-type">${data.right.type}</div>
+            ${data.right.rows.map(r => `<div class="wm-card-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('')}
+        `;
+
+        // Compatibility
+        const compatEl = document.getElementById('wmCompatItems');
+        compatEl.innerHTML = data.compat.map(c => {
+            return `<span class="wm-compat-item ${c.status}"><span class="wm-compat-dot"></span>${c.label}</span>`;
+        }).join('');
+
+        // Recommendation
+        document.getElementById('wmRecommendation').innerHTML = `
+            <div class="wm-rec-label">
+                <span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px">W</span>
+                Wallace Recommendation
+            </div>
+            <div class="wm-rec-title">${data.rec.title}</div>
+            <div class="wm-rec-body">${data.rec.body}</div>
+            <div class="wm-rec-script">${data.rec.script}</div>
+        `;
+
+        // Actions
+        document.getElementById('wmActions').innerHTML = data.actions.map(a =>
+            `<button class="wm-action-btn${a.primary ? ' primary' : ''}">${a.label}</button>`
+        ).join('');
+
+        // Bind action button feedback
+        document.querySelectorAll('#wmActions .wm-action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.classList.contains('primary')) {
+                    // Navigate to Command Compose with pre-filled data from the match
+                    document.getElementById('wallaceMatchModal')?.classList.remove('active');
+                    const composeData = {
+                        to: data.left.rows.find(r => r[0] === 'Decision maker')?.[1]?.split(',')[0] || '',
+                        subject: data.title,
+                        property: data.right.name,
+                        body: data.rec.script.replace(/^"|"$/g, '').replace(/\\'/g, "'")
+                    };
+                    openCmdCompose(composeData);
+                } else {
+                    this.textContent = 'Done';
+                    this.style.background = 'var(--bg-secondary)';
+                    this.disabled = true;
+                }
+            });
+        });
+
+        document.getElementById('wallaceMatchModal')?.classList.add('active');
+    }
+
+    // Helper: open Command compose with pre-filled data
+    function openCmdCompose(data) {
+        switchView('command');
+        setTimeout(() => {
+            showCmdPanel('cmdComposeView');
+            if (data.to) document.getElementById('cmdComposeTo').value = data.to;
+            if (data.subject) document.getElementById('cmdComposeSubject').value = data.subject;
+            if (data.body) document.getElementById('cmdComposeBody').value = data.body;
+            if (data.property) {
+                const sel = document.getElementById('cmdComposeProperty');
+                // Try to match an option
+                for (let opt of sel.options) {
+                    if (opt.text.includes(data.property.split(',')[0])) { sel.value = opt.value; break; }
+                }
+            }
+        }, 300);
+    }
+
+    // Close handler
+    document.getElementById('wallaceMatchClose')?.addEventListener('click', () => {
+        document.getElementById('wallaceMatchModal')?.classList.remove('active');
+    });
+    document.getElementById('wallaceMatchModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'wallaceMatchModal') e.target.classList.remove('active');
+    });
+
+    // Wire Review buttons
+    document.querySelectorAll('.wallace-match-action[data-wmatch]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openWallaceMatch(btn.dataset.wmatch);
+        });
+    });
+
+    // --- Command Centre ---
+    const CMD_EMAILS = [
+        { id: 'e1', from: 'Sophie Chen', fromOrg: 'Lumiere Design', email: 's.chen@lumiere.co.nz', subject: 'RE: Lease renewal discussion — 24 Beaumont St', preview: 'Hi Will, thanks for the call yesterday. We\'d like to explore the expansion option you mentioned...', property: '24 Beaumont St', category: 'client', time: '9:42 AM', unread: true,
+          body: 'Hi Will,<br><br>Thanks for the call yesterday. We\'d like to explore the expansion option you mentioned — taking the ground floor as well as our existing first floor tenancy.<br><br>Could you send through the updated terms for the combined space? We\'re particularly interested in understanding the $/sqm impact and whether Des would consider a longer initial term (8 years) in exchange for a rent reduction.<br><br>Happy to meet this week if that helps move things along.<br><br>Kind regards,<br>Sophie Chen<br>Operations Director, Lumiere Design Group',
+          aiReply: 'Hi Sophie,<br><br>Great to hear you\'re interested in the expansion. I\'ve run the numbers on the combined ground + first floor tenancy:<br><br>• Combined area: 480 sqm (currently 240 sqm)<br>• Proposed rate: $375/sqm (down from $395 reflecting the longer commitment)<br>• 8-year initial term with 2×4-year renewals<br>• Annual rent: $180,000 + GST<br><br>I\'ve discussed the concept with Des and he\'s supportive in principle, subject to seeing the formal terms. Shall I prepare a Heads of Terms for your review?<br><br>I\'m free Thursday afternoon if you\'d like to walk the ground floor space.<br><br>Best regards,<br>Will Alexander',
+          zaraNote: 'Zara confirms: $375/sqm is within market range for Freemans Bay. The 8-year term is favourable for the landlord — recommend proceeding.' },
+        { id: 'e2', from: 'Marcus Miller', fromOrg: 'Morrison Kent', email: 'm.miller@morrisonkent.co.nz', subject: 'Settlement conditions — 15 Osterley Way', preview: 'Will, the vendor\'s solicitor has confirmed the OIA condition is now unconditional...', property: '15 Osterley Way', category: 'property', time: '8:15 AM', unread: true,
+          body: 'Will,<br><br>The vendor\'s solicitor has confirmed the OIA condition is now unconditional. We\'re clear to proceed to settlement.<br><br>Outstanding items:<br>1. Final settlement statement — expected by Wednesday<br>2. Body corporate levy apportionment — I\'ll confirm the daily rate<br>3. Keys and access codes — arrange with building manager<br><br>Settlement date remains 28 April. Please confirm your client is ready to proceed.<br><br>Regards,<br>Marcus Miller<br>Partner, Morrison Kent',
+          aiReply: 'Hi Marcus,<br><br>Thanks for confirming the OIA clearance — great news.<br><br>On the outstanding items:<br>1. Settlement statement — we\'ll review as soon as it\'s through<br>2. Body corp levy — noted, please send the daily rate when available<br>3. Keys — I\'ll coordinate with the building manager at Crockers this week<br><br>My client is confirmed ready to settle on the 28th. No issues anticipated.<br><br>Best regards,<br>Will Alexander',
+          zaraNote: 'Settlement on track. No contradictions with existing deal terms detected.' },
+        { id: 'e3', from: 'James Chen', fromOrg: 'Harbour Capital', email: 'j.chen@harbourcap.co.nz', subject: 'Investment enquiry — Carlisle Road property', preview: 'Will, thanks for the introduction. The Carlisle Rd opportunity looks very interesting...', property: '170-174 Carlisle Rd', category: 'client', time: 'Yesterday', unread: false,
+          body: 'Will,<br><br>Thanks for the introduction. The Carlisle Rd opportunity looks very interesting — the 6.1% yield and long-term ECE tenant are exactly what we\'re looking for.<br><br>A few questions:<br>1. Can you confirm the lease is a net lease or gross?<br>2. What\'s the building condition — any upcoming capex requirements?<br>3. Is there any development upside (zoning)?<br><br>If these stack up, we\'d like to arrange an inspection next week.<br><br>Regards,<br>James Chen<br>Director, Harbour Capital Ltd',
+          aiReply: 'Hi James,<br><br>Great questions. Here are the details:<br><br>1. The lease is a net lease — tenant pays all outgoings including rates, insurance, and maintenance<br>2. Building condition is excellent — recent seismic strengthening to 80% NBS, roof replaced 2021. No material capex expected in the next 5 years<br>3. Zoning is Business — Mixed Use under Auckland Unitary Plan. There is development upside for a potential second level addition (subject to resource consent)<br><br>I\'d be happy to arrange an inspection. How does Wednesday or Thursday next week look?<br><br>Best regards,<br>Will Alexander',
+          zaraNote: 'All property data verified against LINZ and council records. Development upside claim confirmed — Mixed Use zone permits up to 16m height.' },
+        { id: 'e4', from: 'Sarah Park', fromOrg: 'TechFlow Ltd', email: 's.park@techflow.co.nz', subject: 'Office space requirements — follow up', preview: 'Hi Will, following our conversation, I\'ve discussed internally and we\'re keen to view...', property: '88 Shortland St', category: 'client', time: 'Yesterday', unread: false,
+          body: 'Hi Will,<br><br>Following our conversation, I\'ve discussed internally and we\'re keen to view the 88 Shortland St space.<br><br>Key requirements:<br>• Minimum 450 sqm (we need room to grow to 60 staff by end of year)<br>• Modern fit-out or fit-out contribution<br>• Good natural light — our team does a lot of screen work<br>• Bike storage and end-of-trip facilities<br><br>Could you arrange a viewing for next week? Tuesday or Wednesday preferred.<br><br>Thanks,<br>Sarah Park<br>COO, TechFlow Ltd',
+          aiReply: 'Hi Sarah,<br><br>That\'s great to hear. 88 Shortland St ticks all your boxes:<br><br>• The available floor is 1,200 sqm which can be partitioned to 500 sqm initially with expansion options as you grow<br>• Recently refurbished with modern open-plan fit-out — the landlord may consider a fit-out contribution for a 5+ year commitment<br>• North-facing with floor-to-ceiling glazing — excellent natural light<br>• Building has 24 bike parks in the basement plus showers and lockers<br><br>I\'ve provisionally booked a viewing for Tuesday 15th at 2:30 PM. Does that work for you?<br><br>Best regards,<br>Will Alexander',
+          zaraNote: 'Viewing auto-added to calendar for Tue 15th. TechFlow ICP has been active 5 months — strong intent signal.' },
+        { id: 'e5', from: 'Bayleys Research', fromOrg: 'Bayleys', email: 'research@bayleys.co.nz', subject: 'Weekly Market Digest — Auckland Commercial', preview: 'This week: Industrial yields tighten to 4.8%, CBD vacancy drops to 8.1%...', property: null, category: 'internal', time: 'Yesterday', unread: false,
+          body: 'Weekly Market Digest — Auckland Commercial<br><br>Key movements this week:<br>• Industrial yields tighten to 4.8% average (South Auckland leading)<br>• CBD office vacancy drops to 8.1% from 8.4% last month<br>• 3 new retail listings in Ponsonby — combined value $4.2M<br>• Newmarket office demand strong — 4 new tenant requirements registered<br><br>Full report attached.',
+          aiReply: null, zaraNote: null },
+        { id: 'e6', from: 'Des Radonich', fromOrg: 'Des Radonich Ltd', email: 'des@radonich.co.nz', subject: 'Rent review — 33 Crummer Rd', preview: 'Will, the CPI review is due September. Can we discuss the approach...', property: '33 Crummer Rd', category: 'property', time: '2 days ago', unread: false,
+          body: 'Will,<br><br>The CPI rent review for Glenn Cotterill\'s lease at 33 Crummer Rd is due September. Can we discuss the approach? Current rent is $92,412 and CPI is tracking around 3.1%.<br><br>I\'d prefer to keep Glenn happy — he\'s been a good tenant and the expansion signals suggest he may want more space.<br><br>Can you call me when you have a moment?<br><br>Des',
+          aiReply: 'Hi Des,<br><br>Thanks for flagging the rent review. Based on current CPI at 3.1%, the adjusted annual rent would be approximately $95,278 (an increase of $2,866).<br><br>I agree with your approach — Glenn has been a reliable tenant with 91% stickiness, and our signals suggest his business is growing. A smooth review reinforces the relationship for a potential lease renewal conversation down the track.<br><br>I\'ll give you a call this afternoon to discuss. In the meantime, I\'ve asked Costello to prepare a market comparison for the Grey Lynn office submarket to support the CPI adjustment.<br><br>Best regards,<br>Will Alexander',
+          zaraNote: 'CPI calculation verified: 3.1% on $92,412 = $95,278.77. Market comparison supports CPI-only adjustment — no ratchet clause in this lease.' },
+        { id: 'e7', from: 'Tom Mercer', fromOrg: 'Meridian Creative', email: 'tom@meridiancreative.co.nz', subject: 'Expansion plans — confidential', preview: 'Hi Will, Lisa and I have been discussing our space needs. The team has grown to 22...', property: '135 Parnell Rd', category: 'client', time: '2 days ago', unread: false,
+          body: 'Hi Will,<br><br>Lisa and I have been discussing our space needs. The team has grown to 22 and we\'re hiring another 6-8 this year. Our current space at 85 Parnell Rd (180 sqm) is getting very tight.<br><br>We love the Parnell area and would prefer to stay in the creative precinct. Can you show us what\'s available?<br><br>Budget is flexible but we\'re thinking $350-400/sqm range for the right space. Character buildings preferred — our brand is important to us.<br><br>This is confidential for now — we haven\'t told our current landlord yet.<br><br>Cheers,<br>Tom',
+          aiReply: 'Hi Tom,<br><br>Thanks for thinking of me — exciting to hear about Meridian\'s growth.<br><br>I have two options that match your brief perfectly:<br><br>1. <strong>135 Parnell Road</strong> — 320 sqm, heritage conversion with exposed brick and high stud. Creative-ready fit-out. $395/sqm. Available from March 2027 — which aligns well with your lease expiry at 85 Parnell Rd.<br><br>2. <strong>Suite 2, 153B Parnell Road</strong> — 280 sqm, character villa conversion. $370/sqm. Available immediately.<br><br>Both are in the heart of the Parnell creative precinct. I\'d suggest viewing both — I can arrange them back-to-back one morning next week.<br><br>Absolutely understand the confidentiality. I won\'t engage with your current landlord until you\'re ready.<br><br>Best regards,<br>Will Alexander',
+          zaraNote: 'Confidential flag noted. Zara has suppressed this from the CRM activity feed until Tom confirms readiness.' },
+        { id: 'ai1', from: 'Zara', fromOrg: 'AI Agent', email: null, subject: 'Follow-up reminder: Glenn Cotterill re lease renewal', preview: 'Glenn hasn\'t responded to your lease renewal email sent 5 days ago. Recommend a phone call...', property: '33 Crummer Rd', category: 'ai', time: '7:30 AM', unread: true,
+          body: '<div class="cmd-ai-body"><strong>Follow-up recommended</strong><br><br>Glenn Cotterill hasn\'t responded to your lease renewal discussion email sent 5 days ago. Based on his communication pattern, he typically responds within 2 days.<br><br>His lease at 33 Crummer Rd expires in 7 months. Given the expansion signals (6 Seek listings, 40% revenue growth), this is a time-sensitive opportunity.<br><br><strong>Recommended action:</strong> Phone call today. Glenn\'s mobile: 021 XXX XXXX<br><br><em>This reminder was generated by Zara based on your communication history and deal timeline.</em></div>',
+          aiReply: null, zaraNote: null },
+        { id: 'ai2', from: 'Wallace', fromOrg: 'AI Agent', email: null, subject: 'Introduction ready: Harbour Capital → 170-174 Carlisle Rd', preview: 'Wallace has drafted an introduction email for James Chen (Harbour Capital) regarding the 96% match...', property: '170-174 Carlisle Rd', category: 'ai', time: '6:45 AM', unread: true,
+          body: '<div class="cmd-ai-body"><strong>Introduction draft ready</strong><br><br>Wallace matched Harbour Capital to 170-174 Carlisle Rd at <strong>96% compatibility</strong>. A personalised introduction email has been drafted for James Chen.<br><br><strong>Match summary:</strong><br>• Budget: $3.0M–$5.5M ✓ (Asking $3.8M–$4.2M)<br>• Target yield: 5.5–6.5% ✓ (Property yields 6.1%)<br>• Location: North Shore ✓<br>• Tenant quality: 15yr ECE lease ✓<br><br><em>Click "Send to James Chen" to open the pre-filled compose view, or edit before sending.</em></div>',
+          aiReply: null, zaraNote: null, composeData: { to: 'j.chen@harbourcap.co.nz', subject: 'Investment opportunity — 170-174 Carlisle Road, North Shore', property: '170-174 Carlisle Rd, North Shore', body: 'Hi James,\n\nI have a retail investment at 170-174 Carlisle Road, North Shore that closely matches your investment brief.\n\nKey highlights:\n• Net yield: 6.1% on a 15-year lease to Magic Garden ECE\n• Asking price: $3.8M–$4.2M\n• WALE: 4.8 years\n• Building in excellent condition — recent seismic strengthening to 80% NBS\n\nThe long-term ECE tenant and North Shore location provide the income security and growth profile you outlined.\n\nWould you like me to send through the full investment summary, or shall we arrange an inspection?\n\nKind regards,\n\nWill Alexander\nHead of Innovation | Commercial\nBayleys Real Estate\nM: 021 XXX XXXX\nE: will.alexander@bayleys.co.nz' } },
+        { id: 'ai3', from: 'Costello', fromOrg: 'AI Agent', email: null, subject: 'Weekly portfolio report ready — Des Radonich', preview: 'Costello has generated the weekly owner report for Des Radonich covering 33 Crummer Rd...', property: '33 Crummer Rd', category: 'ai', time: 'Yesterday', unread: false,
+          body: '<div class="cmd-ai-body"><strong>Weekly owner report generated</strong><br><br>Costello has prepared the weekly portfolio report for Des Radonich covering:<br><br>• <strong>33 Crummer Road</strong> — Tenant stickiness stable at 48%, CPI review due Sep 2026, Glenn Cotterill showing expansion signals<br>• Market comparison: Grey Lynn office rents averaging $380/sqm (your property at $302/sqm — below market)<br>• Recommendation: Consider rent review to align closer to market during September CPI adjustment<br><br><em>Report is ready to send. Des typically prefers email delivery on Monday mornings.</em></div>',
+          aiReply: null, zaraNote: null, composeData: { to: 'des@radonich.co.nz', subject: 'Weekly portfolio report — 33 Crummer Road', property: '33 Crummer Road, Grey Lynn', body: 'Hi Des,\n\nPlease find attached your weekly portfolio report for 33 Crummer Road.\n\nKey highlights this week:\n• Tenant stickiness remains stable at 48%\n• CPI rent review due September — current CPI tracking at 3.1%\n• Glenn Cotterill showing expansion signals (6 active Seek listings)\n• Grey Lynn office market averaging $380/sqm — your property at $302/sqm has room for adjustment\n\nI\'d recommend we discuss the September rent review approach. Happy to call this week.\n\nBest regards,\n\nWill Alexander\nHead of Innovation | Commercial\nBayleys Real Estate' } },
+        { id: 'ai4', from: 'Wallace', fromOrg: 'AI Agent', email: null, subject: 'Expansion match: Meridian Creative → 135 Parnell Rd', preview: 'Wallace identified Meridian Creative as a high-probability expansion tenant for 135 Parnell Rd...', property: '135 Parnell Rd', category: 'ai', time: 'Yesterday', unread: false,
+          body: '<div class="cmd-ai-body"><strong>Expansion opportunity identified</strong><br><br>Wallace identified Meridian Creative as an <strong>84% match</strong> for 135 Parnell Rd based on expansion signals:<br><br>• 6 active Seek listings (+40% YoY revenue growth)<br>• Current space at 85 Parnell Rd (180 sqm) — outgrowing within 12 months<br>• 135 Parnell Rd offers 320 sqm in a character building matching their brand<br>• Lease timing aligns — Meridian\'s expiry is May 2027, space available from March 2027<br><br><strong>This is confidential</strong> — Tom Mercer has not yet notified his current landlord.<br><br><em>Click to draft an approach email for Tom & Lisa Mercer.</em></div>',
+          aiReply: null, zaraNote: null, composeData: { to: 'tom@meridiancreative.co.nz', subject: 'Space options in Parnell — confidential', property: '135 Parnell Rd, Parnell', body: 'Hi Tom,\n\nCongratulations on Meridian\'s growth this year — it\'s great to see the team expanding.\n\nI wanted to flag 135 Parnell Road, which is coming available around the time your lease at 85 Parnell is up for renewal. It\'s a heritage conversion with 320sqm of creative-ready space — exposed brick, high stud, natural light. Nearly double your current footprint, and still in the Parnell creative precinct.\n\nI also have a second option at Suite 2, 153B Parnell Road (280sqm, $370/sqm) if you\'d like to compare.\n\nHappy to arrange viewings at your convenience. Absolutely understand the confidentiality.\n\nKind regards,\n\nWill Alexander\nHead of Innovation | Commercial\nBayleys Real Estate' } }
+    ];
+
+    const CMD_CALENDAR = [
+        { id: 'c1', time: '9:00', duration: '30 min', title: 'Team standup', type: 'm365', property: null, attendees: [{ name: 'Bayleys Commercial Team', initials: 'BT' }] },
+        { id: 'c2', time: '10:30', duration: '45 min', title: 'Property viewing — 33 Crummer Rd', type: 'viewing', property: '33 Crummer Rd', attendees: [{ name: 'Glenn Cotterill', initials: 'GC', role: 'Tenant · Glenn Cotterill Company Trust' }, { name: 'Des Radonich', initials: 'DR', role: 'Owner · Des Radonich Ltd' }],
+          prep: '<strong>Zara\'s meeting prep:</strong><ul><li>Glenn\'s lease expires Aug 2029 — but expansion signals suggest he may want to discuss early renewal for more space</li><li>Des is open to a longer term at reduced rate (per his email)</li><li>Building NBS is 67% — mention the seismic upgrade plan to reassure Glenn</li><li>Current rent $92,412 — CPI review due Sep, expect ~$95k adjusted</li></ul><strong>Talking points:</strong> Expansion needs, combined floor option, rent review approach, long-term commitment incentives.' },
+        { id: 'c3', time: '12:00', duration: '1 hr', title: 'Lunch with Marcus Miller', type: 'm365', property: '15 Osterley Way', attendees: [{ name: 'Marcus Miller', initials: 'MM', role: 'Partner · Morrison Kent Solicitors' }],
+          prep: '<strong>Context:</strong> Settlement for 15 Osterley Way is 28 April. Marcus confirmed OIA is unconditional. Use lunch to confirm all outstanding items and discuss potential future instructions.' },
+        { id: 'c4', time: '2:00', duration: '30 min', title: 'Harbour Capital intro call', type: 'zara', property: '170-174 Carlisle Rd', attendees: [{ name: 'James Chen', initials: 'JC', role: 'Director · Harbour Capital Ltd' }],
+          prep: '<strong>Wallace matched this at 96%.</strong><ul><li>James is looking for $3-5.5M retail investment, 5.5-6.5% yield</li><li>Carlisle Rd returns 6.1% on a 15-year ECE lease — perfect match</li><li>He\'s asked about lease type (net), building condition, and development upside</li><li>Have answers ready from your AI-drafted reply</li></ul><strong>Goal:</strong> Arrange an inspection for next week.' },
+        { id: 'c5', time: '3:30', duration: '15 min', title: 'Costello weekly report review', type: 'costello', property: null, attendees: [] },
+        { id: 'c6', time: '4:30', duration: '45 min', title: 'TechFlow viewing — 88 Shortland St', type: 'viewing', property: '88 Shortland St', attendees: [{ name: 'Sarah Park', initials: 'SP', role: 'COO · TechFlow Ltd' }, { name: 'David Kim', initials: 'DK', role: 'Facilities Manager · TechFlow Ltd' }],
+          prep: '<strong>Zara\'s viewing prep:</strong><ul><li>TechFlow has 45 staff, growing 30% YoY — need 450+ sqm</li><li>ICP active since Nov 2025 — strong intent</li><li>Key requirements: natural light, modern fit-out, bike storage, growth capacity</li><li>88 Shortland has all of these — emphasise the partitioning flexibility</li><li>Sarah asked about fit-out contribution — the landlord may consider this for a 5+ year term</li></ul><strong>Bring:</strong> Floor plans, fit-out options, parking details.' }
+    ];
+
+    function renderCommandStream(filter) {
+        const stream = document.getElementById('cmdStream');
+        if (!stream) return;
+        let items = [];
+
+        if (filter === 'all') {
+            // All = emails + AI notifications (no calendar in stream)
+            CMD_EMAILS.forEach(e => items.push({ ...e, itemType: 'email' }));
+        } else if (filter === 'email') {
+            CMD_EMAILS.filter(e => e.category !== 'ai').forEach(e => items.push({ ...e, itemType: 'email' }));
+        } else if (filter === 'calendar') {
+            CMD_CALENDAR.forEach(c => items.push({ ...c, itemType: 'calendar', from: c.type === 'zara' ? 'Zara' : c.type === 'costello' ? 'Costello' : '', fromOrg: '' }));
+        } else if (filter === 'ai') {
+            CMD_EMAILS.filter(e => e.category === 'ai').forEach(e => items.push({ ...e, itemType: 'email' }));
+        }
+
+        stream.innerHTML = items.map(item => {
+            if (item.itemType === 'calendar') {
+                const dotClass = item.type === 'viewing' ? 'viewing' : item.type === 'zara' ? 'ai' : item.type === 'costello' ? 'ai' : 'calendar';
+                const propTag = item.property ? `<span class="cmd-property-tag">${item.property}</span>` : '';
+                return `<div class="cmd-stream-item" data-cmd-type="calendar" data-cmd-id="${item.id}">
+                    <span class="cmd-item-dot ${dotClass}"></span>
+                    <div class="cmd-item-content">
+                        <div class="cmd-item-top"><span class="cmd-item-from">${item.time}</span><span class="cmd-item-time">${item.duration}</span></div>
+                        <div class="cmd-item-subject">${item.title}</div>
+                        <div class="cmd-item-tags">${propTag}</div>
+                    </div>
+                </div>`;
+            } else {
+                const dotClass = item.category === 'ai' ? 'ai' : item.category === 'client' ? 'email' : item.category === 'internal' ? 'internal' : 'viewing';
+                const propTag = item.property ? `<span class="cmd-property-tag">${item.property}</span>` : '';
+                const catTag = item.category !== 'ai' ? `<span class="cmd-category-tag ${item.category}">${item.category}</span>` : '';
+                return `<div class="cmd-stream-item${item.unread ? ' unread' : ''}" data-cmd-type="email" data-cmd-id="${item.id}">
+                    <span class="cmd-item-dot ${dotClass}"></span>
+                    <div class="cmd-item-content">
+                        <div class="cmd-item-top"><span class="cmd-item-from">${item.from}${item.fromOrg ? ' · ' + item.fromOrg : ''}</span><span class="cmd-item-time">${item.time}</span></div>
+                        <div class="cmd-item-subject">${item.subject}</div>
+                        <div class="cmd-item-preview">${item.preview}</div>
+                        <div class="cmd-item-tags">${propTag}${catTag}</div>
+                    </div>
+                </div>`;
+            }
+        }).join('');
+
+        // Bind clicks
+        stream.querySelectorAll('.cmd-stream-item').forEach(el => {
+            el.addEventListener('click', () => {
+                stream.querySelectorAll('.cmd-stream-item').forEach(s => s.classList.remove('active'));
+                el.classList.add('active');
+                el.classList.remove('unread');
+                const type = el.dataset.cmdType;
+                const id = el.dataset.cmdId;
+                if (type === 'email') openCmdEmail(id);
+                else if (type === 'calendar') openCmdMeeting(id);
+            });
+        });
+    }
+
+    function renderCommandTimeline() {
+        const tl = document.getElementById('cmdTimeline');
+        if (!tl) return;
+        tl.innerHTML = '<div class="cmd-timeline-title">Today\'s Schedule</div>' +
+            CMD_CALENDAR.map(c => {
+                const propChip = c.property ? `<div class="cmd-tl-property-chip">${c.property}</div>` : '';
+                return `<div class="cmd-tl-item" data-cmd-cal="${c.id}">
+                    <span class="cmd-tl-time">${c.time}</span>
+                    <div class="cmd-tl-bar ${c.type}"></div>
+                    <div class="cmd-tl-info">
+                        <div class="cmd-tl-title">${c.title}</div>
+                        <div class="cmd-tl-meta">${c.duration}${c.attendees.length ? ' · ' + c.attendees.map(a => a.name).join(', ') : ''}</div>
+                        ${propChip}
+                    </div>
+                </div>`;
+            }).join('');
+
+        // Bind timeline clicks
+        tl.querySelectorAll('.cmd-tl-item').forEach(el => {
+            el.addEventListener('click', () => openCmdMeeting(el.dataset.cmdCal));
+        });
+    }
+
+    function showCmdPanel(panel) {
+        ['cmdToday', 'cmdEmailDetail', 'cmdMeetingDetail', 'cmdComposeView'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = id === panel ? '' : 'none';
+        });
+    }
+
+    function openCmdEmail(id) {
+        const email = CMD_EMAILS.find(e => e.id === id);
+        if (!email) return;
+        showCmdPanel('cmdEmailDetail');
+        document.getElementById('cmdEmailSubject').textContent = email.subject;
+        document.getElementById('cmdEmailPropertyTag').innerHTML = email.property ? `<span class="cmd-property-tag">${email.property}</span>` : '';
+        document.getElementById('cmdEmailMeta').innerHTML = `<strong>${email.from}</strong> &lt;${email.email || 'system'}&gt; · ${email.time}`;
+        document.getElementById('cmdEmailBody').innerHTML = email.body;
+        document.getElementById('cmdAiDraft').style.display = 'none';
+
+        // Agent compose button (for Wallace/Costello emails with composeData)
+        const replySection = document.querySelector('.cmd-email-reply-section');
+        if (replySection && email.composeData) {
+            const recipientName = email.composeData.to.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            replySection.innerHTML = `
+                <button class="cmd-draft-reply-btn" id="cmdAgentCompose">
+                    <span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px">W</span>
+                    Send to ${recipientName}
+                </button>
+                <button class="cmd-reply-btn" id="cmdManualReply">Edit draft</button>
+            `;
+            document.getElementById('cmdAgentCompose')?.addEventListener('click', () => {
+                openCmdCompose(email.composeData);
+            });
+        } else if (replySection && !email.composeData) {
+            replySection.innerHTML = `
+                <button class="cmd-draft-reply-btn" id="cmdDraftReply" style="${email.aiReply ? '' : 'display:none'}">
+                    <span class="agent-pip wallace" style="width:18px;height:18px;font-size:8px">W</span>
+                    Draft AI Reply
+                </button>
+                <button class="cmd-reply-btn" id="cmdManualReply">Reply</button>
+                <button class="cmd-reply-btn">Forward</button>
+            `;
+        }
+
+        // Draft reply button
+        const draftBtn = document.getElementById('cmdDraftReply');
+        if (draftBtn) {
+            draftBtn.style.display = email.aiReply ? '' : 'none';
+            draftBtn.onclick = () => {
+                const draftEl = document.getElementById('cmdAiDraft');
+                draftEl.style.display = '';
+                document.getElementById('cmdAiDraftBody').innerHTML = email.aiReply;
+                const zaraEl = document.getElementById('cmdZaraReview');
+                const zaraText = document.getElementById('cmdZaraReviewText');
+                if (email.zaraNote) {
+                    zaraEl.style.display = '';
+                    zaraText.textContent = email.zaraNote;
+                } else {
+                    zaraEl.style.display = 'none';
+                }
+                draftEl.scrollIntoView({ behavior: 'smooth' });
+            };
+        }
+
+        // Send draft
+        document.getElementById('cmdSendDraft').onclick = function() {
+            this.textContent = 'Sent';
+            this.style.background = '#059669';
+            this.disabled = true;
+            // Brittany auto-file confirmation
+            const zaraEl = document.getElementById('cmdZaraReview');
+            if (zaraEl) {
+                setTimeout(() => {
+                    zaraEl.innerHTML = '<span class="agent-pip brittany" style="width:16px;height:16px;font-size:7px;background:linear-gradient(135deg,#ec4899,#8b5cf6)">B</span><span>Brittany has filed this email to ' + (email.property || 'Vault RE') + ' and updated the CRM record.</span>';
+                }, 800);
+            }
+        };
+    }
+
+    function openCmdMeeting(id) {
+        const meeting = CMD_CALENDAR.find(c => c.id === id);
+        if (!meeting) return;
+        showCmdPanel('cmdMeetingDetail');
+        document.getElementById('cmdMeetingTitle').textContent = meeting.title;
+        document.getElementById('cmdMeetingTime').textContent = `${meeting.time} · ${meeting.duration}`;
+        document.getElementById('cmdMeetingProperty').innerHTML = meeting.property ? `<span class="cmd-property-tag">${meeting.property}</span>` : '';
+        document.getElementById('cmdMeetingAttendees').innerHTML = meeting.attendees.map(a =>
+            `<div class="cmd-attendee-card"><div class="cmd-attendee-avatar">${a.initials}</div><div><div class="cmd-attendee-name">${a.name}</div><div class="cmd-attendee-role">${a.role || ''}</div></div></div>`
+        ).join('');
+        document.getElementById('cmdMeetingPrep').innerHTML = meeting.prep ?
+            `<div class="cmd-prep-label"><span class="agent-pip zara" style="width:18px;height:18px;font-size:8px">Z</span>Zara's Meeting Prep</div><div class="cmd-prep-body">${meeting.prep}</div>` : '<p style="color:var(--text-tertiary);font-size:13px;">No prep notes for this meeting.</p>';
+    }
+
+    // Set today's date
+    const cmdDateEl = document.getElementById('cmdTodayDate');
+    if (cmdDateEl) {
+        const now = new Date();
+        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        cmdDateEl.textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+    }
+
+    // Tab switching
+    document.querySelectorAll('.cmd-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.cmd-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            renderCommandStream(tab.dataset.cmdTab);
+        });
+    });
+
+    // Back buttons
+    document.getElementById('cmdBackBtn')?.addEventListener('click', () => showCmdPanel('cmdToday'));
+    document.querySelectorAll('.cmd-back-meeting').forEach(b => b.addEventListener('click', () => showCmdPanel('cmdToday')));
+    document.querySelectorAll('.cmd-back-compose').forEach(b => b.addEventListener('click', () => showCmdPanel('cmdToday')));
+
+    // Compose
+    document.getElementById('cmdCompose')?.addEventListener('click', () => showCmdPanel('cmdComposeView'));
+    document.getElementById('cmdComposeSend')?.addEventListener('click', function() {
+        this.textContent = 'Sent';
+        this.style.background = '#059669';
+        this.disabled = true;
+        setTimeout(() => {
+            showCmdPanel('cmdToday');
+            this.textContent = 'Send';
+            this.style.background = '';
+            this.disabled = false;
+        }, 2000);
+    });
+
+    // AI Assist in compose
+    document.getElementById('cmdAiAssist')?.addEventListener('click', () => {
+        const body = document.getElementById('cmdComposeBody');
+        const prop = document.getElementById('cmdComposeProperty');
+        const to = document.getElementById('cmdComposeTo');
+        const subject = document.getElementById('cmdComposeSubject');
+        const recipientName = to?.value?.split('@')[0]?.replace(/[._]/g, ' ')?.replace(/\b\w/g, c => c.toUpperCase()) || 'there';
+        const propName = prop?.value || 'a property opportunity';
+
+        if (body && !body.value) {
+            body.value = `Hi ${recipientName},\n\nI hope this finds you well. I wanted to reach out regarding ${propName} that I believe would be of interest based on your current requirements.\n\nI'd be happy to arrange a viewing or send through the full property brief at your convenience.\n\nKind regards,\n\nWill Alexander\nHead of Innovation | Commercial\nBayleys Real Estate\nM: 021 XXX XXXX\nE: will.alexander@bayleys.co.nz\nbayleys.co.nz`;
+        }
+        if (subject && !subject.value && propName !== 'a property opportunity') {
+            subject.value = `Property opportunity — ${propName}`;
+        }
+    });
+
+    // Day/Week/Month view toggle
+    document.querySelectorAll('.cmd-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cmd-view-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const view = btn.dataset.cmdView;
+            const timeline = document.getElementById('cmdTimeline');
+            const weekView = document.getElementById('cmdWeekView');
+            const monthView = document.getElementById('cmdMonthView');
+            const monthDayDetail = document.getElementById('cmdMonthDayDetail');
+            if (timeline) timeline.style.display = view === 'day' ? '' : 'none';
+            if (weekView) weekView.style.display = view === 'week' ? '' : 'none';
+            if (monthView) monthView.style.display = view === 'month' ? '' : 'none';
+            if (monthDayDetail) monthDayDetail.style.display = 'none';
+        });
+    });
+
+    // Month view: click date to show day schedule
+    const monthDayEvents = {
+        1: [{ time: '10:00', title: 'Quarter review', type: 'm365' }, { time: '2:00', title: 'Planning session (Zara)', type: 'zara' }],
+        2: [{ time: '9:30', title: 'Team standup', type: 'm365' }],
+        3: [{ time: '12:00', title: 'Client lunch', type: 'm365' }],
+        7: [{ time: '11:00', title: 'Landlord call — Des Radonich', type: 'm365' }],
+        8: [{ time: '9:00', title: 'AI strategy meeting', type: 'm365' }, { time: '2:00', title: 'Alix RPM catch-up', type: 'm365' }, { time: '3:30', title: 'Call Marcus Miller (Zara)', type: 'zara' }],
+        9: [{ time: '10:30', title: 'Property viewing', type: 'viewing' }, { time: '3:00', title: 'Follow-up Sophie Chen (Zara)', type: 'zara' }],
+        12: CMD_CALENDAR.map(c => ({ time: c.time, title: c.title, type: c.type })),
+        13: [{ time: '9:00', title: 'Team planning', type: 'm365' }, { time: '11:00', title: '135 Parnell Rd viewing', type: 'viewing' }],
+        14: [{ time: '12:30', title: 'Client lunch', type: 'm365' }, { time: '3:00', title: 'Follow-up calls (Zara)', type: 'zara' }],
+        15: [{ time: '2:30', title: 'TechFlow — 88 Shortland St', type: 'viewing' }],
+        16: [{ time: '10:00', title: 'Quarterly review', type: 'm365' }, { time: '4:00', title: 'Portfolio report (Costello)', type: 'costello' }],
+        17: [{ time: '10:00', title: 'Beaumont St — Sophie Chen', type: 'viewing' }],
+        21: [{ time: '9:00', title: 'Market update call', type: 'm365' }],
+        22: [{ time: '11:00', title: 'Osterley Way settlement prep', type: 'm365' }],
+        23: [{ time: '2:00', title: 'Harbour Capital follow-up', type: 'zara' }],
+        27: [{ time: '10:00', title: 'Monthly team sync', type: 'm365' }],
+        28: [{ time: '10:00', title: 'Settlement — 15 Osterley Way', type: 'm365' }],
+        29: [{ time: '9:00', title: 'Rent review — Crummer Rd', type: 'm365' }],
+        30: [{ time: '2:00', title: 'End of month reporting', type: 'costello' }]
+    };
+
+    document.querySelectorAll('.cmd-month-cell:not(.muted)').forEach(cell => {
+        cell.addEventListener('click', () => {
+            const day = parseInt(cell.textContent);
+            if (isNaN(day)) return;
+            // Highlight selected
+            document.querySelectorAll('.cmd-month-cell').forEach(c => c.classList.remove('selected'));
+            cell.classList.add('selected');
+
+            const detail = document.getElementById('cmdMonthDayDetail');
+            const header = document.getElementById('cmdMonthDayDetailHeader');
+            const events = document.getElementById('cmdMonthDayDetailEvents');
+            const dayEvents = monthDayEvents[day];
+
+            if (dayEvents && dayEvents.length > 0) {
+                header.textContent = `${day} April 2026 — ${dayEvents.length} event${dayEvents.length > 1 ? 's' : ''}`;
+                events.innerHTML = dayEvents.map(e =>
+                    `<div class="cmd-month-detail-event ${e.type}"><span class="cmd-month-detail-time">${e.time}</span><span class="cmd-month-detail-title">${e.title}</span></div>`
+                ).join('');
+                detail.style.display = '';
+            } else {
+                header.textContent = `${day} April 2026`;
+                events.innerHTML = '<p style="font-size:12px;color:var(--text-tertiary);padding:8px 0;">No events scheduled</p>';
+                detail.style.display = '';
+            }
+        });
+    });
+
+    // Vault RE button
+    document.querySelector('.cmd-vault-btn')?.addEventListener('click', function() {
+        this.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg> Filed';
+        this.style.background = '#059669';
+        this.style.color = 'white';
+        this.style.borderColor = '#059669';
+    });
+
+    // Initialize on view switch
+    const cmdObserver = new MutationObserver(() => {
+        if (document.getElementById('view-command')?.classList.contains('active')) {
+            renderCommandStream('all');
+            renderCommandTimeline();
+            showCmdPanel('cmdToday');
+        }
+    });
+    const cmdView = document.getElementById('view-command');
+    if (cmdView) cmdObserver.observe(cmdView, { attributes: true, attributeFilter: ['class'] });
+
     // --- Calendar Widget & Modal ---
     const TODAY = 8; // Wednesday 8 April 2026 (prototype "today")
     // Events keyed by day-of-month for April 2026 (simulated)
@@ -2209,7 +2965,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const calendarClose = document.getElementById('calendarClose');
 
     calendarCard?.addEventListener('click', () => {
-        calendarModal.classList.add('active');
+        switchView('command');
+        // Auto-switch to Calendar tab
+        setTimeout(() => {
+            document.querySelectorAll('.cmd-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.cmd-tab[data-cmd-tab="calendar"]')?.classList.add('active');
+            renderCommandStream('calendar');
+        }, 200);
     });
     calendarClose?.addEventListener('click', () => {
         calendarModal.classList.remove('active');
@@ -2820,7 +3582,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function clRenderMatch(m, isHigh) {
         const score = m.score;
         const cls = score >= 85 ? 'high' : 'medium';
-        const criteriaHtml = (m.criteria || []).map(c => `<span>&#10003; ${c}</span>`).join('');
+        const criteriaHtml = (m.criteria || []).map(c => `<span><span class="step-dot done" style="display:inline-block;width:6px;height:6px;margin-right:4px;vertical-align:middle"></span>${c}</span>`).join('');
         const consHtml = (m.cons || []).map(c => `<span>&#10008; ${c}</span>`).join('');
         return `
             <div class="cl-match-row">
@@ -3743,10 +4505,55 @@ document.addEventListener('DOMContentLoaded', () => {
         setEl2('laBackTenantEmail', getVal('emailTenant'));
     }
 
+    // Brand review pages with Bayleys header/footer
+    function brandReviewPages() {
+        const pages = document.querySelectorAll('#laReviewDoc .la-adls-page');
+        const scheduleNames = ['Front Page', 'First Schedule', 'Second Schedule', 'Second Schedule (cont.)', 'Third Schedule', 'Fourth Schedule', 'Back Page'];
+        pages.forEach((page, i) => {
+            // Skip if already branded
+            if (page.querySelector('.la-page-header')) return;
+            // Wrap existing content in la-page-body
+            if (!page.querySelector('.la-page-body')) {
+                const body = document.createElement('div');
+                body.className = 'la-page-body';
+                while (page.firstChild) {
+                    if (page.firstChild.classList?.contains('la-page-header') || page.firstChild.classList?.contains('la-page-footer')) break;
+                    body.appendChild(page.firstChild);
+                }
+                // Remove DRAFT mark from body and re-add outside
+                const draftMark = body.querySelector('.la-adls-draft-mark');
+                if (draftMark) body.removeChild(draftMark);
+                page.insertBefore(body, page.firstChild);
+            }
+            // Add header
+            const header = document.createElement('div');
+            header.className = 'la-page-header';
+            header.innerHTML = `<img src="bayleys-logo.png" alt="Bayleys" class="la-page-header-logo"><div class="la-page-header-right">${scheduleNames[i] || 'Agreement to Lease'}</div>`;
+            page.insertBefore(header, page.firstChild);
+            // Move header after ::before pseudo-element (CSS handles this)
+
+            // Add footer
+            if (!page.querySelector('.la-page-footer')) {
+                const footer = document.createElement('div');
+                footer.className = 'la-page-footer';
+                footer.innerHTML = `<span class="la-page-footer-left">Bayleys Real Estate Limited · Licensed under the REAA 2008 · Prepared by Walter AI</span><span class="la-page-footer-right">Page ${i + 1}</span>`;
+                page.appendChild(footer);
+            }
+            // Re-add DRAFT mark
+            if (!page.querySelector('.la-adls-draft-mark')) {
+                const draft = document.createElement('div');
+                draft.className = 'la-adls-draft-mark';
+                draft.textContent = 'DRAFT';
+                page.querySelector('.la-page-body')?.appendChild(draft);
+            }
+        });
+    }
+
     // Generate button — now also populates the review doc
     document.getElementById('laGenerateBtn')?.addEventListener('click', () => {
         generateLeasePreview();
         populateReviewDoc();
+        setTimeout(brandReviewPages, 100);
         const sendBtn = document.getElementById('laSendBtn');
         if (sendBtn) sendBtn.disabled = false;
     });
@@ -3760,7 +4567,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // When switching to review tab, auto-populate
     const reviewSectionObs = new MutationObserver(() => {
         const reviewPanel = document.querySelector('.la-section[data-la-panel="review"]');
-        if (reviewPanel?.classList.contains('active')) populateReviewDoc();
+        if (reviewPanel?.classList.contains('active')) { populateReviewDoc(); setTimeout(brandReviewPages, 100); }
     });
     const reviewPanel = document.querySelector('.la-section[data-la-panel="review"]');
     if (reviewPanel) reviewSectionObs.observe(reviewPanel, { attributes: true, attributeFilter: ['class'] });
@@ -3774,6 +4581,16 @@ document.addEventListener('DOMContentLoaded', () => {
             statusEl.className = 'hot-status sent';
             statusEl.innerHTML = '<span class="hot-status-dot sent"></span>Sent';
         }
+        // Add sent confirmation to Command inbox
+        const leaseAddr = document.getElementById('laTitle')?.textContent || 'Property';
+        CMD_EMAILS.unshift({
+            id: 'lease-sent-' + Date.now(), from: 'Walter', fromOrg: 'Sent', email: null,
+            subject: 'Agreement to Lease sent for signing — ' + leaseAddr,
+            preview: 'TLANZ Agreement to Lease (6th Edition 2024) sent via LuminPDF. Awaiting 3 signatures.',
+            property: leaseAddr.split(',')[0], category: 'ai', time: 'Just now', unread: true,
+            body: '<div class="cmd-ai-body"><strong>Agreement to Lease — Sent for Signing</strong><br><br>The TLANZ Agreement to Lease (6th Edition 2024) for <strong>' + leaseAddr + '</strong> has been sent to all parties via LuminPDF.<br><br><strong>Signing status:</strong><br>• Landlord: Pending<br>• Tenant: Pending<br>• Guarantor: Pending<br><br>All schedules (First through Fourth) and the Further Terms are included. Estimated completion: 3–5 business days.<br><br><em>Brittany has filed this agreement against the property record in Vault RE and notified the solicitors on record.</em></div>',
+            aiReply: null, zaraNote: null
+        });
     });
 
     // Wire HoT → Lease Agreement flow
@@ -4078,6 +4895,16 @@ document.addEventListener('DOMContentLoaded', () => {
             statusEl.className = 'hot-status sent';
             statusEl.innerHTML = '<span class="hot-status-dot sent"></span><span>Sent</span>';
         }
+        // Add sent confirmation to Command inbox
+        const hotAddr = document.getElementById('hotTitle')?.textContent || 'Property';
+        CMD_EMAILS.unshift({
+            id: 'hot-sent-' + Date.now(), from: 'Walter', fromOrg: 'Sent', email: null,
+            subject: 'Heads of Terms sent — ' + hotAddr,
+            preview: 'HoT document sent via LuminPDF for digital signature. Awaiting tenant and owner signatures.',
+            property: hotAddr.split(',')[0], category: 'ai', time: 'Just now', unread: true,
+            body: '<div class="cmd-ai-body"><strong>Heads of Terms — Sent for Signing</strong><br><br>The Heads of Terms for <strong>' + hotAddr + '</strong> has been sent to all parties via LuminPDF digital signature.<br><br><strong>Status:</strong><br>• Tenant: Pending signature<br>• Owner: Pending signature<br><br>You will be notified when each party signs. Estimated completion: 2–3 business days.<br><br><em>Brittany has filed this document against the property record in Vault RE.</em></div>',
+            aiReply: null, zaraNote: null
+        });
     });
 
     // Add to Escape handler
@@ -4142,6 +4969,57 @@ document.addEventListener('DOMContentLoaded', () => {
     propDrillClose?.addEventListener('click', () => propDrillModal.classList.remove('active'));
     propDrillModal?.addEventListener('click', (e) => {
         if (e.target === propDrillModal) propDrillModal.classList.remove('active');
+    });
+
+    // Ask Walter from propDrill hero
+    document.getElementById('pdDrillAskWalter')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const addr = document.getElementById('pdAddress')?.textContent || 'this property';
+        const popout = document.getElementById('walterPopout');
+        const fab = document.getElementById('walterFab');
+        if (popout && !popout.classList.contains('open')) {
+            popout.classList.add('open');
+            fab?.classList.add('popout-open');
+        }
+        const popInput = document.getElementById('walterPopoutInput');
+        if (popInput) {
+            popInput.value = 'Tell me about ' + addr;
+            popInput.focus();
+        }
+    });
+
+    // Add Property from propDrill hero
+    document.getElementById('pdDrillAddProp')?.addEventListener('click', function() {
+        const addr = document.getElementById('pdAddress')?.textContent || 'Property';
+        const chips = document.querySelectorAll('#propDrillModal .pd-meta-chip');
+        const type = chips[0]?.textContent?.split('·')[0]?.trim() || 'Office';
+
+        const tbody = document.querySelector('#view-properties .properties-table tbody');
+        if (tbody) {
+            // Check if already in table
+            const exists = Array.from(tbody.querySelectorAll('.cell-primary')).some(c => c.childNodes[0]?.textContent?.trim() === addr);
+            if (exists) {
+                this.textContent = 'Already added';
+                setTimeout(() => { this.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Property'; }, 2000);
+                return;
+            }
+            const tr = document.createElement('tr');
+            tr.className = 'clickable-row';
+            tr.innerHTML = `
+                <td><span class="cell-primary">${addr}</span><span class="prop-deal-dot"><span class="prop-deal-indicator deal-new"></span><span class="prop-deal-tooltip">New</span></span></td>
+                <td><span class="type-badge badge-${type.toLowerCase()}">${type}</span></td>
+                <td>—</td><td>—</td><td>—</td><td>—</td>
+                <td><div class="pipeline-bar"><div class="pipeline-fill" style="width:0%"></div></div></td>
+            `;
+            tbody.prepend(tr);
+            tr.addEventListener('click', () => openPropDrill(tr));
+        }
+        this.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Added';
+        this.style.background = 'rgba(5,150,105,0.9)';
+        setTimeout(() => {
+            this.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Property';
+            this.style.background = '';
+        }, 3000);
     });
 
     // Tab switching inside drill-down modal
@@ -4421,6 +5299,13 @@ document.addEventListener('DOMContentLoaded', () => {
     addPropSearch?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') doAddPropSearch();
     });
+    // Suggestion chip clicks
+    document.querySelectorAll('.add-prop-suggestion').forEach(chip => {
+        chip.addEventListener('click', () => {
+            if (addPropSearch) addPropSearch.value = chip.dataset.q;
+            doAddPropSearch();
+        });
+    });
 
     // --- My Properties: filtering ---
     const mpWidgets = document.querySelectorAll('.mp-widget');
@@ -4558,7 +5443,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.getElementById('zaraUberCard');
         if (!card) return;
         const actions = card.querySelector('.zu-actions');
-        actions.innerHTML = '&#10003; Booked &mdash; Uber arrives 10:48 AM &middot; receipt to Xero';
+        actions.innerHTML = '<span class="step-dot done" style="display:inline-block;width:6px;height:6px;vertical-align:middle;margin-right:4px"></span> Booked &mdash; Uber arrives 10:48 AM &middot; receipt to Xero';
         card.classList.add('booked');
     });
 
@@ -4771,10 +5656,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (thinkTitle) thinkTitle.textContent = 'Walter is analysing your feedback…';
             if (thinkSteps) {
                 thinkSteps.innerHTML = `
-                    <div class="fb-thinking-step" data-step="1"><span class="fb-step-tick">&#10003;</span> Matched against 1,247 prior submissions</div>
-                    <div class="fb-thinking-step" data-step="2"><span class="fb-step-tick">&#10003;</span> ${deployMatch.count} agents reported the same thing</div>
-                    <div class="fb-thinking-step" data-step="3"><span class="fb-step-tick">&#10003;</span> Complexity assessed: ${deployMatch.complexity}</div>
-                    <div class="fb-thinking-step" data-step="4"><span class="fb-step-tick">&#10003;</span> Routing to Brittany for auto-deploy</div>
+                    <div class="fb-thinking-step" data-step="1"><span class="fb-step-dot"></span> Matched against 1,247 prior submissions</div>
+                    <div class="fb-thinking-step" data-step="2"><span class="fb-step-dot"></span> ${deployMatch.count} agents reported the same thing</div>
+                    <div class="fb-thinking-step" data-step="3"><span class="fb-step-dot"></span> Complexity assessed: ${deployMatch.complexity}</div>
+                    <div class="fb-thinking-step" data-step="4"><span class="fb-step-dot"></span> Routing to Brittany for auto-deploy</div>
                 `;
             }
             const steps = thinkSteps?.querySelectorAll('.fb-thinking-step') || [];
@@ -4816,9 +5701,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (thinkTitle) thinkTitle.textContent = 'Walter is reading your feedback…';
             if (thinkSteps) {
                 thinkSteps.innerHTML = `
-                    <div class="fb-thinking-step" data-step="1"><span class="fb-step-tick">&#10003;</span> Matching against 1,247 prior submissions</div>
-                    <div class="fb-thinking-step" data-step="2"><span class="fb-step-tick">&#10003;</span> Checking against current roadmap</div>
-                    <div class="fb-thinking-step" data-step="3"><span class="fb-step-tick">&#10003;</span> Preparing response</div>
+                    <div class="fb-thinking-step" data-step="1"><span class="fb-step-dot"></span> Matching against 1,247 prior submissions</div>
+                    <div class="fb-thinking-step" data-step="2"><span class="fb-step-dot"></span> Checking against current roadmap</div>
+                    <div class="fb-thinking-step" data-step="3"><span class="fb-step-dot"></span> Preparing response</div>
                 `;
             }
             const steps = thinkSteps?.querySelectorAll('.fb-thinking-step') || [];
@@ -5064,9 +5949,22 @@ document.addEventListener('DOMContentLoaded', () => {
             view: 'properties',
             target: '.properties-table',
             title: 'Click any row for the full picture',
-            text: 'Every row opens a detailed property card with owner and tenant intel, lease history, and AI insights. Use the ⋮ menu on the right for quick actions like Heads of Terms or Lease Agreement.',
+            text: 'Every row opens a detailed property card with owner and tenant intel, lease history, and AI insights.',
             arrow: 'top',
             scroll: true
+        },
+        {
+            view: 'properties',
+            target: '.prop-action-menu',
+            title: 'Quick actions menu',
+            text: 'The ⋮ menu on each row gives you instant access to key workflows — generate a Heads of Terms, draft a Lease Agreement, open the property summary, or view data and reports. This is where deals start.',
+            arrow: 'left',
+            scroll: true,
+            before: function() {
+                // Open the first row's action menu
+                const btn = document.querySelector('.prop-action-btn');
+                if (btn && !btn.classList.contains('open')) btn.click();
+            }
         },
         // MARKET (steps 5-6)
         {
@@ -5114,7 +6012,22 @@ document.addEventListener('DOMContentLoaded', () => {
             text: 'Single lease review, lease comparison, OPEX budget generator, and S&P agreement analysis — each powered by Walter\'s LLM trained on thousands of NZ commercial agreements.',
             arrow: 'top'
         },
-        // SETTINGS (step 11)
+        // COMMAND (steps)
+        {
+            view: 'command',
+            target: '.cmd-hero',
+            title: 'Your property-aware inbox',
+            text: 'Command combines email, calendar, and AI intelligence in one workspace. Every email is auto-tagged to its property by Brittany and filed to Vault RE — no manual CRM entry.',
+            arrow: 'top'
+        },
+        {
+            view: 'command',
+            target: '.cmd-today-brief',
+            title: 'AI-drafted replies and meeting prep',
+            text: 'Click any email to see Walter\'s AI-drafted reply, reviewed by Zara for accuracy. Click any meeting for property-aware prep notes with talking points and attendee intel.',
+            arrow: 'top'
+        },
+        // SETTINGS
         {
             view: 'settings',
             target: '.settings-page-tabs',
@@ -5152,6 +6065,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Small delay to allow view to render
         setTimeout(() => {
+            // Run pre-step action (e.g. open a menu)
+            if (step.before) step.before();
+
+            // Extra delay for before actions to render
+            setTimeout(() => {
             let el = document.querySelector(step.target);
             if (!el && step.fallback) el = document.querySelector(step.fallback);
             if (!el) { tourStep++; showTourStep(tourStep); return; }
@@ -5188,6 +6106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             tourTooltip.style.top = top + 'px';
             tourTooltip.style.left = left + 'px';
+            }, step.before ? 150 : 0);
         }, step.view !== currentView ? 250 : 50);
     }
 
@@ -5201,6 +6120,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeTour() {
         tourOverlay?.classList.remove('active');
         sessionStorage.setItem('walter-tour-done', '1');
+        // Clean up any open menus
+        document.querySelectorAll('.prop-action-btn.open').forEach(b => b.classList.remove('open'));
+        document.querySelectorAll('.prop-action-menu.open').forEach(m => m.classList.remove('open'));
         // Return to home
         switchView('home');
     }

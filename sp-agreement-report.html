@@ -395,16 +395,13 @@
         .check-item.missing { border-left-color: var(--red); background: #fef9f9; }
         .check-item.warning { border-left-color: var(--orange); background: #fffdf6; }
         .check-mark {
-            width: 26px;
-            height: 26px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            font-weight: 800;
             flex-shrink: 0;
+            font-size: 0;
+            color: transparent;
+            overflow: hidden;
         }
         .check-item.complete .check-mark { background: var(--green); }
         .check-item.missing .check-mark { background: var(--red); }
@@ -792,35 +789,35 @@
 
         <div class="checklist-grid">
             <div class="check-item complete">
-                <span class="check-mark">&#10003;</span>
+                <span class="check-mark"></span>
                 <div><strong>OIA condition included</strong><span>Clause 19 — standard REINZ drafting</span></div>
             </div>
             <div class="check-item complete">
-                <span class="check-mark">&#10003;</span>
+                <span class="check-mark"></span>
                 <div><strong>Due diligence period adequate</strong><span>15 working days — generous for BTR scale</span></div>
             </div>
             <div class="check-item complete">
-                <span class="check-mark">&#10003;</span>
+                <span class="check-mark"></span>
                 <div><strong>Settlement mechanics defined</strong><span>Clauses 11-12 — but see asymmetry note</span></div>
             </div>
             <div class="check-item missing">
-                <span class="check-mark">&#10005;</span>
+                <span class="check-mark"></span>
                 <div><strong>Vendor warranty — latent defects</strong><span>Missing — recommend adding</span></div>
             </div>
             <div class="check-item missing">
-                <span class="check-mark">&#10005;</span>
+                <span class="check-mark"></span>
                 <div><strong>Occupancy warranty</strong><span>Missing — only 12/47 units tenanted</span></div>
             </div>
             <div class="check-item complete">
-                <span class="check-mark">&#10003;</span>
+                <span class="check-mark"></span>
                 <div><strong>Easements schedule attached</strong><span>Schedule 5 — verify with LINZ</span></div>
             </div>
             <div class="check-item warning">
-                <span class="check-mark">!</span>
+                <span class="check-mark"></span>
                 <div><strong>Default interest reasonable</strong><span>14% — high vs market 9-11%</span></div>
             </div>
             <div class="check-item complete">
-                <span class="check-mark">&#10003;</span>
+                <span class="check-mark"></span>
                 <div><strong>Long-stop / sunset date</strong><span>Clause 24 — 18 months</span></div>
             </div>
         </div>
