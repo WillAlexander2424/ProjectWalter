@@ -2554,14 +2554,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const CMD_CALENDAR = [
         { id: 'c1', time: '9:00', duration: '30 min', title: 'Team standup', type: 'm365', property: null, attendees: [{ name: 'Bayleys Commercial Team', initials: 'BT' }] },
         { id: 'c2', time: '10:30', duration: '45 min', title: 'Property viewing — 33 Crummer Rd', type: 'viewing', property: '33 Crummer Rd', attendees: [{ name: 'Glenn Cotterill', initials: 'GC', role: 'Tenant · Glenn Cotterill Company Trust' }, { name: 'Des Radonich', initials: 'DR', role: 'Owner · Des Radonich Ltd' }],
-          prep: '<strong>Zara\'s meeting prep:</strong><ul><li>Glenn\'s lease expires Aug 2029 — but expansion signals suggest he may want to discuss early renewal for more space</li><li>Des is open to a longer term at reduced rate (per his email)</li><li>Building NBS is 67% — mention the seismic upgrade plan to reassure Glenn</li><li>Current rent $92,412 — CPI review due Sep, expect ~$95k adjusted</li></ul><strong>Talking points:</strong> Expansion needs, combined floor option, rent review approach, long-term commitment incentives.' },
+          prep: '<strong>Zara\'s meeting prep:</strong><ul><li>Glenn\'s lease expires Aug 2029 — but expansion signals suggest he may want to discuss early renewal for more space</li><li>Des is open to a longer term at reduced rate (per his email)</li><li>Building NBS is 67% — mention the seismic upgrade plan to reassure Glenn</li><li>Current rent $92,412 — CPI review due Sep, expect ~$95k adjusted</li></ul><strong>Talking points:</strong> Expansion needs, combined floor option, rent review approach, long-term commitment incentives.',
+          transport: { address: '33 Crummer Road, Grey Lynn', driveTime: '25 min', distance: '8.2 km', leaveBy: '10:05 AM', cost: '$18–$24' } },
         { id: 'c3', time: '12:00', duration: '1 hr', title: 'Lunch with Marcus Miller', type: 'm365', property: '15 Osterley Way', attendees: [{ name: 'Marcus Miller', initials: 'MM', role: 'Partner · Morrison Kent Solicitors' }],
           prep: '<strong>Context:</strong> Settlement for 15 Osterley Way is 28 April. Marcus confirmed OIA is unconditional. Use lunch to confirm all outstanding items and discuss potential future instructions.' },
         { id: 'c4', time: '2:00', duration: '30 min', title: 'Harbour Capital intro call', type: 'zara', property: '170-174 Carlisle Rd', attendees: [{ name: 'James Chen', initials: 'JC', role: 'Director · Harbour Capital Ltd' }],
           prep: '<strong>Wallace matched this at 96%.</strong><ul><li>James is looking for $3-5.5M retail investment, 5.5-6.5% yield</li><li>Carlisle Rd returns 6.1% on a 15-year ECE lease — perfect match</li><li>He\'s asked about lease type (net), building condition, and development upside</li><li>Have answers ready from your AI-drafted reply</li></ul><strong>Goal:</strong> Arrange an inspection for next week.' },
         { id: 'c5', time: '3:30', duration: '15 min', title: 'Costello weekly report review', type: 'costello', property: null, attendees: [] },
         { id: 'c6', time: '4:30', duration: '45 min', title: 'TechFlow viewing — 88 Shortland St', type: 'viewing', property: '88 Shortland St', attendees: [{ name: 'Sarah Park', initials: 'SP', role: 'COO · TechFlow Ltd' }, { name: 'David Kim', initials: 'DK', role: 'Facilities Manager · TechFlow Ltd' }],
-          prep: '<strong>Zara\'s viewing prep:</strong><ul><li>TechFlow has 45 staff, growing 30% YoY — need 450+ sqm</li><li>ICP active since Nov 2025 — strong intent</li><li>Key requirements: natural light, modern fit-out, bike storage, growth capacity</li><li>88 Shortland has all of these — emphasise the partitioning flexibility</li><li>Sarah asked about fit-out contribution — the landlord may consider this for a 5+ year term</li></ul><strong>Bring:</strong> Floor plans, fit-out options, parking details.' }
+          prep: '<strong>Zara\'s viewing prep:</strong><ul><li>TechFlow has 45 staff, growing 30% YoY — need 450+ sqm</li><li>ICP active since Nov 2025 — strong intent</li><li>Key requirements: natural light, modern fit-out, bike storage, growth capacity</li><li>88 Shortland has all of these — emphasise the partitioning flexibility</li><li>Sarah asked about fit-out contribution — the landlord may consider this for a 5+ year term</li></ul><strong>Bring:</strong> Floor plans, fit-out options, parking details.',
+          transport: { address: '88 Shortland Street, Auckland CBD', driveTime: '12 min', distance: '4.5 km', leaveBy: '4:15 PM', cost: '$12–$16' } }
     ];
 
     function renderCommandStream(filter) {
@@ -2732,8 +2734,79 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('cmdMeetingAttendees').innerHTML = meeting.attendees.map(a =>
             `<div class="cmd-attendee-card"><div class="cmd-attendee-avatar">${a.initials}</div><div><div class="cmd-attendee-name">${a.name}</div><div class="cmd-attendee-role">${a.role || ''}</div></div></div>`
         ).join('');
-        document.getElementById('cmdMeetingPrep').innerHTML = meeting.prep ?
-            `<div class="cmd-prep-label"><span class="agent-pip zara" style="width:18px;height:18px;font-size:8px">Z</span>Zara's Meeting Prep</div><div class="cmd-prep-body">${meeting.prep}</div>` : '<p style="color:var(--text-tertiary);font-size:13px;">No prep notes for this meeting.</p>';
+        // Prep notes
+        let prepHtml = meeting.prep ?
+            `<div class="cmd-prep-label"><span class="agent-pip zara" style="width:18px;height:18px;font-size:8px">Z</span>Zara's Meeting Prep</div><div class="cmd-prep-body">${meeting.prep}</div>` : '';
+
+        // Transport section for viewings
+        if (meeting.transport) {
+            const t = meeting.transport;
+            prepHtml += `
+                <div class="cmd-transport" id="cmdTransport">
+                    <div class="cmd-transport-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span>Transport to viewing</span>
+                    </div>
+                    <div class="cmd-transport-body">
+                        <div class="cmd-transport-destination">
+                            <span class="cmd-transport-address">${t.address}</span>
+                        </div>
+                        <div class="cmd-transport-stats">
+                            <div class="cmd-transport-stat">
+                                <span class="cmd-transport-stat-value">${t.driveTime}</span>
+                                <span class="cmd-transport-stat-label">Drive time</span>
+                            </div>
+                            <div class="cmd-transport-stat">
+                                <span class="cmd-transport-stat-value">${t.distance}</span>
+                                <span class="cmd-transport-stat-label">Distance</span>
+                            </div>
+                            <div class="cmd-transport-stat">
+                                <span class="cmd-transport-stat-value">${t.leaveBy}</span>
+                                <span class="cmd-transport-stat-label">Leave by</span>
+                            </div>
+                            <div class="cmd-transport-stat">
+                                <span class="cmd-transport-stat-value">${t.cost}</span>
+                                <span class="cmd-transport-stat-label">Est. cost</span>
+                            </div>
+                        </div>
+                        <div class="cmd-transport-actions">
+                            <button class="cmd-transport-book" id="cmdBookUberMeeting">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                Book Uber
+                            </button>
+                            <span class="cmd-transport-note">Receipt auto-filed to Xero via Zara</span>
+                        </div>
+                        <div class="cmd-transport-booked" id="cmdTransportBooked" style="display:none">
+                            <div class="cmd-transport-booked-header">
+                                <span class="step-dot done" style="display:inline-block;width:8px;height:8px"></span>
+                                <strong>Uber booked</strong>
+                            </div>
+                            <div class="cmd-transport-booked-details">
+                                <div class="cmd-transport-driver">
+                                    <div class="cmd-transport-driver-avatar">MR</div>
+                                    <div>
+                                        <span class="cmd-transport-driver-name">Michael R.</span>
+                                        <span class="cmd-transport-driver-car">Toyota Camry · Grey · FXR 892</span>
+                                    </div>
+                                </div>
+                                <div class="cmd-transport-eta">
+                                    <span class="cmd-transport-eta-time">Arriving in 4 min</span>
+                                    <span class="cmd-transport-eta-sub">ETA pickup: ${t.leaveBy}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.getElementById('cmdMeetingPrep').innerHTML = prepHtml || '<p style="color:var(--text-tertiary);font-size:13px;">No prep notes for this meeting.</p>';
+
+        // Bind Uber book button
+        document.getElementById('cmdBookUberMeeting')?.addEventListener('click', function() {
+            this.parentElement.style.display = 'none';
+            document.getElementById('cmdTransportBooked').style.display = '';
+        });
     }
 
     // Set today's date
@@ -2790,25 +2863,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Day/Week/Month view toggle
-    document.querySelectorAll('.cmd-view-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.cmd-view-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const view = btn.dataset.cmdView;
-            const timeline = document.getElementById('cmdTimeline');
-            const weekView = document.getElementById('cmdWeekView');
-            const monthView = document.getElementById('cmdMonthView');
-            const monthDayDetail = document.getElementById('cmdMonthDayDetail');
-            if (timeline) timeline.style.display = view === 'day' ? '' : 'none';
-            if (weekView) weekView.style.display = view === 'week' ? '' : 'none';
-            if (monthView) monthView.style.display = view === 'month' ? '' : 'none';
-            if (monthDayDetail) monthDayDetail.style.display = 'none';
-        });
-    });
-
-    // Month view: click date to show day schedule
-    const monthDayEvents = {
+    // Continuous calendar data — events by "year-month-day" key
+    const calEvents = {};
+    // April 2026
+    const aprEvents = {
         1: [{ time: '10:00', title: 'Quarter review', type: 'm365' }, { time: '2:00', title: 'Planning session (Zara)', type: 'zara' }],
         2: [{ time: '9:30', title: 'Team standup', type: 'm365' }],
         3: [{ time: '12:00', title: 'Client lunch', type: 'm365' }],
@@ -2829,33 +2887,153 @@ document.addEventListener('DOMContentLoaded', () => {
         29: [{ time: '9:00', title: 'Rent review — Crummer Rd', type: 'm365' }],
         30: [{ time: '2:00', title: 'End of month reporting', type: 'costello' }]
     };
+    Object.entries(aprEvents).forEach(([d, evts]) => { calEvents['2026-4-' + d] = evts; });
+    // May 2026
+    calEvents['2026-5-5'] = [{ time: '10:00', title: 'Portfolio quarterly review', type: 'm365' }];
+    calEvents['2026-5-7'] = [{ time: '9:00', title: 'Lease renewal — Crummer Rd', type: 'viewing' }, { time: '2:00', title: 'Wallace matching review', type: 'zara' }];
+    calEvents['2026-5-12'] = [{ time: '11:00', title: 'Client presentation', type: 'm365' }];
+    calEvents['2026-5-14'] = [{ time: '10:00', title: '135 Parnell Rd — Meridian viewing', type: 'viewing' }];
+    calEvents['2026-5-19'] = [{ time: '9:30', title: 'Team sync', type: 'm365' }, { time: '3:00', title: 'Costello monthly report', type: 'costello' }];
+    calEvents['2026-5-21'] = [{ time: '10:00', title: 'Osterley Way — post-settlement', type: 'm365' }];
+    calEvents['2026-5-26'] = [{ time: '2:00', title: 'Harbour Capital follow-up', type: 'zara' }];
+    calEvents['2026-5-28'] = [{ time: '9:00', title: 'Market update call', type: 'm365' }];
+    // June 2026
+    calEvents['2026-6-2'] = [{ time: '10:00', title: 'Mid-year planning', type: 'm365' }];
+    calEvents['2026-6-4'] = [{ time: '11:00', title: 'New listing — Ponsonby', type: 'viewing' }];
+    calEvents['2026-6-9'] = [{ time: '9:00', title: 'Team standup', type: 'm365' }];
+    calEvents['2026-6-11'] = [{ time: '2:00', title: 'Investor presentation', type: 'm365' }];
+    calEvents['2026-6-16'] = [{ time: '10:00', title: 'Zara quarterly review', type: 'zara' }];
+    calEvents['2026-6-23'] = [{ time: '9:30', title: 'Rent review — Beaumont', type: 'viewing' }];
+    calEvents['2026-6-30'] = [{ time: '4:00', title: 'End of quarter reporting', type: 'costello' }];
 
-    document.querySelectorAll('.cmd-month-cell:not(.muted)').forEach(cell => {
-        cell.addEventListener('click', () => {
-            const day = parseInt(cell.textContent);
-            if (isNaN(day)) return;
-            // Highlight selected
-            document.querySelectorAll('.cmd-month-cell').forEach(c => c.classList.remove('selected'));
-            cell.classList.add('selected');
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-            const detail = document.getElementById('cmdMonthDayDetail');
-            const header = document.getElementById('cmdMonthDayDetailHeader');
-            const events = document.getElementById('cmdMonthDayDetailEvents');
-            const dayEvents = monthDayEvents[day];
+    function renderContinuousWeeks() {
+        const container = document.getElementById('cmdWeekView');
+        if (!container) return;
+        const today = new Date(2026, 3, 12); // April 12, 2026
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday of current week
+        let html = '';
 
-            if (dayEvents && dayEvents.length > 0) {
-                header.textContent = `${day} April 2026 — ${dayEvents.length} event${dayEvents.length > 1 ? 's' : ''}`;
-                events.innerHTML = dayEvents.map(e =>
+        for (let w = 0; w < 4; w++) {
+            const weekStart = new Date(startOfWeek);
+            weekStart.setDate(startOfWeek.getDate() + w * 7);
+            const weekLabel = w === 0 ? 'This Week' : w === 1 ? 'Next Week' : `Week of ${weekStart.getDate()} ${monthNames[weekStart.getMonth()]}`;
+            html += `<div class="cmd-week-label">${weekLabel}</div><div class="cmd-week-grid">`;
+
+            for (let d = 0; d < 7; d++) {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + d);
+                const isToday = date.getDate() === 12 && date.getMonth() === 3;
+                const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+                const events = calEvents[key] || [];
+
+                html += `<div class="cmd-week-day">`;
+                html += `<div class="cmd-week-day-header${isToday ? ' today' : ''}"><span class="cmd-week-day-name">${isToday ? 'Today' : dayNames[date.getDay()]}</span><span class="cmd-week-day-num">${date.getDate()}</span></div>`;
+                events.forEach(e => {
+                    html += `<div class="cmd-week-event ${e.type}">${e.title}<span>${e.time}</span></div>`;
+                });
+                html += `</div>`;
+            }
+            html += `</div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function renderContinuousMonths() {
+        const container = document.getElementById('cmdMonthView');
+        if (!container) return;
+        let html = '';
+
+        for (let m = 0; m < 3; m++) {
+            const month = 3 + m; // April=3, May=4, June=5
+            const year = 2026;
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevDays = new Date(year, month, 0).getDate();
+
+            html += `<div class="cmd-month-block">`;
+            html += `<div class="cmd-month-header">${monthNames[month]} ${year}</div>`;
+            html += `<div class="cmd-month-grid">`;
+            html += `<div class="cmd-month-dayname">S</div><div class="cmd-month-dayname">M</div><div class="cmd-month-dayname">T</div><div class="cmd-month-dayname">W</div><div class="cmd-month-dayname">T</div><div class="cmd-month-dayname">F</div><div class="cmd-month-dayname">S</div>`;
+
+            // Previous month padding
+            for (let p = firstDay - 1; p >= 0; p--) {
+                html += `<div class="cmd-month-cell muted">${prevDays - p}</div>`;
+            }
+
+            // Days of the month
+            for (let d = 1; d <= daysInMonth; d++) {
+                const key = `${year}-${month + 1}-${d}`;
+                const hasEvent = calEvents[key] ? ' has-event' : '';
+                const isToday = month === 3 && d === 12 ? ' today' : '';
+                html += `<div class="cmd-month-cell${isToday}${hasEvent}" data-cmd-month-date="${key}">${d}</div>`;
+            }
+
+            // Next month padding
+            const totalCells = firstDay + daysInMonth;
+            const remaining = (7 - totalCells % 7) % 7;
+            for (let n = 1; n <= remaining; n++) {
+                html += `<div class="cmd-month-cell muted">${n}</div>`;
+            }
+
+            html += `</div></div>`;
+        }
+
+        // Day detail container
+        html += `<div class="cmd-month-day-detail" id="cmdMonthDayDetail" style="display:none"><div class="cmd-month-day-detail-header" id="cmdMonthDayDetailHeader"></div><div class="cmd-month-day-detail-events" id="cmdMonthDayDetailEvents"></div></div>`;
+        container.innerHTML = html;
+
+        // Bind date clicks
+        container.querySelectorAll('.cmd-month-cell:not(.muted)').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const key = cell.dataset.cmdMonthDate;
+                if (!key) return;
+                container.querySelectorAll('.cmd-month-cell').forEach(c => c.classList.remove('selected'));
+                cell.classList.add('selected');
+
+                const parts = key.split('-');
+                const day = parseInt(parts[2]);
+                const monthIdx = parseInt(parts[1]) - 1;
+                const dayEvents = calEvents[key];
+                const detail = document.getElementById('cmdMonthDayDetail');
+                const header = document.getElementById('cmdMonthDayDetailHeader');
+                const eventsEl = document.getElementById('cmdMonthDayDetailEvents');
+
+                header.textContent = `${day} ${monthNames[monthIdx]} 2026` + (dayEvents ? ` — ${dayEvents.length} event${dayEvents.length > 1 ? 's' : ''}` : '');
+                eventsEl.innerHTML = dayEvents ? dayEvents.map(e =>
                     `<div class="cmd-month-detail-event ${e.type}"><span class="cmd-month-detail-time">${e.time}</span><span class="cmd-month-detail-title">${e.title}</span></div>`
-                ).join('');
+                ).join('') : '<p style="font-size:12px;color:var(--text-tertiary);padding:8px 0;">No events scheduled</p>';
                 detail.style.display = '';
-            } else {
-                header.textContent = `${day} April 2026`;
-                events.innerHTML = '<p style="font-size:12px;color:var(--text-tertiary);padding:8px 0;">No events scheduled</p>';
-                detail.style.display = '';
+                detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+    }
+
+    // Day/Week/Month view toggle
+    document.querySelectorAll('.cmd-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cmd-view-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const view = btn.dataset.cmdView;
+            const timeline = document.getElementById('cmdTimeline');
+            const weekView = document.getElementById('cmdWeekView');
+            const monthView = document.getElementById('cmdMonthView');
+            if (timeline) timeline.style.display = view === 'day' ? '' : 'none';
+            if (weekView) {
+                weekView.style.display = view === 'week' ? '' : 'none';
+                if (view === 'week') renderContinuousWeeks();
+            }
+            if (monthView) {
+                monthView.style.display = view === 'month' ? '' : 'none';
+                if (view === 'month') renderContinuousMonths();
             }
         });
     });
+
+    // monthDayEvents used by continuous calendar renderer (defined above in calEvents)
 
     // Vault RE button
     document.querySelector('.cmd-vault-btn')?.addEventListener('click', function() {
@@ -2964,14 +3142,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const calendarCard = document.getElementById('calendarCard');
     const calendarClose = document.getElementById('calendarClose');
 
-    calendarCard?.addEventListener('click', () => {
+    // Zara Schedule: Open Command link
+    document.getElementById('zaraSchedLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
         switchView('command');
-        // Auto-switch to Calendar tab
-        setTimeout(() => {
-            document.querySelectorAll('.cmd-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector('.cmd-tab[data-cmd-tab="calendar"]')?.classList.add('active');
-            renderCommandStream('calendar');
-        }, 200);
+    });
+
+    // Zara Schedule: Book Uber buttons
+    document.querySelectorAll('.zara-sched-action').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Booked';
+            this.style.background = '#059669';
+            this.style.color = 'white';
+            this.style.borderColor = '#059669';
+            this.disabled = true;
+        });
     });
     calendarClose?.addEventListener('click', () => {
         calendarModal.classList.remove('active');

@@ -7,7 +7,7 @@
     <!-- Google Fonts Inter loaded async for production -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <link rel="stylesheet" href="styles.css?v=67">
+    <link rel="stylesheet" href="styles.css?v=71">
 </head>
 <body>
     <!-- Sidebar -->
@@ -407,31 +407,70 @@
                     </div>
                 </div>
 
-                <!-- My Calendar -->
-                <div class="dash-card calendar-card" id="calendarCard">
+                <!-- Zara Schedule Assistant -->
+                <div class="dash-card zara-schedule-card" id="zaraScheduleCard">
                     <div class="dash-card-header">
-                        <h3>My Calendar</h3>
-                        <div class="cal-mini-nav">
-                            <span class="cal-mini-month" id="calMiniMonth">April 2026</span>
-                            <button class="cal-expand-btn" id="calExpandBtn" title="Expand calendar">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                        <div class="zara-sched-title">
+                            <span class="agent-pip zara" style="width:22px;height:22px;font-size:9px">Z</span>
+                            <h3>Today's Schedule</h3>
+                        </div>
+                        <span class="zara-sched-count" id="zaraSchedCount">6 events</span>
+                    </div>
+                    <div class="zara-sched-brief" id="zaraSchedBrief">
+                        3 property meetings today. Leave by 10:05 for Crummer Rd &mdash; 25 min drive from office.
+                    </div>
+                    <div class="zara-sched-timeline" id="zaraSchedTimeline">
+                        <div class="zara-sched-item">
+                            <span class="zara-sched-time">9:00</span>
+                            <div class="zara-sched-bar m365"></div>
+                            <div class="zara-sched-info">
+                                <span class="zara-sched-event">Team standup</span>
+                                <span class="zara-sched-meta">30 min</span>
+                            </div>
+                        </div>
+                        <div class="zara-sched-item highlight">
+                            <span class="zara-sched-time">10:30</span>
+                            <div class="zara-sched-bar viewing"></div>
+                            <div class="zara-sched-info">
+                                <span class="zara-sched-event">Viewing &mdash; 33 Crummer Rd</span>
+                                <span class="zara-sched-meta">Glenn Cotterill, Des Radonich</span>
+                            </div>
+                            <button class="zara-sched-action" id="zaraBookUber" title="Book Uber">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                Uber
+                            </button>
+                        </div>
+                        <div class="zara-sched-item">
+                            <span class="zara-sched-time">12:00</span>
+                            <div class="zara-sched-bar m365"></div>
+                            <div class="zara-sched-info">
+                                <span class="zara-sched-event">Lunch &mdash; Marcus Miller</span>
+                                <span class="zara-sched-meta">Morrison Kent &middot; 15 Osterley Way</span>
+                            </div>
+                        </div>
+                        <div class="zara-sched-item highlight">
+                            <span class="zara-sched-time">2:00</span>
+                            <div class="zara-sched-bar zara"></div>
+                            <div class="zara-sched-info">
+                                <span class="zara-sched-event">Harbour Capital intro call</span>
+                                <span class="zara-sched-meta">Auto-scheduled by Wallace</span>
+                            </div>
+                            <span class="zara-sched-tag">Prep ready</span>
+                        </div>
+                        <div class="zara-sched-item">
+                            <span class="zara-sched-time">4:30</span>
+                            <div class="zara-sched-bar viewing"></div>
+                            <div class="zara-sched-info">
+                                <span class="zara-sched-event">TechFlow &mdash; 88 Shortland St</span>
+                                <span class="zara-sched-meta">Sarah Park, David Kim</span>
+                            </div>
+                            <button class="zara-sched-action" title="Book Uber">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                Uber
                             </button>
                         </div>
                     </div>
-                    <div class="cal-mini" id="calMini">
-                        <div class="cal-mini-grid" id="calMiniGrid"></div>
-                    </div>
-                    <div class="cal-mini-footer">
-                        <div class="cal-mini-today">
-                            <span class="cal-mini-today-label">Today</span>
-                            <span class="cal-mini-today-count"><strong>5</strong> events</span>
-                        </div>
-                        <div class="cal-mini-legend">
-                            <span class="cal-legend-item"><span class="cal-legend-dot m365"></span>Meetings</span>
-                            <span class="cal-legend-item"><span class="cal-legend-dot zara"></span>Zara</span>
-                            <span class="cal-legend-item"><span class="cal-legend-dot costello"></span>Costello</span>
-                        </div>
-                    </div>
+                    <a href="#" class="zara-sched-link" id="zaraSchedLink">Open Command &rarr;</a>
                 </div>
 
                 <!-- Wallace + Deal Pipeline (side by side) -->
@@ -5935,65 +5974,11 @@
                         </div>
 
                         <!-- Week View (hidden by default) -->
-                        <div class="cmd-week-view" id="cmdWeekView" style="display:none">
-                            <div class="cmd-week-grid">
-                                <div class="cmd-week-day">
-                                    <div class="cmd-week-day-header today">
-                                        <span class="cmd-week-day-name">Today</span>
-                                        <span class="cmd-week-day-num">12</span>
-                                    </div>
-                                    <div class="cmd-week-event viewing">Property viewing &mdash; 33 Crummer Rd<span>10:30</span></div>
-                                    <div class="cmd-week-event m365">Lunch &mdash; Marcus Miller<span>12:00</span></div>
-                                    <div class="cmd-week-event zara">Harbour Capital call<span>2:00</span></div>
-                                    <div class="cmd-week-event viewing">TechFlow viewing<span>4:30</span></div>
-                                </div>
-                                <div class="cmd-week-day">
-                                    <div class="cmd-week-day-header"><span class="cmd-week-day-name">Mon</span><span class="cmd-week-day-num">13</span></div>
-                                    <div class="cmd-week-event m365">Team planning<span>9:00</span></div>
-                                    <div class="cmd-week-event viewing">135 Parnell Rd viewing<span>11:00</span></div>
-                                </div>
-                                <div class="cmd-week-day">
-                                    <div class="cmd-week-day-header"><span class="cmd-week-day-name">Tue</span><span class="cmd-week-day-num">14</span></div>
-                                    <div class="cmd-week-event m365">Client lunch<span>12:30</span></div>
-                                    <div class="cmd-week-event zara">Follow-up calls<span>3:00</span></div>
-                                </div>
-                                <div class="cmd-week-day">
-                                    <div class="cmd-week-day-header"><span class="cmd-week-day-name">Wed</span><span class="cmd-week-day-num">15</span></div>
-                                    <div class="cmd-week-event viewing">TechFlow &mdash; 88 Shortland<span>2:30</span></div>
-                                </div>
-                                <div class="cmd-week-day">
-                                    <div class="cmd-week-day-header"><span class="cmd-week-day-name">Thu</span><span class="cmd-week-day-num">16</span></div>
-                                    <div class="cmd-week-event m365">Quarterly review<span>10:00</span></div>
-                                    <div class="cmd-week-event costello">Portfolio report<span>4:00</span></div>
-                                </div>
-                                <div class="cmd-week-day">
-                                    <div class="cmd-week-day-header"><span class="cmd-week-day-name">Fri</span><span class="cmd-week-day-num">17</span></div>
-                                    <div class="cmd-week-event viewing">Beaumont St &mdash; Sophie<span>10:00</span></div>
-                                </div>
-                                <div class="cmd-week-day">
-                                    <div class="cmd-week-day-header"><span class="cmd-week-day-name">Sat</span><span class="cmd-week-day-num">18</span></div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Week View (JS-populated, continuous scroll) -->
+                        <div class="cmd-week-view" id="cmdWeekView" style="display:none"></div>
 
-                        <!-- Month View (hidden by default) -->
-                        <div class="cmd-month-view" id="cmdMonthView" style="display:none">
-                            <div class="cmd-month-header">April 2026</div>
-                            <div class="cmd-month-grid">
-                                <div class="cmd-month-dayname">S</div><div class="cmd-month-dayname">M</div><div class="cmd-month-dayname">T</div><div class="cmd-month-dayname">W</div><div class="cmd-month-dayname">T</div><div class="cmd-month-dayname">F</div><div class="cmd-month-dayname">S</div>
-                                <div class="cmd-month-cell muted">29</div><div class="cmd-month-cell muted">30</div><div class="cmd-month-cell muted">31</div><div class="cmd-month-cell has-event">1</div><div class="cmd-month-cell has-event">2</div><div class="cmd-month-cell has-event">3</div><div class="cmd-month-cell">4</div>
-                                <div class="cmd-month-cell">5</div><div class="cmd-month-cell">6</div><div class="cmd-month-cell has-event">7</div><div class="cmd-month-cell has-event">8</div><div class="cmd-month-cell has-event">9</div><div class="cmd-month-cell">10</div><div class="cmd-month-cell">11</div>
-                                <div class="cmd-month-cell today has-event">12</div><div class="cmd-month-cell has-event">13</div><div class="cmd-month-cell has-event">14</div><div class="cmd-month-cell has-event">15</div><div class="cmd-month-cell has-event">16</div><div class="cmd-month-cell has-event">17</div><div class="cmd-month-cell">18</div>
-                                <div class="cmd-month-cell">19</div><div class="cmd-month-cell">20</div><div class="cmd-month-cell has-event">21</div><div class="cmd-month-cell has-event">22</div><div class="cmd-month-cell has-event">23</div><div class="cmd-month-cell">24</div><div class="cmd-month-cell">25</div>
-                                <div class="cmd-month-cell">26</div><div class="cmd-month-cell has-event">27</div><div class="cmd-month-cell has-event">28</div><div class="cmd-month-cell has-event">29</div><div class="cmd-month-cell has-event">30</div><div class="cmd-month-cell muted">1</div><div class="cmd-month-cell muted">2</div>
-                            </div>
-                        </div>
-
-                        <!-- Month day detail (shown when date clicked) -->
-                        <div class="cmd-month-day-detail" id="cmdMonthDayDetail" style="display:none">
-                            <div class="cmd-month-day-detail-header" id="cmdMonthDayDetailHeader"></div>
-                            <div class="cmd-month-day-detail-events" id="cmdMonthDayDetailEvents"></div>
-                        </div>
+                        <!-- Month View (JS-populated, continuous scroll) -->
+                        <div class="cmd-month-view" id="cmdMonthView" style="display:none"></div>
 
                         <!-- Brittany filing indicator -->
                         <div class="cmd-brittany-strip">
@@ -7958,6 +7943,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=67"></script>
+    <script src="app.js?v=71"></script>
 </body>
 </html>
