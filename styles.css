@@ -15545,6 +15545,61 @@ body.on-chat-view .walter-popout { display: none; }
 .hot-type-btn:last-child { border-right: none; }
 .hot-type-btn.active { background: var(--accent); color: white; }
 
+/* ============ MOBILE MORE MENU ============ */
+.mobile-more-menu { display: none; }
+.mobile-more-menu.open { display: block; }
+.mob-more-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 1250;
+}
+.mob-more-sheet {
+    position: fixed;
+    bottom: 56px;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.12);
+    z-index: 1260;
+    padding: 8px 0 env(safe-area-inset-bottom, 8px);
+    animation: sheetUp 0.2s ease;
+}
+@keyframes sheetUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.mob-more-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+.mob-more-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 4px 8px;
+}
+.mob-more-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.1s;
+}
+.mob-more-item:hover { background: var(--bg-secondary); }
+.mob-more-item svg { color: var(--text-secondary); }
+
 /* ============ MOBILE BOTTOM TAB BAR ============ */
 .mobile-tab-bar {
     display: none;
@@ -15555,22 +15610,23 @@ body.on-chat-view .walter-popout { display: none; }
     background: white;
     border-top: 1px solid var(--border);
     z-index: 1200;
-    padding: 6px 0 env(safe-area-inset-bottom, 4px);
+    padding: 8px 0 env(safe-area-inset-bottom, 8px);
 }
 .mob-tab {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     text-decoration: none;
     color: var(--text-tertiary);
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 600;
-    padding: 4px 0;
+    padding: 6px 0;
     transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
 }
 .mob-tab.active { color: var(--accent); }
-.mob-tab svg { width: 20px; height: 20px; }
+.mob-tab svg { width: 22px; height: 22px; }
 
 /* ============ RESPONSIVE: TABLET (≤1024px) ============ */
 @media (max-width: 1024px) {
@@ -15588,7 +15644,7 @@ body.on-chat-view .walter-popout { display: none; }
     }
     .main-content {
         margin-left: 0 !important;
-        padding-bottom: 56px !important; /* Space for bottom tab bar */
+        padding-bottom: 72px !important; /* Space for bottom tab bar */
     }
 
     /* Reduce view padding */
@@ -15697,9 +15753,102 @@ body.on-chat-view .walter-popout { display: none; }
     .settings-section-hero { padding: 20px !important; }
     .settings-hero-stats { flex-wrap: wrap; gap: 16px !important; }
 
-    /* Walter FAB — above tab bar */
-    .walter-fab { bottom: 64px !important; right: 16px !important; width: 48px !important; height: 48px !important; }
-    .walter-popout { bottom: 120px !important; right: 12px !important; width: calc(100vw - 24px) !important; max-width: 100% !important; }
+    /* Walter FAB — above tab bar, smaller on mobile */
+    .walter-fab { bottom: 76px !important; right: 14px !important; width: 44px !important; height: 44px !important; border-radius: 12px !important; opacity: 0.9; }
+    .walter-fab-core { font-size: 14px !important; }
+    .walter-fab-ring { display: none !important; } /* Hide pulse rings on mobile — too distracting */
+    .walter-fab-tooltip { display: none !important; }
+    .walter-popout { bottom: 130px !important; left: 10px !important; right: 10px !important; width: auto !important; max-width: none !important; border-radius: 16px !important; }
+    .walter-popout-close { top: 12px !important; right: 12px !important; }
+
+    /* All modals — full width mobile sheets */
+    .modal-overlay { padding: 0 !important; }
+    .modal-content {
+        margin: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .modal-close { width: 36px !important; height: 36px !important; font-size: 18px !important; top: 10px !important; right: 10px !important; }
+
+    /* HoT modal mobile */
+    .hot-modal { border-radius: 16px 16px 0 0 !important; }
+    .hot-tabs { overflow-x: auto; flex-wrap: nowrap; }
+    .hot-tab { white-space: nowrap; font-size: 11px !important; }
+
+    /* Wallace match modal mobile */
+    .wm-modal { border-radius: 16px 16px 0 0 !important; width: 100% !important; }
+    .wm-header { flex-direction: column !important; padding: 16px 16px 12px !important; }
+    .wm-score-ring { width: 48px !important; height: 48px !important; align-self: flex-start; }
+    .wm-score-value { font-size: 14px !important; }
+    .wm-columns { padding: 12px 16px !important; gap: 12px !important; }
+    .wm-card { padding: 12px !important; }
+    .wm-card-name { font-size: 13px !important; }
+    .wm-card-row { font-size: 11px !important; }
+    .wm-compat { padding: 10px 16px 14px !important; }
+    .wm-compat-items { gap: 4px !important; }
+    .wm-compat-item { padding: 4px 8px !important; font-size: 10px !important; }
+    .wm-recommendation { margin: 0 16px 12px !important; padding: 12px 14px !important; }
+    .wm-rec-title { font-size: 12px !important; }
+    .wm-rec-body { font-size: 11px !important; }
+    .wm-rec-script { font-size: 11px !important; padding: 8px 10px !important; }
+    .wm-actions { padding: 10px 16px 16px !important; gap: 6px !important; }
+    .wm-action-btn { font-size: 11px !important; padding: 8px 0 !important; }
+
+    /* Strategy card modal mobile */
+    .strategy-modal { max-height: 90vh !important; overflow-y: auto !important; }
+
+    /* Add property modal mobile */
+    .add-prop-modal { border-radius: 16px 16px 0 0 !important; max-height: 85vh !important; }
+    .add-prop-search-bar { margin: 14px 16px 0 !important; }
+    .add-prop-results { padding: 0 16px 16px !important; }
+    .add-prop-details { grid-template-columns: 1fr !important; }
+
+    /* Agreement type selector mobile */
+    .agr-type-modal { border-radius: 16px 16px 0 0 !important; overflow-y: auto !important; max-height: 80vh !important; }
+    .agr-type-header { padding: 20px 20px 14px !important; }
+    .agr-type-cards { padding: 16px 20px 20px !important; gap: 12px !important; }
+
+    /* Feedback modal mobile */
+    .feedback-modal { border-radius: 16px 16px 0 0 !important; }
+
+    /* Pipeline drill-down mobile */
+    .pipeline-modal { width: 100% !important; border-radius: 16px 16px 0 0 !important; padding: 16px !important; }
+    .pipeline-modal .pm-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .pipeline-modal .pm-filter-chips { flex-wrap: wrap !important; }
+    .pipeline-modal .pm-property-card { padding: 10px !important; }
+
+    /* Strategy card mobile */
+    .strategy-modal { width: 100% !important; border-radius: 16px 16px 0 0 !important; padding: 16px !important; }
+    .strategy-grid { grid-template-columns: 1fr !important; }
+
+    /* HoT modal mobile */
+    .hot-modal { width: 100% !important; }
+    .hot-form { padding: 12px !important; }
+    .hot-form .la-form-grid { grid-template-columns: 1fr !important; }
+
+    /* Calendar modal — don't show on mobile, use Command instead */
+    .calendar-detail { display: none !important; }
+
+    /* Global mobile overflow prevention */
+    * { max-width: 100vw; }
+    .modal-content * { max-width: 100%; box-sizing: border-box; }
+    table { table-layout: fixed !important; width: 100% !important; word-wrap: break-word; }
+    img { max-width: 100% !important; height: auto !important; }
+
+    /* Ensure all grids collapse properly */
+    .la-form-grid, .hot-form-grid, .wm-columns, .pd-ov-3col,
+    .agr-type-cards, .add-prop-details, .cmd-transport-stats,
+    .settings-hero-stats, .sla-extracted-fields {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Two-column grids that should stay 2-col on mobile */
+    .pipeline-stats, .mp-dashboard, .la-outgoings-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
 
     /* Lease/sublease builders */
     .la-topbar { flex-wrap: wrap; padding: 10px 12px !important; gap: 8px !important; }
