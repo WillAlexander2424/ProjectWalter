@@ -7,7 +7,7 @@
     <!-- Google Fonts Inter loaded async for production -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <link rel="stylesheet" href="styles.css?v=84">
+    <link rel="stylesheet" href="styles.css?v=89">
 </head>
 <body>
     <!-- Sidebar -->
@@ -25,6 +25,59 @@
             </button>
         </div>
 
+
+        <!-- Notification Bell -->
+        <div class="notif-bell-wrap">
+            <button class="notif-bell" id="notifBell" title="Notifications">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                <span class="notif-badge" id="notifBadge">5</span>
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-dropdown-header">
+                    <span class="notif-dropdown-title">Notifications</span>
+                    <button class="notif-mark-read" id="notifMarkRead">Mark all read</button>
+                </div>
+                <div class="notif-dropdown-list" id="notifList">
+                    <div class="notif-group-label">Today</div>
+                    <div class="notif-item unread">
+                        <span class="agent-pip wallace" style="width:22px;height:22px;font-size:9px">W</span>
+                        <div class="notif-content">
+                            <span class="notif-text">Wallace found <strong>3 new matches</strong> for 33 Crummer Rd</span>
+                            <span class="notif-time">12 min ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-item unread">
+                        <span class="agent-pip zara" style="width:22px;height:22px;font-size:9px">Z</span>
+                        <div class="notif-content">
+                            <span class="notif-text">Zara scheduled <strong>Harbour Capital intro call</strong> for 2pm</span>
+                            <span class="notif-time">45 min ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-item unread">
+                        <span class="agent-pip brittany" style="width:22px;height:22px;font-size:9px;background:linear-gradient(135deg,#ec4899,#8b5cf6)">B</span>
+                        <div class="notif-content">
+                            <span class="notif-text">Brittany captured <strong>3 new contacts</strong> from Plaud session</span>
+                            <span class="notif-time">1 hour ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-group-label">Yesterday</div>
+                    <div class="notif-item">
+                        <span class="agent-pip costello" style="width:22px;height:22px;font-size:9px">C</span>
+                        <div class="notif-content">
+                            <span class="notif-text">Costello: weekly report for <strong>Des Radonich</strong> is ready</span>
+                            <span class="notif-time">Yesterday</span>
+                        </div>
+                    </div>
+                    <div class="notif-item">
+                        <span class="agent-pip wallace" style="width:22px;height:22px;font-size:9px">W</span>
+                        <div class="notif-content">
+                            <span class="notif-text">Wallace: <strong>Meridian Creative</strong> expansion match (84%)</span>
+                            <span class="notif-time">Yesterday</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <nav class="sidebar-nav">
             <a href="#" class="nav-item active" data-view="home" title="Home">
@@ -104,11 +157,6 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         <span>Personal context</span>
                     </a>
-                    <a href="#" class="dropdown-item" data-view="settings" data-section="theme">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                        <span>Theme</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                    </a>
                     <a href="#" class="dropdown-item" data-view="settings">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
                         <span>All settings</span>
@@ -158,26 +206,58 @@
                 </div>
             </div>
 
-            <!-- Priority Action Banner (top action elevated) -->
-            <div class="priority-banner" id="priorityBanner">
-                <div class="priority-banner-indicator"></div>
-                <div class="priority-banner-content">
-                    <div class="priority-banner-main">
-                        <span class="priority-banner-label">Priority Action</span>
-                        <span class="priority-banner-title">Lumiere Design — Lease expiry in 7 months</span>
-                        <span class="priority-banner-meta">24 Beaumont St, Freemans Bay · Expansion Opportunity · Surfaced by Zara</span>
+            <!-- ZONE 1: Priority Actions (compact mini-feed) -->
+            <div class="priority-feed" id="priorityFeed">
+                <div class="priority-feed-header">
+                    <div class="priority-feed-left">
+                        <span class="priority-feed-dot"></span>
+                        <span class="priority-feed-label">Priority Actions</span>
+                        <span class="priority-feed-count">7 urgent</span>
                     </div>
-                    <div class="priority-banner-actions">
-                        <button class="priority-banner-cta" data-action="beaumont">Review now</button>
-                        <span class="agent-pip zara" style="width:28px;height:28px;font-size:12px">Z</span>
+                    <button class="priority-feed-expand" id="priorityFeedExpand">View all &rsaquo;</button>
+                </div>
+                <div class="priority-feed-items">
+                    <div class="priority-feed-item" data-action="beaumont">
+                        <span class="agent-pip zara" style="width:20px;height:20px;font-size:8px">Z</span>
+                        <div class="priority-feed-content">
+                            <span class="priority-feed-title">Lumiere Design &mdash; Lease expiry in 7 months</span>
+                            <span class="priority-feed-meta">24 Beaumont St &middot; Expansion Opportunity</span>
+                        </div>
+                        <button class="priority-feed-cta" data-action="beaumont">Review</button>
+                    </div>
+                    <div class="priority-feed-item" data-action="techflow">
+                        <span class="agent-pip wallace" style="width:20px;height:20px;font-size:8px">W</span>
+                        <div class="priority-feed-content">
+                            <span class="priority-feed-title">TechFlow Ltd &mdash; ICP activation detected</span>
+                            <span class="priority-feed-meta">88 Shortland St &middot; New tenant signal</span>
+                        </div>
+                        <button class="priority-feed-cta" data-action="techflow">Review</button>
+                    </div>
+                    <div class="priority-feed-item" data-action="pacific">
+                        <span class="agent-pip costello" style="width:20px;height:20px;font-size:8px">C</span>
+                        <div class="priority-feed-content">
+                            <span class="priority-feed-title">Pacific Traders &mdash; Annual return overdue</span>
+                            <span class="priority-feed-meta">15 Osterley Way &middot; Flight risk elevated</span>
+                        </div>
+                        <button class="priority-feed-cta" data-action="pacific">Review</button>
                     </div>
                 </div>
-                <button class="priority-banner-dismiss" id="priorityBannerDismiss" title="Dismiss">&times;</button>
+                <div class="priority-feed-more" id="priorityFeedMore" style="display:none">
+                    <div class="priority-feed-item" data-action="nzhealth">
+                        <span class="agent-pip wallace" style="width:20px;height:20px;font-size:8px">W</span>
+                        <div class="priority-feed-content">
+                            <span class="priority-feed-title">NZ Health Group &mdash; Hiring surge detected</span>
+                            <span class="priority-feed-meta">42 Victoria St &middot; Potential expansion</span>
+                        </div>
+                        <button class="priority-feed-cta">Review</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Dashboard Cards -->
+            <!-- ZONE 2: Your Day + Market Reference -->
             <div class="dashboard-grid">
-                <div class="dash-card priority">
+                <!-- Priority Actions card removed — now in Zone 1 priority-feed above -->
+                <div class="dash-card priority" style="display:none">
                     <div class="dash-card-header">
                         <h3>Priority Actions</h3>
                         <span class="badge urgent">7 urgent</span>
@@ -5439,6 +5519,10 @@
                         <div class="pd-metric-item"><span class="pd-mi-label">Stickiness</span><span class="pd-mi-value" id="pdMetricStick">48%</span></div>
                         <div class="pd-metric-item"><span class="pd-mi-label">Status</span><span class="pd-mi-value" id="pdMetricStatus">Stable</span></div>
                     </div>
+                    <!-- Deal Progression Timeline -->
+                    <div class="pd-deal-timeline" id="pdDealTimeline">
+                        <!-- Populated by JS based on property deal status -->
+                    </div>
                     <div class="pd-tabs">
                         <button class="pd-tab active" data-pd-tab="overview">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -8643,6 +8727,30 @@
         </div>
     </div>
 
-    <script src="app.js?v=84"></script>
+    <!-- Mobile Bottom Tab Bar -->
+    <nav class="mobile-tab-bar" id="mobileTabBar">
+        <a href="#" class="mob-tab active" data-view="home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="#" class="mob-tab" data-view="command">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            <span>Command</span>
+        </a>
+        <a href="#" class="mob-tab" data-view="properties">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <span>Properties</span>
+        </a>
+        <a href="#" class="mob-tab" data-view="chat">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span>Walter</span>
+        </a>
+        <a href="#" class="mob-tab" id="mobMoreTab">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            <span>More</span>
+        </a>
+    </nav>
+
+    <script src="app.js?v=88"></script>
 </body>
 </html>

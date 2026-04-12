@@ -5363,11 +5363,45 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'sv-88-shortland.png'; // default
     }
 
+    // Deal progression data
+    const dealProgress = {
+        'Crummer': { steps: ['Prospect','HoT Drafted','HoT Signed','Lease in Progress','Lease Sent','Signed'], current: 3, dates: ['Feb 2026','Mar 2026','Mar 2026'] },
+        'Beaumont': { steps: ['Prospect','HoT Drafted','HoT Signed','Lease in Progress','Lease Sent','Signed'], current: 4, dates: ['Jan 2026','Feb 2026','Feb 2026','Apr 2026'] },
+        'Osterley': { steps: ['Prospect','HoT Drafted','HoT Signed','Lease in Progress','Lease Sent','Signed'], current: 2, dates: ['Mar 2026','Apr 2026'] },
+        'Parnell': { steps: ['Prospect','HoT Drafted','HoT Signed','Lease in Progress','Lease Sent','Signed'], current: 1, dates: ['Apr 2026'] },
+    };
+
+    function renderDealTimeline(address) {
+        const el = document.getElementById('pdDealTimeline');
+        if (!el) return;
+        const addr = typeof address === 'string' ? address : '';
+        let matchKey = null;
+        for (const key of Object.keys(dealProgress)) {
+            if (addr.includes(key)) { matchKey = key; break; }
+        }
+        if (!matchKey) {
+            el.innerHTML = `<div class="pd-deal-no-deal"><span>No active deal</span><button class="pd-deal-start-btn" onclick="openHeadsOfTerms('${addr}')">Start HoT &rsaquo;</button></div>`;
+            return;
+        }
+        const deal = dealProgress[matchKey];
+        let html = '';
+        deal.steps.forEach((step, i) => {
+            const status = i < deal.current ? 'done' : i === deal.current ? 'current' : 'upcoming';
+            html += `<div class="pd-deal-step"><span class="pd-deal-dot ${status}"></span><span class="pd-deal-label ${status}">${step}</span></div>`;
+            if (i < deal.steps.length - 1) {
+                html += `<div class="pd-deal-line ${i < deal.current ? 'done' : 'upcoming'}"></div>`;
+            }
+        });
+        el.innerHTML = html;
+    }
+
     function openPropDrill(address, tab) {
         if (pdAddress && address) pdAddress.textContent = address;
         // Set hero image
         const heroImg = document.getElementById('pdHeroImg');
         if (heroImg) heroImg.src = getPropertyImage(address);
+        // Deal progression timeline
+        renderDealTimeline(address);
         // Activate the selected tab (default: overview)
         const targetTab = tab || 'overview';
         document.querySelectorAll('.pd-tab').forEach(t => t.classList.toggle('active', t.dataset.pdTab === targetTab));
@@ -6241,7 +6275,79 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Priority Banner ---
+    // --- Mobile Tab Bar ---
+    document.querySelectorAll('.mob-tab[data-view]').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.mob-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            switchView(tab.dataset.view);
+        });
+    });
+    document.getElementById('mobMoreTab')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Toggle sidebar open on mobile as an overlay
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+            sidebar.style.position = 'fixed';
+            sidebar.style.zIndex = '1300';
+            sidebar.style.left = '0';
+            sidebar.style.top = '0';
+            sidebar.style.bottom = '60px';
+            sidebar.style.width = '260px';
+            sidebar.style.boxShadow = '4px 0 20px rgba(0,0,0,0.15)';
+            sidebar.classList.remove('collapsed');
+        }
+    });
+
+    // --- Notification Bell ---
+    const notifBell = document.getElementById('notifBell');
+    const notifDropdown = document.getElementById('notifDropdown');
+    notifBell?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notifDropdown?.classList.toggle('open');
+        // Position based on sidebar state
+        if (notifDropdown?.classList.contains('open')) {
+            const sidebar = document.getElementById('sidebar');
+            const isCollapsed = sidebar?.classList.contains('collapsed');
+            notifDropdown.style.left = (isCollapsed ? 70 : 270) + 'px';
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (!notifDropdown?.contains(e.target) && e.target !== notifBell) {
+            notifDropdown?.classList.remove('open');
+        }
+    });
+    document.getElementById('notifMarkRead')?.addEventListener('click', () => {
+        document.querySelectorAll('.notif-item.unread').forEach(n => n.classList.remove('unread'));
+        const badge = document.getElementById('notifBadge');
+        if (badge) badge.style.display = 'none';
+    });
+
+    // --- Priority Feed (Zone 1) ---
+    document.getElementById('priorityFeedExpand')?.addEventListener('click', () => {
+        const more = document.getElementById('priorityFeedMore');
+        if (more) {
+            more.style.display = more.style.display === 'none' ? '' : 'none';
+            document.getElementById('priorityFeedExpand').textContent = more.style.display === 'none' ? 'View all ›' : 'Show less';
+        }
+    });
+    document.querySelectorAll('.priority-feed-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            if (e.target.closest('.priority-feed-cta')) return;
+            const action = item.dataset.action;
+            if (action) document.querySelector(`.action-item [data-action="${action}"]`)?.click();
+        });
+    });
+    document.querySelectorAll('.priority-feed-cta').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            if (action) document.querySelector(`.action-item [data-action="${action}"]`)?.click();
+        });
+    });
+
+    // --- Priority Banner (legacy) ---
     document.getElementById('priorityBannerDismiss')?.addEventListener('click', () => {
         document.getElementById('priorityBanner')?.classList.add('dismissed');
     });
