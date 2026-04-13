@@ -6436,7 +6436,8 @@ document.addEventListener('DOMContentLoaded', () => {
         home: [
             { title: 'Welcome to Walter', text: 'Priority actions are at the top — click "Review" to act on any item immediately.', target: '.priority-feed', arrow: 'top' },
             { title: 'Your schedule & AI agents', text: 'Zara\'s schedule shows today\'s meetings. Wallace\'s matches and your deal pipeline are below. Book an Uber to viewings with one tap.', target: '.zara-schedule-card', arrow: 'top', scroll: true },
-            { title: 'Notifications', text: 'The bell icon shows AI agent notifications — Wallace matches, Zara reminders, and Brittany captures. The W button opens Walter Chat from any page.', target: '.notif-bell-wrap', arrow: 'left' }
+            { title: 'Notifications', text: 'The bell icon shows AI agent notifications — Wallace matches, Zara reminders, and Brittany captures.', target: '.notif-bell-wrap', arrow: 'left' },
+            { title: 'Settings', text: 'Configure your integrations, AI agents, alert preferences, and personal context to maximise Walter. Access via the gear icon below.', target: '.settings-dropdown-container', arrow: 'left' }
         ],
         command: [
             { title: 'Command Centre', text: 'Every email is auto-tagged to its property by Brittany and filed to Vault RE. No manual CRM entry.', target: '.cmd-hero', arrow: 'top' },
