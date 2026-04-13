@@ -15730,15 +15730,13 @@ body.on-chat-view .walter-popout { display: none; }
     /* Properties */
     .mp-dashboard { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
     .mp-widget { padding: 12px !important; }
-    .properties-table { font-size: 11px; }
-    .properties-table th, .properties-table td { padding: 8px 6px !important; }
-    /* Hide less important columns on mobile */
-    .properties-table th:nth-child(4),
-    .properties-table td:nth-child(4),
-    .properties-table th:nth-child(5),
-    .properties-table td:nth-child(5),
-    .properties-table th:nth-child(7),
-    .properties-table td:nth-child(7) { display: none; }
+    .properties-table { font-size: 12px; overflow: hidden; }
+    .properties-table th, .properties-table td { padding: 10px 6px !important; }
+    /* Hide less important columns on mobile — show only Address, Type */
+    .properties-table th:nth-child(n+3),
+    .properties-table td:nth-child(n+3) { display: none; }
+    .properties-table th:nth-child(1) { width: 70%; }
+    .properties-table th:nth-child(2) { width: 30%; }
     .mp-export-btn, .mp-add-btn { font-size: 11px !important; padding: 6px 12px !important; }
 
     /* Listings */
@@ -15822,13 +15820,22 @@ body.on-chat-view .walter-popout { display: none; }
     .feedback-modal { border-radius: 16px 16px 0 0 !important; }
 
     /* Pipeline drill-down mobile */
-    .pipeline-modal { width: 100% !important; border-radius: 16px 16px 0 0 !important; padding: 16px !important; }
-    .pipeline-modal .pm-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
-    .pipeline-modal .pm-filter-chips { flex-wrap: wrap !important; }
-    .pipeline-modal .pm-property-card { padding: 10px !important; }
+    .pipeline-modal { width: 100% !important; border-radius: 16px 16px 0 0 !important; padding: 12px !important; }
+    .pipeline-modal .pm-stats { grid-template-columns: repeat(4, 1fr) !important; gap: 4px !important; }
+    .pipeline-modal .pm-stat { font-size: 10px !important; padding: 8px 4px !important; text-align: center; }
+    .pipeline-modal .pm-stat-value { font-size: 16px !important; }
+    .pipeline-modal .pm-filter-chips { flex-wrap: wrap !important; gap: 4px !important; }
+    .pipeline-modal .pm-property-card { padding: 8px 10px !important; }
+    .pipeline-modal .pm-prop-row { font-size: 10px !important; flex-wrap: wrap; gap: 4px !important; }
+
+    /* Old property modal — stack 2-col to 1-col */
+    .pd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+    .pd-row span, .pd-row strong { font-size: 11px !important; }
+    .pd-metrics { flex-wrap: wrap !important; }
+    .pd-hero { margin: 0 !important; border-radius: 0 !important; }
 
     /* Strategy card mobile */
-    .strategy-modal { width: 100% !important; border-radius: 16px 16px 0 0 !important; padding: 16px !important; }
+    .strategy-modal { width: 100% !important; border-radius: 16px 16px 0 0 !important; }
     .strategy-grid { grid-template-columns: 1fr !important; }
 
     /* HoT modal mobile */
@@ -15878,8 +15885,19 @@ body.on-chat-view .walter-popout { display: none; }
     .la-topbar h2 { font-size: 16px !important; }
     .la-topbar-badge { font-size: 9px !important; }
     .la-back-btn, .la-hot-btn { padding: 6px 10px !important; font-size: 11px !important; }
-    .la-sections-nav { overflow-x: auto; white-space: nowrap; padding: 0 12px; -webkit-overflow-scrolling: touch; }
-    .la-sec-btn { padding: 8px 10px !important; font-size: 10px !important; flex-shrink: 0; }
+    .la-sections-nav {
+        overflow-x: auto;
+        overflow-y: hidden !important;
+        white-space: nowrap;
+        padding: 0 12px;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap !important;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: white;
+    }
+    .la-sec-btn { padding: 8px 10px !important; font-size: 10px !important; flex-shrink: 0; display: inline-flex !important; }
     .la-form-pane { padding: 14px !important; }
     .la-form-grid { grid-template-columns: 1fr !important; }
     .la-zara-banner { padding: 10px 12px !important; }
@@ -15891,9 +15909,26 @@ body.on-chat-view .walter-popout { display: none; }
     .la-page-footer { padding: 8px 16px !important; }
     .la-outgoings-grid { grid-template-columns: 1fr !important; }
     .la-clause-chat { margin: 0 -14px; border-radius: 10px; }
-    .la-send-flow { gap: 12px; }
-    .la-send-step-card { padding: 14px !important; }
-    .la-review-doc { padding: 10px 0 !important; gap: 24px !important; }
+    .la-send-flow { gap: 10px !important; }
+    .la-send-step-card {
+        padding: 14px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    .la-send-step-num { width: 28px !important; height: 28px !important; font-size: 12px !important; flex-shrink: 0; }
+    .la-send-step-body strong { font-size: 13px !important; }
+    .la-send-step-body span { font-size: 11px !important; }
+    .la-generate-btn, .la-send-btn { width: 100% !important; justify-content: center !important; padding: 10px 16px !important; font-size: 12px !important; }
+    .la-review-doc { padding: 10px 0 !important; gap: 20px !important; }
+    .la-adls-page {
+        transform: scale(0.48) !important;
+        transform-origin: top left !important;
+        margin-bottom: -500px !important;
+        width: 794px !important;
+    }
+    .la-review-toolbar { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
+    .la-review-toolbar-right { align-self: flex-start; }
     .la-peer-layout { grid-template-columns: 1fr !important; }
 
     /* Agreement type selector */
@@ -15925,7 +15960,11 @@ body.on-chat-view .walter-popout { display: none; }
 @media (max-width: 480px) {
     .view { padding: 12px 10px !important; }
     .view-title { font-size: 20px !important; }
-    .mp-dashboard { grid-template-columns: 1fr !important; }
+    .mp-dashboard { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+    .mp-widget { padding: 10px 12px !important; }
+    .mp-widget-value { font-size: 20px !important; }
+    .mp-widget-label { font-size: 10px !important; }
+    .mp-widget-sub { font-size: 9px !important; }
     .cmd-hero { padding: 14px 16px !important; }
     .cmd-hero-sub { display: none; }
     .priority-feed-meta { display: none; }
