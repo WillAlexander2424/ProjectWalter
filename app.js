@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                         Wallace: Match tenants for 33 Crummer Rd
                     </button>
-                    <button class="chat-suggestion" data-prompt="A tenant is disputing the OPEX charges claiming the landlord has included capital expenditure items. What are the legal grounds under the ADLS lease and what tribunal precedents support the tenant or landlord position?">
+                    <button class="chat-suggestion" data-prompt="A tenant is disputing the OPEX charges claiming the landlord has included capital expenditure items. What are the legal grounds under the TLANZ lease and what tribunal precedents support the tenant or landlord position?">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         OPEX dispute — tribunal precedents
                     </button>
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { icon: '&#128196;', text: 'Analyse a new lease', prompt: 'I want to analyse a new lease for a client' },
                 { icon: '&#128181;', text: 'Build an OPEX budget', prompt: 'Generate an OPEX budget from a lease I uploaded' },
                 { icon: '&#9878;', text: 'Compare lease options', prompt: 'Compare multiple lease options for a client' },
-                { icon: '&#128269;', text: 'Flag unusual clauses', prompt: 'What unusual clauses should I watch for in ADLS 6th Ed leases?' }
+                { icon: '&#128269;', text: 'Flag unusual clauses', prompt: 'What unusual clauses should I watch for in TLANZ 6th Ed leases?' }
             ]
         },
         settings: {
@@ -1160,11 +1160,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return `
             <div class="processing-steps">
                 <div class="processing-step"><span class="step-dot done"></span> Searched Bayleys clause library — 73.0 CPI Adjustment Formula</div>
-                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced ADLS 6th Edition rent review provisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Cross-referenced TLANZ 6th Edition rent review provisions</div>
                 <div class="processing-step"><span class="step-dot done"></span> Analysed 1,240 commercial leases with CPI clauses</div>
             </div>
             <strong>CPI Adjustment Clause — Drafted for 5-Year Term, Capped at 3%</strong><br><br>
-            Based on Bayleys Clause 73.0 and ADLS 6th Edition Schedule 1, Field 12, here is the recommended clause:<br><br>
+            Based on Bayleys Clause 73.0 and TLANZ 6th Edition Schedule 1, Field 12, here is the recommended clause:<br><br>
             <div style="background:var(--bg-secondary);padding:14px 16px;border-radius:8px;border-left:3px solid var(--accent);margin:8px 0;font-size:13px;line-height:1.7;">
             <em>"The annual rent shall be adjusted on each CPI rent adjustment date by applying to the annual rent payable at the adjustment date the same percentage by which the Consumer Price Index (All Groups) published by Stats NZ has altered during the preceding 12-month period, <strong>provided that any such adjustment shall not exceed 3.0% per annum nor be less than 0.0% (the rent shall not decrease)</strong>. If the CPI ceases to be published, the rent will be reviewed by reference to the most closely comparable index as agreed by the parties."</em>
             </div><br>
@@ -1172,7 +1172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             &bull; <strong>Fixed 3% p.a.</strong> — Simpler but overexposes the tenant when CPI is below 3%. Based on RBNZ forecasts (2.1-2.4% for 2026-28), a fixed 3% would cost the tenant an additional <strong>$3,200-$5,800 p.a.</strong> on a 300 sqm lease vs CPI-linked.<br><br>
             &bull; <strong>Uncapped CPI</strong> — Favours the landlord in high-inflation periods. During 2022-23, uncapped CPI reviews hit 7.2%, causing significant tenant disputes. Our database shows <strong>14 tribunal cases</strong> where tenants challenged uncapped CPI reviews.<br><br>
             &bull; <strong>CPI capped at 3%</strong> (recommended) — The balanced approach. Used in <strong>62% of Bayleys commercial leases</strong> signed in 2025. Protects both parties while providing predictable cost increases.<br><br>
-            <strong>Legal reference:</strong> Property Law Act 2007 s.224 governs rent review mechanisms. ADLS 6th Edition cl.2.1(d) and cl.2.5(d) provide the framework for CPI adjustments with lower and upper limits.
+            <strong>Legal reference:</strong> Property Law Act 2007 s.224 governs rent review mechanisms. TLANZ 6th Edition cl.2.1(d) and cl.2.5(d) provide the framework for CPI adjustments with lower and upper limits.
         `;
     }
 
@@ -1303,14 +1303,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function getOPEXDisputeResponse() {
         return `
             <div class="processing-steps">
-                <div class="processing-step"><span class="step-dot done"></span> Referenced ADLS 6th Edition — Second Schedule OPEX provisions</div>
+                <div class="processing-step"><span class="step-dot done"></span> Referenced TLANZ 6th Edition — Second Schedule OPEX provisions</div>
                 <div class="processing-step"><span class="step-dot done"></span> Searched tribunal decisions — OPEX capital vs operating disputes</div>
                 <div class="processing-step"><span class="step-dot done"></span> Found 42 relevant cases</div>
             </div>
             <strong>OPEX Dispute — Capital vs Operating Expenditure</strong><br><br>
-            This is one of the most common commercial lease disputes. The ADLS 6th Edition Second Schedule defines 13 categories of recoverable OPEX but <strong>explicitly excludes capital items</strong>.<br><br>
+            This is one of the most common commercial lease disputes. The TLANZ 6th Edition Second Schedule defines 13 categories of recoverable OPEX but <strong>explicitly excludes capital items</strong>.<br><br>
             <strong>The legal position:</strong><br><br>
-            Under ADLS 6th Ed. Second Schedule, Item 7, the landlord may recover <em>"maintenance and repair charges"</em> but this <strong>excludes:</strong><br>
+            Under TLANZ 6th Ed. Second Schedule, Item 7, the landlord may recover <em>"maintenance and repair charges"</em> but this <strong>excludes:</strong><br>
             &bull; Structural repairs to the building<br>
             &bull; Repairs due to defects in design or construction<br>
             &bull; Inherent defects<br>
@@ -1318,7 +1318,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <strong>Key tribunal precedents:</strong><br><br>
             &bull; <em>Stride Property v MediaWorks (2023)</em> — Landlord charged $180,000 for a new roof as OPEX. <strong>Held: Capital expenditure.</strong> Roof replacement is a capital item, not maintenance. Only minor roof repairs (patching, flashing) are recoverable.<br><br>
             &bull; <em>Kiwi Income Property v ANZ (2024)</em> — Landlord recovered $45,000 for a new HVAC compressor as "service maintenance." <strong>Held: Partially capital.</strong> The Tribunal apportioned 70% as capital (new equipment) and 30% as maintenance (installation labour).<br><br>
-            &bull; <em>Argosy Property v Fletcher Construction (2022)</em> — Car park resealing of $85,000 charged to tenants. <strong>Held: Capital.</strong> ADLS Schedule Item 10 explicitly excludes "repaving or resealing" from tenant recoverable charges. Only pothole repairs and minor patching qualify.<br><br>
+            &bull; <em>Argosy Property v Fletcher Construction (2022)</em> — Car park resealing of $85,000 charged to tenants. <strong>Held: Capital.</strong> TLANZ Schedule Item 10 explicitly excludes "repaving or resealing" from tenant recoverable charges. Only pothole repairs and minor patching qualify.<br><br>
             <strong>Advice for the agent:</strong><br>
             1. Request a <strong>full OPEX breakdown</strong> with invoices — tenants have a right to audit under cl.3.3<br>
             2. Challenge any single item exceeding <strong>$10,000</strong> — likely a capital item<br>
@@ -1618,7 +1618,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 responseHtml = `
                     <div class="processing-steps">
                         <div class="processing-step"><span class="step-dot done"></span> Matched to: 15 Osterley Way, Manukau</div>
-                        <div class="processing-step"><span class="step-dot done"></span> Tagged as: Lease Agreement (ADLS 6th Ed.)</div>
+                        <div class="processing-step"><span class="step-dot done"></span> Tagged as: Lease Agreement (TLANZ 6th Ed.)</div>
                         <div class="processing-step"><span class="step-dot done"></span> Filed to Vault RE property record</div>
                         <div class="processing-step"><span class="step-dot done"></span> Added to property timeline</div>
                     </div>
@@ -4570,9 +4570,9 @@ document.addEventListener('DOMContentLoaded', () => {
         CMD_EMAILS.unshift({
             id: 'sla-sent-' + Date.now(), from: 'Walter', fromOrg: 'Sent', email: null,
             subject: 'Agreement to Sublease sent for signing — ' + addr,
-            preview: 'ADLS Agreement to Sublease (First Edition 2018) sent via LuminPDF. Awaiting 3 signatures.',
+            preview: 'TLANZ Agreement to Sublease (Second Edition 2025) sent via LuminPDF. Awaiting 3 signatures.',
             property: addr.split(',')[0], category: 'ai', time: 'Just now', unread: true,
-            body: '<div class="cmd-ai-body"><strong>Agreement to Sublease — Sent for Signing</strong><br><br>The ADLS Agreement to Sublease for <strong>' + addr + '</strong> has been sent to all parties via LuminPDF.<br><br><strong>Signing status:</strong><br>• Sublandlord: Pending<br>• Subtenant: Pending<br>• Guarantor: Pending<br><br><em>Brittany has filed this agreement against the property record in Vault RE.</em></div>',
+            body: '<div class="cmd-ai-body"><strong>Agreement to Sublease — Sent for Signing</strong><br><br>The TLANZ Agreement to Sublease for <strong>' + addr + '</strong> has been sent to all parties via LuminPDF.<br><br><strong>Signing status:</strong><br>• Sublandlord: Pending<br>• Subtenant: Pending<br>• Guarantor: Pending<br><br><em>Brittany has filed this agreement against the property record in Vault RE.</em></div>',
             aiReply: null, zaraNote: null
         });
     });
@@ -5027,7 +5027,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'signage': {
             title: 'Signage Rights',
             text: 'The Tenant shall be entitled to install signage on the exterior of the Premises and within any common area directory board, subject to the Landlord\'s prior written approval (not to be unreasonably withheld) and compliance with all applicable council and building regulations. All signage costs, including installation, maintenance and removal, shall be borne by the Tenant. The Tenant shall remove all signage and make good any damage caused by such removal at the expiry or sooner determination of this Lease.',
-            source: 'Standard clause — ADLS 7th Edition cl 20'
+            source: 'Standard clause — TLANZ 6th Edition cl 20'
         },
         'nocompete': {
             title: 'Non-Compete Radius',
@@ -5042,7 +5042,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'damage': {
             title: 'Damage & Abatement',
             text: 'If the Premises or any part thereof are damaged or destroyed so as to render the Premises or any part thereof unfit for the Tenant\'s use, then the rent and outgoings (or a fair proportion thereof having regard to the nature and extent of the damage) shall abate from the date of the damage until the Premises are reinstated to a condition fit for the Tenant\'s use. If the Premises are not reinstated within 9 months of the date of damage, either party may terminate this Lease by giving 20 working days\' notice.',
-            source: 'Based on ADLS 7th Edition cl 29 — 9-month no-access default'
+            source: 'Based on TLANZ 6th Edition cl 29 — 9-month no-access default'
         },
         'hns': {
             title: 'Health & Safety Obligations',
@@ -6431,230 +6431,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     })();
 
-    // --- Guided Tour ---
-    // --- Guided Tour (multi-page) ---
-    const tourSteps = [
-        // HOME (steps 0-1)
-        {
-            view: 'home',
-            target: '.priority-banner',
-            title: 'Your daily briefing',
-            text: 'Walter surfaces the most urgent action each morning. Review it, act on it, or dismiss to move to the next priority.',
-            arrow: 'top'
-        },
-        {
-            view: 'home',
-            target: '.wallace-ambient-card',
-            title: 'Wallace works in the background',
-            text: 'Wallace continuously matches tenants and buyers to your listings. New matches appear here each day — review and send introductions with one click.',
-            arrow: 'top',
-            scroll: true
-        },
-        // MY PROPERTIES (steps 2-4)
-        {
-            view: 'properties',
-            target: '.mp-dashboard',
-            title: 'Portfolio at a glance',
-            text: 'Eight smart widgets filter your 54 properties by risk, signals, stickiness, and value. Click any widget to instantly filter the table below.',
-            arrow: 'top'
-        },
-        {
-            view: 'properties',
-            target: '.mp-export-btn',
-            title: 'Export & add properties',
-            text: 'Export your portfolio to CSV, or search Walter\'s database of 113,000+ NZ commercial properties to add new ones to your watchlist.',
-            arrow: 'top'
-        },
-        {
-            view: 'properties',
-            target: '.properties-table',
-            title: 'Click any row for the full picture',
-            text: 'Every row opens a detailed property card with owner and tenant intel, lease history, and AI insights.',
-            arrow: 'top',
-            scroll: true
-        },
-        {
-            view: 'properties',
-            target: '.prop-action-menu',
-            title: 'Quick actions menu',
-            text: 'The ⋮ menu on each row gives you instant access to key workflows — generate a Heads of Terms, draft a Lease Agreement, open the property summary, or view data and reports. This is where deals start.',
-            arrow: 'left',
-            scroll: true,
-            before: function() {
-                // Open the first row's action menu
-                const btn = document.querySelector('.prop-action-btn');
-                if (btn && !btn.classList.contains('open')) btn.click();
-            }
-        },
-        // MARKET (steps 5-6)
-        {
-            view: 'market',
-            target: '#leafletMap',
-            title: 'Interactive market map',
-            text: 'Explore Auckland\'s commercial landscape. Click any pin to see property details, tenant signals, and predicted demand. Blue = office, purple = retail, green = industrial, orange = new signal.',
-            arrow: 'top'
-        },
-        {
-            view: 'market',
-            target: '.market-intel-panel',
-            title: 'Market intelligence sidebar',
-            text: 'Three tabs — Overview for market stats, Signals for live property feeds, and Insights for AI-generated market trends. Clicking a signal flies the map to that property.',
-            arrow: 'left'
-        },
-        // LISTINGS (steps 7-8)
-        {
-            view: 'listings',
-            target: '.listing-card',
-            title: 'Your active listings',
-            text: 'Each listing card shows real market data, Walter\'s AI insight, and Wallace match indicators. Click any card for the full gallery, comparable analysis, and tenant matching.',
-            arrow: 'top'
-        },
-        {
-            view: 'listings',
-            target: '.listing-card .wallace-pips',
-            title: 'Wallace match pips',
-            text: 'These coloured dots show how many prospective matches Wallace has found for each listing. More pips = stronger demand signal.',
-            arrow: 'top',
-            fallback: '.listing-card'
-        },
-        // ADVISORY (steps 9-10)
-        {
-            view: 'documents',
-            target: '.advisory-prompt',
-            title: 'Proactive advisory',
-            text: 'Walter monitors your portfolio and prompts you when leases need attention. Zara identifies upcoming renewals and recommends starting reviews early for negotiation leverage.',
-            arrow: 'top'
-        },
-        {
-            view: 'documents',
-            target: '.docs-workflows-4',
-            title: 'Four advisory workflows',
-            text: 'Single lease review, lease comparison, OPEX budget generator, and S&P agreement analysis — each powered by Walter\'s LLM trained on thousands of NZ commercial agreements.',
-            arrow: 'top'
-        },
-        // COMMAND (steps)
-        {
-            view: 'command',
-            target: '.cmd-hero',
-            title: 'Your property-aware inbox',
-            text: 'Command combines email, calendar, and AI intelligence in one workspace. Every email is auto-tagged to its property by Brittany and filed to Vault RE — no manual CRM entry.',
-            arrow: 'top'
-        },
-        {
-            view: 'command',
-            target: '.cmd-today-brief',
-            title: 'AI-drafted replies and meeting prep',
-            text: 'Click any email to see Walter\'s AI-drafted reply, reviewed by Zara for accuracy. Click any meeting for property-aware prep notes with talking points and attendee intel.',
-            arrow: 'top'
-        },
-        // SETTINGS
-        {
-            view: 'settings',
-            target: '.settings-page-tabs',
-            title: 'Configure your setup',
-            text: 'Maximise Walter by connecting your data sources, fine-tuning alert preferences, configuring your five AI agents, and setting your personal context so every recommendation is relevant to you.',
-            arrow: 'top'
-        },
-        // FINAL (step 12)
-        {
-            view: 'home',
-            target: '.walter-fab',
-            title: 'Ask Walter anything',
-            text: 'Walter is always available. Click this button from any page to ask about properties, tenants, market trends, or to draft documents. Walter works across all your data.',
-            arrow: 'bottom'
-        }
-    ];
+    // --- Contextual Page Tips (show per-page, first visit only) ---
+    const pageTips = {
+        home: { title: 'Welcome to Walter', text: 'This is your daily briefing. Priority actions are at the top, your schedule and AI agent matches are below. Click any item to take action.' },
+        command: { title: 'Command Centre', text: 'Your property-aware inbox. Every email is auto-tagged to its property by Brittany. Click any email for an AI-drafted reply, or any meeting for prep notes.' },
+        properties: { title: 'My Properties', text: 'Your portfolio at a glance. Click any row to see the full property card, or use the ⋮ menu for quick actions like Heads of Terms and Agreements.' },
+        market: { title: 'Market Intelligence', text: 'Explore Auckland\'s commercial landscape. Click any map pin for property details. Use the filters to narrow by type, status, or source.' },
+        listings: { title: 'Active Listings', text: 'Your current listings with AI insights and Wallace match indicators. Click any card for the full gallery, comparable analysis, and tenant matching.' },
+        documents: { title: 'Advisory', text: 'Upload a lease, contract, or agreement and Walter will analyse it in under 60 seconds. Four workflows — lease review, comparison, OPEX budget, and S&P analysis.' },
+        settings: { title: 'Settings', text: 'Configure Walter to work for you. Connect data sources, set alert preferences, tune your five AI agents, and build your personal context.' },
+        chat: { title: 'Walter Chat', text: 'Ask Walter about any property, tenant, market trend, or to draft documents. Walter has access to your full portfolio and 14,200+ NZ commercial agreements.' }
+    };
 
-    let tourStep = 0;
+    const seenTips = JSON.parse(sessionStorage.getItem('walter-seen-tips') || '{}');
     const tourOverlay = document.getElementById('tourOverlay');
     const tourTooltip = document.getElementById('tourTooltip');
     const tourContent = document.getElementById('tourContent');
-    const tourStepIndicator = document.getElementById('tourStepIndicator');
     const tourNext = document.getElementById('tourNext');
     const tourSkip = document.getElementById('tourSkip');
 
-    function showTourStep(idx) {
-        if (idx >= tourSteps.length) { closeTour(); return; }
-        const step = tourSteps[idx];
+    function showPageTip(viewId) {
+        if (seenTips[viewId]) return;
+        const tip = pageTips[viewId];
+        if (!tip) return;
 
-        // Navigate to the correct view
-        const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
-        if (step.view && step.view !== currentView) {
-            switchView(step.view);
-        }
+        seenTips[viewId] = true;
+        sessionStorage.setItem('walter-seen-tips', JSON.stringify(seenTips));
 
-        // Small delay to allow view to render
-        setTimeout(() => {
-            // Run pre-step action (e.g. open a menu)
-            if (step.before) step.before();
+        tourContent.innerHTML = `<h4>${tip.title}</h4><p>${tip.text}</p>`;
+        document.getElementById('tourStepIndicator').textContent = '';
+        tourNext.textContent = 'Got it';
+        tourTooltip.className = 'tour-tooltip arrow-top';
 
-            // Extra delay for before actions to render
-            setTimeout(() => {
-            let el = document.querySelector(step.target);
-            if (!el && step.fallback) el = document.querySelector(step.fallback);
-            if (!el) { tourStep++; showTourStep(tourStep); return; }
+        // Position at top-center of the page
+        tourTooltip.style.top = '80px';
+        tourTooltip.style.left = Math.max(10, (window.innerWidth - 340) / 2) + 'px';
 
-            // Scroll element into view if needed
-            if (step.scroll) {
-                el.scrollIntoView({ behavior: 'instant', block: 'center' });
-            }
-
-            // Update content
-            tourContent.innerHTML = `<h4>${step.title}</h4><p>${step.text}</p>`;
-            tourStepIndicator.textContent = `${idx + 1} of ${tourSteps.length}`;
-            tourNext.textContent = idx === tourSteps.length - 1 ? 'Get started' : 'Next';
-
-            tourTooltip.className = 'tour-tooltip arrow-' + step.arrow;
-
-            const rect = el.getBoundingClientRect();
-            let top, left;
-
-            if (step.arrow === 'top') {
-                top = rect.bottom + 12;
-                left = Math.max(20, rect.left);
-            } else if (step.arrow === 'left') {
-                top = rect.top + Math.min(rect.height / 2, 40);
-                left = rect.right + 12;
-            } else if (step.arrow === 'bottom') {
-                top = rect.top - 200;
-                left = rect.left - 260;
-            }
-
-            // Clamp within viewport
-            top = Math.max(10, Math.min(top, window.innerHeight - 220));
-            left = Math.max(10, Math.min(left, window.innerWidth - 360));
-
-            tourTooltip.style.top = top + 'px';
-            tourTooltip.style.left = left + 'px';
-            }, step.before ? 150 : 0);
-        }, step.view !== currentView ? 250 : 50);
-    }
-
-    function startTour() {
-        if (sessionStorage.getItem('walter-tour-done')) return;
-        tourStep = 0;
         tourOverlay?.classList.add('active');
-        showTourStep(0);
     }
 
-    function closeTour() {
+    function closeTip() {
         tourOverlay?.classList.remove('active');
-        sessionStorage.setItem('walter-tour-done', '1');
-        // Clean up any open menus
-        document.querySelectorAll('.prop-action-btn.open').forEach(b => b.classList.remove('open'));
-        document.querySelectorAll('.prop-action-menu.open').forEach(m => m.classList.remove('open'));
-        // Return to home
-        switchView('home');
     }
 
-    tourNext?.addEventListener('click', () => {
-        tourStep++;
-        showTourStep(tourStep);
-    });
-    tourSkip?.addEventListener('click', closeTour);
-    document.getElementById('tourBackdrop')?.addEventListener('click', closeTour);
+    tourNext?.addEventListener('click', closeTip);
+    tourSkip?.addEventListener('click', closeTip);
+    document.getElementById('tourBackdrop')?.addEventListener('click', closeTip);
 
-    // Auto-start tour after 800ms
-    setTimeout(startTour, 800);
+    // Show tip when view changes
+    const origSwitchView = switchView;
+    switchView = function(viewId) {
+        origSwitchView(viewId);
+        setTimeout(() => showPageTip(viewId), 400);
+    };
+
+    // Show home tip on first load
+    setTimeout(() => showPageTip('home'), 800);
 
 });
