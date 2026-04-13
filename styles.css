@@ -11931,7 +11931,8 @@ body {
     width: 94%;
     padding: 0;
     border-radius: 18px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: #ffffff !important;
     opacity: 1 !important;
     box-shadow: 0 32px 80px rgba(0,0,0,0.28);
