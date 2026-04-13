@@ -6434,39 +6434,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Contextual Page Tips (show per-page, first visit only) ---
     const pageTips = {
         home: [
-            { title: 'Welcome to Walter', text: 'This is your daily briefing. Priority actions are at the top — click "Review" to act on any item immediately.' },
-            { title: 'Your schedule & AI agents', text: 'Scroll down to see Zara\'s schedule for today, Wallace\'s latest matches, and your deal pipeline. Book an Uber to viewings with one tap.' },
-            { title: 'Notifications & settings', text: 'The bell icon shows AI agent notifications. Click the W button in the bottom-right to ask Walter anything from any page.' }
+            { title: 'Welcome to Walter', text: 'Priority actions are at the top — click "Review" to act on any item immediately.', target: '.priority-feed', arrow: 'top' },
+            { title: 'Your schedule & AI agents', text: 'Zara\'s schedule shows today\'s meetings. Wallace\'s matches and your deal pipeline are below. Book an Uber to viewings with one tap.', target: '.zara-schedule-card', arrow: 'top', scroll: true },
+            { title: 'Notifications', text: 'The bell icon shows AI agent notifications — Wallace matches, Zara reminders, and Brittany captures. The W button opens Walter Chat from any page.', target: '.notif-bell-wrap', arrow: 'left' }
         ],
         command: [
-            { title: 'Command Centre', text: 'Your property-aware inbox. Every email is auto-tagged to its property by Brittany and filed to Vault RE automatically.' },
-            { title: 'AI-drafted replies', text: 'Click any email, then "Draft AI Reply" — Walter writes a contextual response and Zara reviews it for accuracy before you send.' },
-            { title: 'Day, Week & Month views', text: 'Use the toggle in the top-right to switch between Day, Week, and Month calendar views. Click any meeting for Zara\'s prep notes.' }
+            { title: 'Command Centre', text: 'Every email is auto-tagged to its property by Brittany and filed to Vault RE. No manual CRM entry.', target: '.cmd-hero', arrow: 'top' },
+            { title: 'AI-drafted replies', text: 'Click any email, then "Draft AI Reply" — Walter writes a contextual response and Zara reviews it for accuracy.', target: '.cmd-stream', arrow: 'top' },
+            { title: 'Calendar views', text: 'Switch between Day, Week, and Month views. Click any meeting for Zara\'s property-aware prep notes and Uber booking.', target: '.cmd-view-toggle', arrow: 'top' }
         ],
         properties: [
-            { title: 'My Properties', text: 'Your portfolio of 54 properties. The widgets at the top filter the table — click any widget to see At Risk, Expiring, or Expansion properties.' },
-            { title: 'Property actions menu', text: 'Click the ⋮ menu on any row to generate Heads of Terms, build a Lease or Sub-Lease Agreement, or open the full property summary.' },
-            { title: 'Export & add', text: 'Export your portfolio to CSV, or click "+ Add property" to search Walter\'s database of 113,000+ NZ commercial properties.' }
+            { title: 'Portfolio overview', text: 'These widgets filter your table. Click any widget to see At Risk, Expiring, or Expansion properties instantly.', target: '.mp-dashboard', arrow: 'top' },
+            { title: 'Quick actions menu', text: 'Click the ⋮ menu on any row to generate Heads of Terms, build a Lease or Sub-Lease Agreement, or view the full property summary.', target: '.properties-table', arrow: 'top', scroll: true },
+            { title: 'Export & add', text: 'Export to CSV, or search Walter\'s database of 113,000+ NZ commercial properties to add to your portfolio.', target: '.mp-export-btn', arrow: 'top' }
         ],
         market: [
-            { title: 'Market Intelligence', text: 'Click any map pin to see property details and tenant signals. Blue = office, purple = retail, green = industrial, orange = new signal.' },
-            { title: 'Filters & signals', text: 'Use the dropdowns to filter by type, status, or source. The Signals tab shows live property feeds — clicking one flies the map to that location.' }
+            { title: 'Interactive map', text: 'Click any pin for property details and tenant signals. Blue = office, purple = retail, green = industrial, orange = new signal.', target: '#leafletMap', arrow: 'top' },
+            { title: 'Filters & signals', text: 'Filter by type, status, or source. The Signals tab shows live feeds — clicking one flies the map to that property.', target: '.market-intel-panel', arrow: 'left' }
         ],
         listings: [
-            { title: 'Active Listings', text: 'Each card shows real market data and Walter\'s AI insight. The coloured dots show Wallace match indicators — more dots = stronger demand.' },
-            { title: 'Full listing detail', text: 'Click any card for the gallery, comparable analysis, Wallace matches, and Molloy value-add strategies.' }
+            { title: 'Active Listings', text: 'Each card shows market data and Walter\'s AI insight. Coloured dots are Wallace match indicators — more dots = stronger demand.', target: '.listing-card', arrow: 'top' },
+            { title: 'Full detail', text: 'Click any card for the gallery, comparable analysis, Wallace matches, and Molloy value-add strategies.', target: '.listing-card', arrow: 'top' }
         ],
         documents: [
-            { title: 'Advisory', text: 'Four AI-powered workflows — lease review, comparison, OPEX budget, and S&P analysis. Each powered by Walter\'s LLM trained on thousands of NZ agreements.' },
-            { title: 'Preview before sharing', text: 'Click any document under "Recent Documents" to preview the full report. Review and adjust before sharing with your client via email.' }
+            { title: 'Advisory workflows', text: 'Four AI-powered workflows — lease review, comparison, OPEX budget, and S&P analysis. Upload a document and Walter analyses it in under 60 seconds.', target: '.docs-workflows-4', arrow: 'top' },
+            { title: 'Preview before sharing', text: 'Click any document under "Recent Documents" to preview the full report before sharing with your client.', target: '.docs-recent-strip', arrow: 'top', scroll: true }
         ],
         settings: [
-            { title: 'Configure Walter', text: 'Connect your data sources under Integrations, fine-tune alerts, and configure your five AI agents to match your workflow.' },
-            { title: 'Contactless CRM', text: 'Brittany captures every conversation from Plaud, phone calls, SMS, WhatsApp, WeChat, and email — all filed automatically to Vault RE.' }
+            { title: 'Configure Walter', text: 'Connect data sources, fine-tune alerts, and configure your five AI agents under these tabs.', target: '.settings-page-tabs', arrow: 'top' },
+            { title: 'Contactless CRM', text: 'Brittany captures every conversation from Plaud, phone, SMS, WhatsApp, WeChat, and email — all filed automatically.', target: '.cc-hero', arrow: 'top', scroll: true }
         ],
         chat: [
-            { title: 'Ask Walter anything', text: 'Walter has access to your full portfolio, 14,200+ lease agreements, and market data. Try the suggestion chips or type your own question.' },
-            { title: 'Document drafting', text: 'Ask Walter to draft clauses, analyse a property, compare leases, or generate market reports. Results include links to full reports.' }
+            { title: 'Ask Walter anything', text: 'Try the suggestion chips below, or type your own question. Walter has access to your full portfolio and 14,200+ NZ lease agreements.', target: '.chat-welcome', arrow: 'top' }
         ]
     };
 
@@ -6502,11 +6501,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const indicator = document.getElementById('tourStepIndicator');
         indicator.textContent = total > 1 ? `${currentTipStep + 1} of ${total}` : '';
         tourNext.textContent = currentTipStep === total - 1 ? 'Got it' : 'Next';
-        tourTooltip.className = 'tour-tooltip arrow-top';
 
-        // Position at top-center
-        tourTooltip.style.top = '80px';
-        tourTooltip.style.left = Math.max(10, (window.innerWidth - 340) / 2) + 'px';
+        // Find and position relative to target
+        const el = tip.target ? document.querySelector(tip.target) : null;
+        const arrow = tip.arrow || 'top';
+        tourTooltip.className = 'tour-tooltip arrow-' + arrow;
+
+        if (el) {
+            // Scroll target into view if needed
+            if (tip.scroll) el.scrollIntoView({ behavior: 'instant', block: 'center' });
+
+            const rect = el.getBoundingClientRect();
+            let top, left;
+
+            if (arrow === 'top') {
+                top = rect.bottom + 12;
+                left = rect.left;
+            } else if (arrow === 'left') {
+                top = rect.top;
+                left = rect.right + 12;
+            } else if (arrow === 'bottom') {
+                top = rect.top - 200;
+                left = rect.left;
+            }
+
+            // Clamp within viewport
+            top = Math.max(10, Math.min(top, window.innerHeight - 220));
+            left = Math.max(10, Math.min(left, window.innerWidth - 350));
+
+            tourTooltip.style.top = top + 'px';
+            tourTooltip.style.left = left + 'px';
+        } else {
+            // Fallback: centre
+            tourTooltip.style.top = '80px';
+            tourTooltip.style.left = Math.max(10, (window.innerWidth - 340) / 2) + 'px';
+        }
 
         tourOverlay?.classList.add('active');
     }
