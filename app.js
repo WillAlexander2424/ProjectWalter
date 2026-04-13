@@ -694,19 +694,8 @@ document.addEventListener('DOMContentLoaded', () => {
         lastResponseKey = classifyQuery(text);
         lastResponseTier = 'brief';
 
-        // Strictly-complex queries (specific properties / agent names) → still escalate to full chat
-        if (isStrictlyComplexQuery(text)) {
-            closePopout();
-            switchView('chat');
-            setTimeout(() => {
-                if (typeof simulateChat === 'function') {
-                    simulateChat(text);
-                }
-            }, 200);
-            return;
-        }
-
-        // Otherwise render the brief inline
+        // All queries handled inline — user can click "Open full chat" for the full experience
+        // Render the brief inline
         showThinking();
         if (walterPopoutInput) walterPopoutInput.value = '';
         setTimeout(() => {

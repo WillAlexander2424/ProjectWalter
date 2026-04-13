@@ -389,7 +389,28 @@ body {
     margin-top: 4px;
 }
 
-.header-actions { display: flex; align-items: center; gap: 12px; }
+.header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.header-bayleys-logo { display: none; }
+
+/* Bayleys logo in sidebar */
+.sidebar-bayleys {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+}
+.sidebar-bayleys-logo { height: 22px; opacity: 0.45; }
+.sidebar-bayleys-b {
+    display: none;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-tertiary);
+    letter-spacing: -0.5px;
+    font-family: inherit;
+}
+.sidebar.collapsed .sidebar-bayleys { padding: 8px 0; justify-content: center; }
+.sidebar.collapsed .sidebar-bayleys-logo { display: none; }
+.sidebar.collapsed .sidebar-bayleys-b { display: block; }
+.view-header { position: relative; }
 
 .date-display {
     font-size: 13px;
@@ -4498,8 +4519,9 @@ body {
 
 #view-market .view-header {
     padding: 32px 40px 22px;
+    margin: 0 auto;
     margin-bottom: 0;
-    max-width: 1100px;
+    max-width: 1400px;
 }
 #view-market .view-header .view-subtitle {
     max-width: 880px;
@@ -6727,11 +6749,12 @@ body {
    the right AI panel stay visible while the build workspace scrolls.
    ======================================================================== */
 #view-settings.active:has(#settings-context.active) {
-    height: 100vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     padding-bottom: 0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 #view-settings.active:has(#settings-context.active) .settings-view-header {
     flex-shrink: 0;
