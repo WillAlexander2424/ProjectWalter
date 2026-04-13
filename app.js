@@ -6433,14 +6433,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Contextual Page Tips (show per-page, first visit only) ---
     const pageTips = {
-        home: { title: 'Welcome to Walter', text: 'This is your daily briefing. Priority actions are at the top, your schedule and AI agent matches are below. Click any item to take action.' },
-        command: { title: 'Command Centre', text: 'Your property-aware inbox. Every email is auto-tagged to its property by Brittany. Click any email for an AI-drafted reply, or any meeting for prep notes.' },
-        properties: { title: 'My Properties', text: 'Your portfolio at a glance. Click any row to see the full property card, or use the ⋮ menu for quick actions like Heads of Terms and Agreements.' },
-        market: { title: 'Market Intelligence', text: 'Explore Auckland\'s commercial landscape. Click any map pin for property details. Use the filters to narrow by type, status, or source.' },
-        listings: { title: 'Active Listings', text: 'Your current listings with AI insights and Wallace match indicators. Click any card for the full gallery, comparable analysis, and tenant matching.' },
-        documents: { title: 'Advisory', text: 'Upload a lease, contract, or agreement and Walter will analyse it in under 60 seconds. Four workflows — lease review, comparison, OPEX budget, and S&P analysis.' },
-        settings: { title: 'Settings', text: 'Configure Walter to work for you. Connect data sources, set alert preferences, tune your five AI agents, and build your personal context.' },
-        chat: { title: 'Walter Chat', text: 'Ask Walter about any property, tenant, market trend, or to draft documents. Walter has access to your full portfolio and 14,200+ NZ commercial agreements.' }
+        home: [
+            { title: 'Welcome to Walter', text: 'This is your daily briefing. Priority actions are at the top — click "Review" to act on any item immediately.' },
+            { title: 'Your schedule & AI agents', text: 'Scroll down to see Zara\'s schedule for today, Wallace\'s latest matches, and your deal pipeline. Book an Uber to viewings with one tap.' },
+            { title: 'Notifications & settings', text: 'The bell icon shows AI agent notifications. Click the W button in the bottom-right to ask Walter anything from any page.' }
+        ],
+        command: [
+            { title: 'Command Centre', text: 'Your property-aware inbox. Every email is auto-tagged to its property by Brittany and filed to Vault RE automatically.' },
+            { title: 'AI-drafted replies', text: 'Click any email, then "Draft AI Reply" — Walter writes a contextual response and Zara reviews it for accuracy before you send.' },
+            { title: 'Day, Week & Month views', text: 'Use the toggle in the top-right to switch between Day, Week, and Month calendar views. Click any meeting for Zara\'s prep notes.' }
+        ],
+        properties: [
+            { title: 'My Properties', text: 'Your portfolio of 54 properties. The widgets at the top filter the table — click any widget to see At Risk, Expiring, or Expansion properties.' },
+            { title: 'Property actions menu', text: 'Click the ⋮ menu on any row to generate Heads of Terms, build a Lease or Sub-Lease Agreement, or open the full property summary.' },
+            { title: 'Export & add', text: 'Export your portfolio to CSV, or click "+ Add property" to search Walter\'s database of 113,000+ NZ commercial properties.' }
+        ],
+        market: [
+            { title: 'Market Intelligence', text: 'Click any map pin to see property details and tenant signals. Blue = office, purple = retail, green = industrial, orange = new signal.' },
+            { title: 'Filters & signals', text: 'Use the dropdowns to filter by type, status, or source. The Signals tab shows live property feeds — clicking one flies the map to that location.' }
+        ],
+        listings: [
+            { title: 'Active Listings', text: 'Each card shows real market data and Walter\'s AI insight. The coloured dots show Wallace match indicators — more dots = stronger demand.' },
+            { title: 'Full listing detail', text: 'Click any card for the gallery, comparable analysis, Wallace matches, and Molloy value-add strategies.' }
+        ],
+        documents: [
+            { title: 'Advisory', text: 'Four AI-powered workflows — lease review, comparison, OPEX budget, and S&P analysis. Each powered by Walter\'s LLM trained on thousands of NZ agreements.' },
+            { title: 'Preview before sharing', text: 'Click any document under "Recent Documents" to preview the full report. Review and adjust before sharing with your client via email.' }
+        ],
+        settings: [
+            { title: 'Configure Walter', text: 'Connect your data sources under Integrations, fine-tune alerts, and configure your five AI agents to match your workflow.' },
+            { title: 'Contactless CRM', text: 'Brittany captures every conversation from Plaud, phone calls, SMS, WhatsApp, WeChat, and email — all filed automatically to Vault RE.' }
+        ],
+        chat: [
+            { title: 'Ask Walter anything', text: 'Walter has access to your full portfolio, 14,200+ lease agreements, and market data. Try the suggestion chips or type your own question.' },
+            { title: 'Document drafting', text: 'Ask Walter to draft clauses, analyse a property, compare leases, or generate market reports. Results include links to full reports.' }
+        ]
     };
 
     const seenTips = JSON.parse(sessionStorage.getItem('walter-seen-tips') || '{}');
@@ -6449,21 +6476,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const tourContent = document.getElementById('tourContent');
     const tourNext = document.getElementById('tourNext');
     const tourSkip = document.getElementById('tourSkip');
+    let currentTipView = null;
+    let currentTipStep = 0;
 
     function showPageTip(viewId) {
         if (seenTips[viewId]) return;
-        const tip = pageTips[viewId];
-        if (!tip) return;
+        const tips = pageTips[viewId];
+        if (!tips || !tips.length) return;
 
-        seenTips[viewId] = true;
-        sessionStorage.setItem('walter-seen-tips', JSON.stringify(seenTips));
+        currentTipView = viewId;
+        currentTipStep = 0;
+        renderTip();
+    }
+
+    function renderTip() {
+        const tips = pageTips[currentTipView];
+        if (!tips || currentTipStep >= tips.length) {
+            closeTip();
+            return;
+        }
+        const tip = tips[currentTipStep];
+        const total = tips.length;
 
         tourContent.innerHTML = `<h4>${tip.title}</h4><p>${tip.text}</p>`;
-        document.getElementById('tourStepIndicator').textContent = '';
-        tourNext.textContent = 'Got it';
+        const indicator = document.getElementById('tourStepIndicator');
+        indicator.textContent = total > 1 ? `${currentTipStep + 1} of ${total}` : '';
+        tourNext.textContent = currentTipStep === total - 1 ? 'Got it' : 'Next';
         tourTooltip.className = 'tour-tooltip arrow-top';
 
-        // Position at top-center of the page
+        // Position at top-center
         tourTooltip.style.top = '80px';
         tourTooltip.style.left = Math.max(10, (window.innerWidth - 340) / 2) + 'px';
 
@@ -6472,9 +6513,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeTip() {
         tourOverlay?.classList.remove('active');
+        if (currentTipView) {
+            seenTips[currentTipView] = true;
+            sessionStorage.setItem('walter-seen-tips', JSON.stringify(seenTips));
+        }
+        currentTipView = null;
+        currentTipStep = 0;
     }
 
-    tourNext?.addEventListener('click', closeTip);
+    tourNext?.addEventListener('click', () => {
+        const tips = pageTips[currentTipView];
+        if (tips && currentTipStep < tips.length - 1) {
+            currentTipStep++;
+            renderTip();
+        } else {
+            closeTip();
+        }
+    });
     tourSkip?.addEventListener('click', closeTip);
     document.getElementById('tourBackdrop')?.addEventListener('click', closeTip);
 
